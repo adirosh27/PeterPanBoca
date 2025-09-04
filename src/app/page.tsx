@@ -7,20 +7,20 @@ import { useEffect, useState } from 'react';
 
 export default function HomePage() {
   const [themeContent, setThemeContent] = useState({
-    heroTitle: 'Welcome to Neverland',
-    heroSubtitle: 'Capturing magical moments from our enchanting Peter Pan events in Boca Raton',
-    heroIcons: '🌙⭐✨',
-    sectionTitle: '🌟 Featured Events',
-    sectionSubtitle: 'Dive into our most magical moments from recent Peter Pan adventures',
-    buttonText: '🌟 Explore Galleries',
-    ctaTitle: 'Ready for Your Own Adventure?',
-    ctaButton: '🌟 Get Involved',
-    yearTitle: '🗓️ Explore by Year'
+    heroTitle: "The Captain's Chronicles",
+    heroSubtitle: 'Sail through our elegant collection of sophisticated maritime memories',
+    heroIcons: '⚓🚢👑',
+    sectionTitle: '⚓ Ship\'s Log',
+    sectionSubtitle: 'Peruse our most distinguished maritime events and elegant gatherings',
+    buttonText: '⚓ View Chronicles',
+    ctaTitle: 'Ready to Set Sail?',
+    ctaButton: '⚓ Come Aboard',
+    yearTitle: '⏰ Maritime Archives'
   });
 
   useEffect(() => {
     const updateContent = () => {
-      const currentTheme = (window as any).currentTheme || 'neverland-night';
+      const currentTheme = (window as any).currentTheme || 'captain-hooks-log';
       
       const themeTexts = {
         'neverland-night': {
@@ -80,7 +80,7 @@ export default function HomePage() {
         }
       };
 
-      setThemeContent(themeTexts[currentTheme as keyof typeof themeTexts] || themeTexts['neverland-night']);
+      setThemeContent(themeTexts[currentTheme as keyof typeof themeTexts] || themeTexts['captain-hooks-log']);
     };
 
     updateContent();

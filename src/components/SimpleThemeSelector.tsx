@@ -48,15 +48,19 @@ const THEMES = {
 type ThemeKey = keyof typeof THEMES;
 
 export default function SimpleThemeSelector() {
-  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('neverland-night');
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('captain-hooks-log');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('simple-theme') as ThemeKey;
     if (savedTheme && THEMES[savedTheme]) {
       setCurrentTheme(savedTheme);
+      applyTheme(savedTheme);
+    } else {
+      // Default to Captain Hook's Log
+      setCurrentTheme('captain-hooks-log');
+      applyTheme('captain-hooks-log');
     }
-    applyTheme(savedTheme || 'neverland-night');
   }, []);
 
   const applyTheme = (themeKey: ThemeKey) => {
