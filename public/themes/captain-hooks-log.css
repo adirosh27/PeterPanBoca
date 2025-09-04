@@ -1,0 +1,143 @@
+/* Captain Hook's Log Theme - Elegant Maritime Sophistication */
+
+:root {
+  /* Captain Hook's Log Palette */
+  --primary-50: #f8fafc;
+  --primary-100: #f1f5f9;
+  --primary-200: #e2e8f0;
+  --primary-300: #cbd5e1;
+  --primary-400: #94a3b8;
+  --primary-500: #64748b;
+  --primary-600: #475569;
+  --primary-700: #191970;
+  --primary-800: #1e293b;
+  --primary-900: #0f172a;
+
+  --secondary-50: #fffbeb;
+  --secondary-100: #fef3c7;
+  --secondary-200: #fde68a;
+  --secondary-300: #fcd34d;
+  --secondary-400: #fbbf24;
+  --secondary-500: #b8860b;
+  --secondary-600: #d97706;
+  --secondary-700: #b45309;
+  --secondary-800: #92400e;
+  --secondary-900: #78350f;
+
+  --accent-50: #fef2f2;
+  --accent-100: #fee2e2;
+  --accent-200: #fecaca;
+  --accent-300: #fca5a5;
+  --accent-400: #f87171;
+  --accent-500: #8b0000;
+  --accent-600: #dc2626;
+  --accent-700: #b91c1c;
+  --accent-800: #991b1b;
+  --accent-900: #7f1d1d;
+}
+
+/* Captain Hook's Log specific styling */
+.captain-hook-theme {
+  background: linear-gradient(135deg, #191970 0%, #2f2f2f 100%);
+  position: relative;
+}
+
+.captain-hook-theme::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.1) 50%, transparent 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(184, 134, 11, 0.05) 2px, rgba(184, 134, 11, 0.05) 4px);
+  pointer-events: none;
+}
+
+.ship-deck-card {
+  background: #f8f8ff;
+  border: 3px solid #b8860b;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(184, 134, 11, 0.3);
+}
+
+.ship-deck-card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background: linear-gradient(90deg, #b8860b, transparent, #b8860b);
+}
+
+.brass-frame {
+  border: 4px solid #b8860b;
+  border-radius: 50%;
+  background: radial-gradient(circle, #b8860b 0%, #8b7d11 100%);
+  padding: 3px;
+}
+
+.brass-frame img {
+  border-radius: 50%;
+  border: 2px solid #2f2f2f;
+}
+
+.nautical-rope {
+  border: 6px solid transparent;
+  border-image: repeating-linear-gradient(
+    45deg,
+    #8b7d11,
+    #8b7d11 8px,
+    #b8860b 8px,
+    #b8860b 16px
+  ) 6;
+  border-radius: 12px;
+}
+
+.captain-text {
+  font-family: 'Playfair Display', serif;
+  color: #f8f8ff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.naval-accent {
+  background: linear-gradient(45deg, #b8860b, #8b0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+}
+
+.ship-wheel {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #b8860b;
+  border-radius: 50%;
+  position: relative;
+  display: inline-block;
+}
+
+.ship-wheel::before,
+.ship-wheel::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 50px;
+  background: #b8860b;
+  transform-origin: center;
+}
+
+.ship-wheel::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.ship-wheel::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}

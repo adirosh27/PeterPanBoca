@@ -1,0 +1,84 @@
+/* Skull Rock Shores Theme - Rugged Pirate Adventure */
+
+:root {
+  /* Skull Rock Shores Palette */
+  --primary-50: #fdf8f6;
+  --primary-100: #f2e8e5;
+  --primary-200: #eaddd7;
+  --primary-300: #e0cec7;
+  --primary-400: #d2bab0;
+  --primary-500: #bfa094;
+  --primary-600: #a18072;
+  --primary-700: #8b4513;
+  --primary-800: #723a0f;
+  --primary-900: #5d2f0c;
+
+  --secondary-50: #f0fdfa;
+  --secondary-100: #ccfbf1;
+  --secondary-200: #99f6e4;
+  --secondary-300: #5eead4;
+  --secondary-400: #2dd4bf;
+  --secondary-500: #14b8a6;
+  --secondary-600: #0d9488;
+  --secondary-700: #2f4f4f;
+  --secondary-800: #285d55;
+  --secondary-900: #234e47;
+
+  --accent-50: #fef2f2;
+  --accent-100: #fee2e2;
+  --accent-200: #fecaca;
+  --accent-300: #fca5a5;
+  --accent-400: #f87171;
+  --accent-500: #dc143c;
+  --accent-600: #dc2626;
+  --accent-700: #b91c1c;
+  --accent-800: #991b1b;
+  --accent-900: #7f1d1d;
+}
+
+/* Skull Rock Shores specific styling */
+.skull-rock-theme {
+  background: linear-gradient(135deg, #8b4513 0%, #2f4f4f 100%);
+}
+
+.skull-rock-card {
+  background: #f4a460;
+  border: 3px solid #708090;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.skull-rock-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #8b4513, #2f4f4f, #dc143c);
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.rope-border {
+  border: 4px solid transparent;
+  border-image: repeating-linear-gradient(
+    45deg,
+    #8b4513,
+    #8b4513 10px,
+    #f4a460 10px,
+    #f4a460 20px
+  ) 4;
+}
+
+.weathered-text {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'Pirata One', cursive;
+}
+
+.treasure-accent {
+  background: linear-gradient(45deg, #dc143c, #8b4513);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

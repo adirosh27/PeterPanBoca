@@ -1,0 +1,96 @@
+/* Pixie Dust Pastels Theme - Whimsical Fairy Magic */
+
+:root {
+  /* Pixie Dust Pastels Palette */
+  --primary-50: #faf5ff;
+  --primary-100: #f3e8ff;
+  --primary-200: #e9d5ff;
+  --primary-300: #d8b4fe;
+  --primary-400: #c084fc;
+  --primary-500: #dda0dd;
+  --primary-600: #9333ea;
+  --primary-700: #7c3aed;
+  --primary-800: #6b21a8;
+  --primary-900: #581c87;
+
+  --secondary-50: #f0fff4;
+  --secondary-100: #dcfce7;
+  --secondary-200: #bbf7d0;
+  --secondary-300: #86efac;
+  --secondary-400: #4ade80;
+  --secondary-500: #98fb98;
+  --secondary-600: #16a34a;
+  --secondary-700: #15803d;
+  --secondary-800: #166534;
+  --secondary-900: #14532d;
+
+  --accent-50: #fdf2f8;
+  --accent-100: #fce7f3;
+  --accent-200: #fbcfe8;
+  --accent-300: #f9a8d4;
+  --accent-400: #f472b6;
+  --accent-500: #ffc0cb;
+  --accent-600: #db2777;
+  --accent-700: #be185d;
+  --accent-800: #9d174d;
+  --accent-900: #831843;
+}
+
+/* Pixie Dust specific styling */
+.pixie-dust-theme {
+  background: linear-gradient(135deg, #dda0dd 0%, #98fb98 50%, #ffc0cb 100%);
+  position: relative;
+}
+
+.pixie-dust-theme::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(221, 160, 221, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(152, 251, 152, 0.3) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.floating-sparkles {
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-sparkles::after {
+  content: '✨ ⭐ 🌟 ✨ ⭐ 🌟';
+  position: absolute;
+  top: -20px;
+  left: -100%;
+  right: -100%;
+  animation: sparkle-float 20s linear infinite;
+  opacity: 0.6;
+  font-size: 1.5rem;
+}
+
+@keyframes sparkle-float {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.cloud-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(221, 160, 221, 0.3);
+}
+
+.fairy-text {
+  font-family: 'Dancing Script', cursive;
+  text-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+}
+
+.magical-glow {
+  box-shadow: 0 0 20px rgba(221, 160, 221, 0.6);
+  border-radius: 15px;
+}
