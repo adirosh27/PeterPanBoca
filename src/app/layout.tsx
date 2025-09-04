@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './theme-styles.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import ThemeSelector from '@/components/ThemeSelector';
@@ -59,7 +60,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Pirata+One&family=Fredoka+One:wght@400&family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="min-h-screen bg-gray-50 flex flex-col">
+      <body className="min-h-screen bg-gray-50 flex flex-col theme-neverland-night">
         <SiteHeader />
         <main className="flex-grow">
           {children}

@@ -1,0 +1,363 @@
+/* Theme-specific styles that override the base design */
+
+/* ===== THEME 1: NEVERLAND NIGHT (Default) ===== */
+.theme-neverland-night {
+  --bg-primary: #1e40af;
+  --bg-secondary: #16213e; 
+  --bg-accent: #ffd700;
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --card-bg: rgba(30, 64, 175, 0.1);
+  --border-color: #ffd700;
+}
+
+.theme-neverland-night .hero-section {
+  background: linear-gradient(135deg, #1e40af 0%, #16213e 100%);
+  position: relative;
+}
+
+.theme-neverland-night .hero-section::after {
+  content: '🌙 ⭐ ✨ 🌟 🌙 ⭐';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  opacity: 0.4;
+}
+
+.theme-neverland-night .card {
+  background: rgba(248, 250, 252, 0.95);
+  border: 2px solid #ffd700;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* ===== THEME 2: SKULL ROCK SHORES ===== */
+.theme-skull-rock-shores {
+  --bg-primary: #8b4513;
+  --bg-secondary: #2f4f4f;
+  --bg-accent: #dc143c;
+  --text-primary: #f4a460;
+  --text-secondary: #f8f8ff;
+  --card-bg: #f4a460;
+  --border-color: #708090;
+}
+
+.theme-skull-rock-shores body {
+  background: #f4a460;
+  font-family: 'Pirata One', cursive;
+}
+
+.theme-skull-rock-shores .hero-section {
+  background: linear-gradient(135deg, #8b4513 0%, #2f4f4f 100%);
+  position: relative;
+}
+
+.theme-skull-rock-shores .hero-section::after {
+  content: '🏴‍☠️ ⚓ 💀 🏴‍☠️ ⚓ 💀';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+.theme-skull-rock-shores .card {
+  background: #f4a460;
+  border: 3px solid #708090;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  transform: rotate(-1deg);
+}
+
+.theme-skull-rock-shores .card:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+.theme-skull-rock-shores h1, 
+.theme-skull-rock-shores h2, 
+.theme-skull-rock-shores h3 {
+  color: #dc143c;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'Pirata One', cursive;
+}
+
+.theme-skull-rock-shores .btn-primary {
+  background: #dc143c;
+  border: 2px solid #8b4513;
+  font-family: 'Pirata One', cursive;
+  text-transform: uppercase;
+}
+
+/* ===== THEME 3: PIXIE DUST PASTELS ===== */
+.theme-pixie-dust-pastels {
+  --bg-primary: #dda0dd;
+  --bg-secondary: #98fb98;
+  --bg-accent: #ffc0cb;
+  --text-primary: #8b7d80;
+  --text-secondary: #696969;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --border-color: #dda0dd;
+}
+
+.theme-pixie-dust-pastels body {
+  background: linear-gradient(135deg, #dda0dd 0%, #98fb98 50%, #ffc0cb 100%);
+  position: relative;
+}
+
+.theme-pixie-dust-pastels body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(221, 160, 221, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 192, 203, 0.3) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.theme-pixie-dust-pastels .hero-section {
+  background: linear-gradient(135deg, #dda0dd 0%, #98fb98 50%, #ffc0cb 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-pixie-dust-pastels .hero-section::after {
+  content: '✨ ⭐ 🌟 🧚‍♀️ ✨ ⭐ 🌟';
+  position: absolute;
+  top: -20px;
+  left: -100%;
+  right: -100%;
+  animation: sparkle-float 15s linear infinite;
+  opacity: 0.7;
+  font-size: 1.5rem;
+}
+
+@keyframes sparkle-float {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.theme-pixie-dust-pastels .card {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(221, 160, 221, 0.3);
+}
+
+.theme-pixie-dust-pastels h1, 
+.theme-pixie-dust-pastels h2, 
+.theme-pixie-dust-pastels h3 {
+  font-family: 'Dancing Script', cursive;
+  color: #8b7d80;
+  text-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+}
+
+.theme-pixie-dust-pastels .btn-primary {
+  background: linear-gradient(45deg, #dda0dd, #ffc0cb);
+  border: none;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.1rem;
+  box-shadow: 0 0 20px rgba(221, 160, 221, 0.6);
+}
+
+/* ===== THEME 4: LOST BOYS SCRAPBOOK ===== */
+.theme-lost-boys-scrapbook {
+  --bg-primary: #f5deb3;
+  --bg-secondary: #228b22;
+  --bg-accent: #ff6347;
+  --text-primary: #8b4513;
+  --text-secondary: #2f4f2f;
+  --card-bg: #fff8dc;
+  --border-color: #8b4513;
+}
+
+.theme-lost-boys-scrapbook body {
+  background: #f5deb3;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(139, 69, 19, 0.1) 2px, transparent 2px),
+    radial-gradient(circle at 75% 75%, rgba(34, 139, 34, 0.1) 2px, transparent 2px);
+  background-size: 50px 50px;
+}
+
+.theme-lost-boys-scrapbook .hero-section {
+  background: #8b4513;
+  position: relative;
+}
+
+.theme-lost-boys-scrapbook .hero-section::before {
+  content: '🌳 🏹 🌲 🏠 🌳 🏹';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+.theme-lost-boys-scrapbook .card {
+  background: #fff8dc;
+  border: 3px dashed #8b4513;
+  border-radius: 0;
+  position: relative;
+  transform: rotate(-1deg);
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-lost-boys-scrapbook .card:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+.theme-lost-boys-scrapbook .card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 15px;
+  height: 15px;
+  background: #ff6347;
+  border-radius: 50%;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.theme-lost-boys-scrapbook .card::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 15px;
+  height: 15px;
+  background: #228b22;
+  border-radius: 50%;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.theme-lost-boys-scrapbook h1, 
+.theme-lost-boys-scrapbook h2, 
+.theme-lost-boys-scrapbook h3 {
+  font-family: 'Fredoka One', cursive;
+  color: #8b4513;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.theme-lost-boys-scrapbook .btn-primary {
+  background: #ff6347;
+  font-family: 'Fredoka One', cursive;
+  border: 2px solid #8b4513;
+  border-radius: 25px;
+  transform: rotate(-2deg);
+}
+
+/* ===== THEME 5: CAPTAIN HOOK'S LOG ===== */
+.theme-captain-hooks-log {
+  --bg-primary: #191970;
+  --bg-secondary: #b8860b;
+  --bg-accent: #8b0000;
+  --text-primary: #f8f8ff;
+  --text-secondary: #e6e6fa;
+  --card-bg: #f8f8ff;
+  --border-color: #b8860b;
+}
+
+.theme-captain-hooks-log body {
+  background: linear-gradient(135deg, #191970 0%, #2f2f2f 100%);
+}
+
+.theme-captain-hooks-log .hero-section {
+  background: linear-gradient(135deg, #191970 0%, #2f2f2f 100%);
+  position: relative;
+}
+
+.theme-captain-hooks-log .hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(90deg, transparent 0%, rgba(184, 134, 11, 0.1) 50%, transparent 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(184, 134, 11, 0.05) 2px, rgba(184, 134, 11, 0.05) 4px);
+  pointer-events: none;
+}
+
+.theme-captain-hooks-log .hero-section::after {
+  content: '⚓ 🚢 ⚓ 🚢 ⚓ 🚢';
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+.theme-captain-hooks-log .card {
+  background: #f8f8ff;
+  border: 3px solid #b8860b;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(184, 134, 11, 0.3);
+}
+
+.theme-captain-hooks-log .card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background: linear-gradient(90deg, #b8860b, transparent, #b8860b);
+}
+
+.theme-captain-hooks-log h1, 
+.theme-captain-hooks-log h2, 
+.theme-captain-hooks-log h3 {
+  font-family: 'Playfair Display', serif;
+  color: #f8f8ff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.theme-captain-hooks-log .hero-section h1,
+.theme-captain-hooks-log .hero-section h2 {
+  color: #f8f8ff;
+}
+
+.theme-captain-hooks-log .btn-primary {
+  background: linear-gradient(45deg, #b8860b, #8b0000);
+  border: 2px solid #f8f8ff;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* General theme-specific text colors */
+.theme-skull-rock-shores .text-gray-800,
+.theme-skull-rock-shores .text-gray-700,
+.theme-skull-rock-shores .text-gray-600 {
+  color: #8b4513 !important;
+}
+
+.theme-pixie-dust-pastels .text-gray-800,
+.theme-pixie-dust-pastels .text-gray-700,
+.theme-pixie-dust-pastels .text-gray-600 {
+  color: #8b7d80 !important;
+}
+
+.theme-lost-boys-scrapbook .text-gray-800,
+.theme-lost-boys-scrapbook .text-gray-700,
+.theme-lost-boys-scrapbook .text-gray-600 {
+  color: #8b4513 !important;
+}
+
+.theme-captain-hooks-log .text-gray-800,
+.theme-captain-hooks-log .text-gray-700,
+.theme-captain-hooks-log .text-gray-600 {
+  color: #f8f8ff !important;
+}

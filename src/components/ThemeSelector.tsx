@@ -50,6 +50,13 @@ export default function ThemeSelector() {
     applyTheme(savedTheme);
   }, []);
 
+  useEffect(() => {
+    // Apply default theme on first load
+    if (typeof window !== 'undefined') {
+      document.body.classList.add('theme-neverland-night');
+    }
+  }, []);
+
   const applyTheme = (themeId: string) => {
     // Remove existing theme stylesheets
     const existingThemeLinks = document.querySelectorAll('link[data-theme]');
