@@ -46,7 +46,6 @@ export default function Gallery({ photos, title }: GalleryProps) {
       <PhotoAlbum
         photos={albumPhotos}
         layout="masonry"
-        targetRowHeight={300}
         onClick={({ index: current }) => setIndex(current)}
         renderPhoto={({ photo, wrapperStyle, renderDefaultPhoto }) => (
           <div style={wrapperStyle} className="relative group cursor-pointer">
