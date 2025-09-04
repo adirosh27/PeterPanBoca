@@ -5,10 +5,10 @@ import { getEvent, galleryData } from '@/lib/data';
 import Gallery from '@/components/Gallery';
 
 interface EventPageProps {
-  params: {
+  params: Promise<{
     year: string;
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -27,8 +27,9 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: EventPageProps) {
-  const year = parseInt(params.year);
-  const event = getEvent(year, params.slug);
+  const { year: yearString, slug } = await params;
+  const year = parseInt(yearString);
+  const event = getEvent(year, slug);
   
   if (!event) {
     return {
@@ -54,9 +55,10 @@ export async function generateMetadata({ params }: EventPageProps) {
   };
 }
 
-export default function EventPage({ params }: EventPageProps) {
-  const year = parseInt(params.year);
-  const event = getEvent(year, params.slug);
+export default async function EventPage({ params }: EventPageProps) {
+  const { year: yearString, slug } = await params;
+  const year = parseInt(yearString);
+  const event = getEvent(year, slug);
 
   if (!event) {
     notFound();

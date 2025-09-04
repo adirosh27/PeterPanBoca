@@ -4,9 +4,9 @@ import { notFound } from 'next/navigation';
 import { getYearData, getYears } from '@/lib/data';
 
 interface YearPageProps {
-  params: {
+  params: Promise<{
     year: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -17,7 +17,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: YearPageProps) {
-  const year = parseInt(params.year);
+  const { year: yearString } = await params;
+  const year = parseInt(yearString);
   const yearData = getYearData(year);
   
   if (!yearData) {
@@ -32,8 +33,9 @@ export async function generateMetadata({ params }: YearPageProps) {
   };
 }
 
-export default function YearPage({ params }: YearPageProps) {
-  const year = parseInt(params.year);
+export default async function YearPage({ params }: YearPageProps) {
+  const { year: yearString } = await params;
+  const year = parseInt(yearString);
   const yearData = getYearData(year);
 
   if (!yearData) {
