@@ -47,18 +47,6 @@ export default function Gallery({ photos, title }: GalleryProps) {
         photos={albumPhotos}
         layout="masonry"
         onClick={({ index: current }) => setIndex(current)}
-        renderPhoto={({ photo, wrapperStyle, renderDefaultPhoto }) => (
-          <div style={wrapperStyle} className="relative group cursor-pointer">
-            {renderDefaultPhoto({ wrapped: true })}
-            {photo.title && (
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-end">
-                <div className="p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <h3 className="font-medium text-sm">{photo.title}</h3>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
       />
 
       <Lightbox
