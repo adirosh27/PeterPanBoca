@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getFeaturedEvents, getYears } from '@/lib/data';
 import { useEffect, useState } from 'react';
 
-export default function HomePage() {
+export default function SimpleThemedHomePage() {
   const [themeContent, setThemeContent] = useState({
     heroTitle: 'Welcome to Neverland',
     heroSubtitle: 'Capturing magical moments from our enchanting Peter Pan events in Boca Raton',

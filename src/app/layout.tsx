@@ -2,9 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
-import { ThemeProvider } from '@/components/ThemeProvider';
-import NewThemeSelector from '@/components/NewThemeSelector';
-import ThemedBody from '@/components/ThemedBody';
+import SimpleThemeSelector from '@/components/SimpleThemeSelector';
 
 export const metadata: Metadata = {
   title: {
@@ -62,16 +60,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Pirata+One&family=Fredoka+One:wght@400&family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-screen flex flex-col">
-        <ThemeProvider>
-          <ThemedBody>
-            <SiteHeader />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <SiteFooter />
-            <NewThemeSelector />
-          </ThemedBody>
-        </ThemeProvider>
+        <SiteHeader />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <SiteFooter />
+        <SimpleThemeSelector />
       </body>
     </html>
   );
