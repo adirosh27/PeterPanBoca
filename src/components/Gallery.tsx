@@ -63,27 +63,6 @@ export default function Gallery({ photos, title }: GalleryProps) {
           borderRadius: 4,
           gap: 16,
         }}
-        render={{
-          slide: ({ slide }) => (
-            <div className="relative w-full h-full flex items-center justify-center">
-              <Image
-                src={slide.src}
-                alt={slide.alt || ''}
-                width={slide.width}
-                height={slide.height}
-                className="max-w-full max-h-full object-contain"
-                priority
-              />
-              {slide.title && (
-                <div className="absolute bottom-4 left-4 right-4 text-center">
-                  <h3 className="text-white text-lg font-medium bg-black bg-opacity-50 px-4 py-2 rounded-lg">
-                    {slide.title}
-                  </h3>
-                </div>
-              )}
-            </div>
-          ),
-        }}
       />
       
       <div className="text-center text-sm text-gray-600">
