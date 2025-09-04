@@ -1,25 +1,22 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { getFeaturedEvents, getYears } from '@/lib/data';
 import ThemedContent from '@/components/ThemedContent';
-import { themes } from '@/lib/themes';
 
-export default function HomePage() {
+export default function ThemedHomePage() {
   const featuredEvents = getFeaturedEvents(3);
   const years = getYears();
 
   return (
     <ThemedContent>
       {(theme) => (
-        <div className={`space-y-16 pb-16 min-h-screen transition-all duration-500`}>
+        <div className={`space-y-16 pb-16 min-h-screen ${theme.body}`}>
           {/* Hero Section */}
           <section className={`${theme.hero.background} ${theme.hero.text} relative overflow-hidden`}>
             <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             <div className="relative container mx-auto px-4 py-24 text-center">
               <div className="max-w-4xl mx-auto space-y-6">
-                <div className="text-6xl mb-4 animate-bounce">
+                <div className="text-6xl mb-4">
                   {theme === themes['skull-rock-shores'] && '🏴‍☠️⚓💀'}
                   {theme === themes['pixie-dust-pastels'] && '🧚‍♀️✨🌟'}
                   {theme === themes['lost-boys-scrapbook'] && '🌳🏹📖'}
@@ -41,14 +38,14 @@ export default function HomePage() {
                   {theme === themes['neverland-night'] && 'Capturing magical moments from our enchanting Peter Pan events in Boca Raton'}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-                  <Link href="/galleries" className={`${theme.button.primary} px-8 py-4 rounded-lg transition-all duration-200 text-lg font-semibold hover:scale-105`}>
+                  <Link href="/galleries" className={`${theme.button.primary} px-8 py-4 rounded-lg transition-all duration-200 text-lg font-semibold`}>
                     {theme === themes['skull-rock-shores'] && '🏴‍☠️ Explore Treasures'}
                     {theme === themes['pixie-dust-pastels'] && '✨ View Magic'}
                     {theme === themes['lost-boys-scrapbook'] && '📖 Browse Adventures'}
                     {theme === themes['captain-hooks-log'] && '⚓ View Chronicles'}
                     {theme === themes['neverland-night'] && '🌟 Explore Galleries'}
                   </Link>
-                  <Link href="/about" className={`${theme.button.secondary} px-8 py-4 rounded-lg transition-all duration-200 text-lg hover:scale-105`}>
+                  <Link href="/about" className={`${theme.button.secondary} px-8 py-4 rounded-lg transition-all duration-200 text-lg`}>
                     Learn More
                   </Link>
                 </div>
@@ -59,14 +56,14 @@ export default function HomePage() {
           {/* Featured Events */}
           <section className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className={`text-4xl ${theme.font} font-bold mb-4 ${theme.body === 'bg-slate-900' ? 'text-white' : theme.body === 'bg-amber-50' ? 'text-amber-900' : 'text-gray-800'}`}>
+              <h2 className={`text-4xl ${theme.font} font-bold mb-4`}>
                 {theme === themes['skull-rock-shores'] && '🏴‍☠️ Legendary Adventures'}
                 {theme === themes['pixie-dust-pastels'] && '✨ Magical Moments'}
                 {theme === themes['lost-boys-scrapbook'] && '📖 Memory Book'}
                 {theme === themes['captain-hooks-log'] && '⚓ Ship\'s Log'}
                 {theme === themes['neverland-night'] && '🌟 Featured Events'}
               </h2>
-              <p className={`text-lg max-w-2xl mx-auto ${theme.body === 'bg-slate-900' ? 'text-gray-300' : theme.body === 'bg-amber-50' ? 'text-amber-700' : 'text-gray-600'}`}>
+              <p className="text-lg max-w-2xl mx-auto">
                 {theme === themes['skull-rock-shores'] && 'Dive into our most swashbuckling adventures from recent pirate expeditions'}
                 {theme === themes['pixie-dust-pastels'] && 'Step into our most enchanting fairy tale moments and magical memories'}
                 {theme === themes['lost-boys-scrapbook'] && 'Flip through pages of our wildest adventures and fun-filled memories'}
@@ -132,7 +129,7 @@ export default function HomePage() {
                   <Link 
                     key={year}
                     href={`/galleries/${year}`}
-                    className={`${theme.button.primary} py-6 px-10 rounded-xl transition-all duration-300 text-2xl font-bold hover:scale-110 hover:shadow-2xl`}
+                    className={`${theme.button.primary} py-6 px-10 rounded-xl transition-all duration-300 text-2xl font-bold hover:scale-110 hover:shadow-2xl ${theme.card.shadow}`}
                   >
                     {year}
                   </Link>
@@ -144,7 +141,7 @@ export default function HomePage() {
           {/* Call to Action */}
           <section className="container mx-auto px-4 text-center">
             <div className={`${theme.card.background} ${theme.card.border} ${theme.card.shadow} rounded-2xl p-12`}>
-              <div className="text-4xl mb-6 animate-pulse">
+              <div className="text-4xl mb-6">
                 {theme === themes['skull-rock-shores'] && '💎'}
                 {theme === themes['pixie-dust-pastels'] && '🌟'}
                 {theme === themes['lost-boys-scrapbook'] && '🗺️'}
@@ -161,7 +158,7 @@ export default function HomePage() {
               <p className={`text-lg ${theme.card.text} mb-8 max-w-2xl mx-auto`}>
                 Join us for upcoming Peter Pan events and create magical memories that will last a lifetime.
               </p>
-              <Link href="/about" className={`${theme.button.primary} text-lg px-8 py-4 rounded-lg hover:scale-105`}>
+              <Link href="/about" className={`${theme.button.primary} text-lg px-8 py-4 rounded-lg`}>
                 {theme === themes['skull-rock-shores'] && '🏴‍☠️ Join the Crew'}
                 {theme === themes['pixie-dust-pastels'] && '✨ Start Your Journey'}
                 {theme === themes['lost-boys-scrapbook'] && '🌲 Join the Adventure'}
