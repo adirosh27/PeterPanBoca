@@ -85,6 +85,7 @@ const characters = [
 
 export default function CharactersPage() {
   const [selectedCharacter, setSelectedCharacter] = useState(characters[0]);
+  const [showTeamMembers, setShowTeamMembers] = useState(true);
 
   return (
     <div style={{ 
