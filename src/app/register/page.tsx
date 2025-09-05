@@ -12,7 +12,6 @@ interface FormData {
   children: number;
   childrenAges: string;
   specialRequests: string;
-  agreeTerms: boolean;
 }
 
 const EVENTS = [
@@ -29,8 +28,7 @@ export default function RegisterPage() {
     adults: 1,
     children: 0,
     childrenAges: '',
-    specialRequests: '',
-    agreeTerms: false
+    specialRequests: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,7 +65,6 @@ export default function RegisterPage() {
     if (formData.children > 0 && !formData.childrenAges.trim()) {
       newErrors.childrenAges = 'Please specify children ages';
     }
-    if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to terms and conditions';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -143,8 +140,7 @@ export default function RegisterPage() {
             adults: 1,
             children: 0,
             childrenAges: '',
-            specialRequests: '',
-            agreeTerms: false
+            specialRequests: ''
           });
         }, 4000);
       } else {
@@ -222,46 +218,6 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Pricing Info Banner */}
-        <div style={{
-          backgroundColor: '#15803d',
-          color: '#ffffff',
-          padding: '1.5rem',
-          borderRadius: '15px',
-          textAlign: 'center',
-          marginBottom: '2rem',
-          border: '3px solid #facc15'
-        }}>
-          <h3 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: 'bold', 
-            margin: '0 0 0.5rem 0',
-            color: '#facc15'
-          }}>
-            💰 Event Pricing
-          </h3>
-          <p style={{ 
-            fontSize: '1.2rem', 
-            margin: '0 0 1rem 0'
-          }}>
-            <strong>הרמת כוסית לראש השנה</strong><br/>
-            September 13, 2025 at 20:00
-          </p>
-          <div style={{ 
-            fontSize: '1.8rem', 
-            fontWeight: 'bold',
-            color: '#facc15'
-          }}>
-            $45 per person
-          </div>
-          <div style={{ 
-            fontSize: '1.2rem', 
-            marginTop: '0.5rem',
-            color: '#ffffff'
-          }}>
-            Total for {formData.adults + formData.children} people: <strong>${(formData.adults + formData.children) * 45}</strong>
-          </div>
-        </div>
 
         {/* Registration Form */}
         <form onSubmit={handleSubmit}>
@@ -531,60 +487,6 @@ export default function RegisterPage() {
             )}
           </div>
 
-          {/* Payment Summary */}
-          <div 
-            data-card
-            style={{
-              padding: '2.5rem',
-              borderRadius: '20px',
-              marginBottom: '2rem'
-            }}
-          >
-            <h2 style={{ 
-              fontSize: '1.8rem', 
-              fontWeight: 'bold', 
-              marginBottom: '2rem',
-              color: '#15803d',
-              borderBottom: '2px solid #facc15',
-              paddingBottom: '0.5rem'
-            }}>
-              💰 Payment Summary
-            </h2>
-
-            <div style={{ backgroundColor: '#f0fdf4', padding: '1.5rem', borderRadius: '15px', border: '2px solid #15803d' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
-                <span>{selectedEvent ? selectedEvent.name : 'הרמת כוסית לראש השנה'}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <span>Price per person:</span>
-                <span>${selectedEvent ? selectedEvent.price : 45}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <span>Adults ({formData.adults}):</span>
-                <span>${formData.adults * (selectedEvent ? selectedEvent.price : 45)}</span>
-              </div>
-              {formData.children > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span>Children ({formData.children}):</span>
-                  <span>${formData.children * (selectedEvent ? selectedEvent.price : 45)}</span>
-                </div>
-              )}
-              <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
-                <span>Total Cost:</span>
-                <span>${totalCost || (formData.adults + formData.children) * 45}</span>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#fffbeb', borderRadius: '10px', border: '1px solid #facc15' }}>
-              <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e' }}>
-                💳 <strong>Payment:</strong> After registration, you will receive payment instructions via email. 
-                You can pay via PayPal, Venmo, or check. Full payment is required within 7 days to secure your spot.
-              </p>
-            </div>
-          </div>
-
           {/* Party Size */}
           <div 
             data-card
@@ -732,8 +634,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-
-          {/* Terms and Submit */}
+          {/* Payment Summary */}
           <div 
             data-card
             style={{
@@ -742,39 +643,64 @@ export default function RegisterPage() {
               marginBottom: '2rem'
             }}
           >
-            <div style={{ marginBottom: '2rem' }}>
-              <label style={{ 
-                display: 'flex',
-                alignItems: 'flex-start',
-                cursor: 'pointer',
-                fontSize: '0.95rem',
-                lineHeight: '1.5'
-              }}>
-                <input
-                  type="checkbox"
-                  name="agreeTerms"
-                  checked={formData.agreeTerms}
-                  onChange={handleInputChange}
-                  style={{ 
-                    marginRight: '0.75rem', 
-                    marginTop: '0.25rem',
-                    transform: 'scale(1.2)',
-                    accentColor: '#15803d'
-                  }}
-                />
-                <span>
-                  I agree to the terms and conditions, understand that this event involves physical activities, 
-                  and acknowledge that photos/videos may be taken during the event for promotional purposes. 
-                  I confirm that all information provided is accurate. *
-                </span>
-              </label>
-              {errors.agreeTerms && (
-                <p style={{ color: '#dc2626', fontSize: '0.9rem', marginTop: '0.5rem', marginLeft: '2rem' }}>
-                  {errors.agreeTerms}
-                </p>
+            <h2 style={{ 
+              fontSize: '1.8rem', 
+              fontWeight: 'bold', 
+              marginBottom: '2rem',
+              color: '#15803d',
+              borderBottom: '2px solid #facc15',
+              paddingBottom: '0.5rem'
+            }}>
+              💰 Payment Summary
+            </h2>
+
+            <div style={{ backgroundColor: '#f0fdf4', padding: '1.5rem', borderRadius: '15px', border: '2px solid #15803d' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
+                <span>הרמת כוסית לראש השנה</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Date:</span>
+                <span>September 13, 2025 at 20:00</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Price per person:</span>
+                <span>$45</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Adults ({formData.adults}):</span>
+                <span>${formData.adults * 45}</span>
+              </div>
+              {formData.children > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Children ({formData.children}):</span>
+                  <span>${formData.children * 45}</span>
+                </div>
               )}
+              <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
+                <span>Total Cost:</span>
+                <span>${(formData.adults + formData.children) * 45}</span>
+              </div>
             </div>
 
+            <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#fffbeb', borderRadius: '10px', border: '1px solid #facc15' }}>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e' }}>
+                💳 <strong>Payment:</strong> After registration, you will receive payment instructions via email. 
+                You can pay via PayPal, Venmo, or check. Full payment is required within 7 days to secure your spot.
+              </p>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div 
+            data-card
+            style={{
+              padding: '2.5rem',
+              borderRadius: '20px',
+              marginBottom: '2rem'
+            }}
+          >
             <div style={{ textAlign: 'center' }}>
               <button
                 type="submit"
