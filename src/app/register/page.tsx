@@ -490,6 +490,60 @@ export default function RegisterPage() {
             )}
           </div>
 
+          {/* Payment Summary */}
+          <div 
+            data-card
+            style={{
+              padding: '2.5rem',
+              borderRadius: '20px',
+              marginBottom: '2rem'
+            }}
+          >
+            <h2 style={{ 
+              fontSize: '1.8rem', 
+              fontWeight: 'bold', 
+              marginBottom: '2rem',
+              color: '#15803d',
+              borderBottom: '2px solid #facc15',
+              paddingBottom: '0.5rem'
+            }}>
+              💰 Payment Summary
+            </h2>
+
+            <div style={{ backgroundColor: '#f0fdf4', padding: '1.5rem', borderRadius: '15px', border: '2px solid #15803d' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
+                <span>{selectedEvent ? selectedEvent.name : 'הרמת כוסית לראש השנה'}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Price per person:</span>
+                <span>${selectedEvent ? selectedEvent.price : 45}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Adults ({formData.adults}):</span>
+                <span>${formData.adults * (selectedEvent ? selectedEvent.price : 45)}</span>
+              </div>
+              {formData.children > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Children ({formData.children}):</span>
+                  <span>${formData.children * (selectedEvent ? selectedEvent.price : 45)}</span>
+                </div>
+              )}
+              <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
+                <span>Total Cost:</span>
+                <span>${totalCost || (formData.adults + formData.children) * 45}</span>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#fffbeb', borderRadius: '10px', border: '1px solid #facc15' }}>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e' }}>
+                💳 <strong>Payment:</strong> After registration, you will receive payment instructions via email. 
+                You can pay via PayPal, Venmo, or check. Full payment is required within 7 days to secure your spot.
+              </p>
+            </div>
+          </div>
+
           {/* Party Size */}
           <div 
             data-card
@@ -637,60 +691,6 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Payment Summary */}
-          <div 
-              data-card
-              style={{
-                padding: '2.5rem',
-                borderRadius: '20px',
-                marginBottom: '2rem'
-              }}
-            >
-              <h2 style={{ 
-                fontSize: '1.8rem', 
-                fontWeight: 'bold', 
-                marginBottom: '2rem',
-                color: '#15803d',
-                borderBottom: '2px solid #facc15',
-                paddingBottom: '0.5rem'
-              }}>
-                💰 Payment Summary
-              </h2>
-
-              <div style={{ backgroundColor: '#f0fdf4', padding: '1.5rem', borderRadius: '15px', border: '2px solid #15803d' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
-                  <span>{selectedEvent ? selectedEvent.name : 'הרמת כוסית לראש השנה'}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span>Price per person:</span>
-                  <span>${selectedEvent ? selectedEvent.price : 45}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span>Adults ({formData.adults}):</span>
-                  <span>${formData.adults * (selectedEvent ? selectedEvent.price : 45)}</span>
-                </div>
-                {formData.children > 0 && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <span>Children ({formData.children}):</span>
-                    <span>${formData.children * (selectedEvent ? selectedEvent.price : 45)}</span>
-                  </div>
-                )}
-                <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
-                  <span>Total Cost:</span>
-                  <span>${totalCost || (formData.adults + formData.children) * 45}</span>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#fffbeb', borderRadius: '10px', border: '1px solid #facc15' }}>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e' }}>
-                  💳 <strong>Payment:</strong> After registration, you will receive payment instructions via email. 
-                  You can pay via PayPal, Venmo, or check. Full payment is required within 7 days to secure your spot.
-                </p>
-              </div>
-            </div>
-          </div>
 
           {/* Terms and Submit */}
           <div 
