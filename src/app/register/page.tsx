@@ -638,8 +638,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Payment Summary */}
-          {selectedEvent && (formData.adults > 0 || formData.children > 0) && (
-            <div 
+          <div 
               data-card
               style={{
                 padding: '2.5rem',
@@ -661,22 +660,26 @@ export default function RegisterPage() {
               <div style={{ backgroundColor: '#f0fdf4', padding: '1.5rem', borderRadius: '15px', border: '2px solid #15803d' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                   <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
-                  <span>{selectedEvent.name}</span>
+                  <span>{selectedEvent ? selectedEvent.name : 'הרמת כוסית לראש השנה'}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Price per person:</span>
+                  <span>${selectedEvent ? selectedEvent.price : 45}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                   <span>Adults ({formData.adults}):</span>
-                  <span>${formData.adults * selectedEvent.price}</span>
+                  <span>${formData.adults * (selectedEvent ? selectedEvent.price : 45)}</span>
                 </div>
                 {formData.children > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <span>Children ({formData.children}):</span>
-                    <span>${formData.children * selectedEvent.price}</span>
+                    <span>${formData.children * (selectedEvent ? selectedEvent.price : 45)}</span>
                   </div>
                 )}
                 <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
                   <span>Total Cost:</span>
-                  <span>${totalCost}</span>
+                  <span>${totalCost || (formData.adults + formData.children) * 45}</span>
                 </div>
               </div>
 
@@ -687,7 +690,7 @@ export default function RegisterPage() {
                 </p>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Terms and Submit */}
           <div 
