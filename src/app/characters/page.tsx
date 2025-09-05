@@ -3,6 +3,35 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+const teamMembers = [
+  { name: 'אדיר חזן', role: 'מפיק ראשי', icon: '🎭', color: '#10b981' },
+  { name: 'עמית תירוש', role: 'במאי אירועים', icon: '🎪', color: '#f59e0b' },
+  { name: 'אבי לוי', role: 'מנהל הפקה', icon: '🎬', color: '#dc2626' },
+  { name: 'דני קרן', role: 'אמן בידור', icon: '🎨', color: '#a855f7' },
+  { name: 'דודי אמסלם', role: 'מוזיקאי', icon: '🎵', color: '#22d3ee' },
+  { name: 'ליאור תמיר', role: 'כוריאוגרף', icon: '💃', color: '#ec4899' },
+  { name: 'מומי שושן', role: 'מעצב תחפושות', icon: '👗', color: '#8b5cf6' },
+  { name: 'משה מרקו', role: 'טכנאי סאונד', icon: '🎧', color: '#14b8a6' },
+  { name: 'נדב חורי', role: 'מנהל במה', icon: '🎯', color: '#f97316' },
+  { name: 'עופר גלעדי', role: 'מאמן פעלולים', icon: '🤸‍♂️', color: '#84cc16' },
+  { name: 'אורן בנבנישתי', role: 'מעצב תפאורה', icon: '🏰', color: '#6366f1' },
+  { name: 'רם אלמוג', role: 'מנהל ייצור', icon: '⚙️', color: '#ef4444' },
+  { name: 'רועי וגנר', role: 'צלם ראשי', icon: '📸', color: '#06b6d4' },
+  { name: 'רון דיקסון', role: 'מוביל קבוצה', icon: '👥', color: '#84cc16' },
+  { name: 'שגיא שנון', role: 'מאפר ראשי', icon: '🎨', color: '#f59e0b' },
+  { name: 'סהר אביאני', role: 'מעצבת שיער', icon: '💇‍♀️', color: '#ec4899' },
+  { name: 'ספי בר', role: 'רכז בטיחות', icon: '🛡️', color: '#10b981' },
+  { name: 'שלום מולדבסקי', role: 'מנהל לוגיסטיקה', icon: '🚛', color: '#8b5cf6' },
+  { name: 'שלום ספיר', role: 'מנהל קהל', icon: '🎤', color: '#f97316' },
+  { name: 'שי זיידנברג', role: 'מתכנת פעילויות', icon: '🎯', color: '#22d3ee' },
+  { name: 'שולי מייקלס', role: 'רכזת ילדים', icon: '🧸', color: '#a855f7' },
+  { name: 'טל שקד', role: 'מעצב גרפי', icon: '🖼️', color: '#14b8a6' },
+  { name: 'יוסי חכם', role: 'יועץ יצירתי', icon: '💡', color: '#84cc16' },
+  { name: 'יוסי עוז־סיני', role: 'רכז התנדבות', icon: '🤝', color: '#ef4444' },
+  { name: 'אייל בישרי', role: 'מנהל קשרי קהילה', icon: '🌟', color: '#06b6d4' },
+  { name: 'רועי וולקן', role: 'מתאמן חדש', icon: '🌱', color: '#10b981' }
+];
+
 const characters = [
   {
     id: 'peter-pan',
@@ -107,7 +136,7 @@ export default function CharactersPage() {
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite'
           }}>
-            🎭 פגשו את הדמויות שלנו
+            🎭 פגשו את חברי פיטר פן
           </h1>
           <p style={{ fontSize: '1.3rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
             הכירו את הדמויות הקסומות שמביאות את סיפור פיטר פן לחיים באירועים שלנו
@@ -266,6 +295,85 @@ export default function CharactersPage() {
               <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>💬</div>
               {selectedCharacter.catchphrase}
             </div>
+          </div>
+        </div>
+
+        {/* Team Members Section */}
+        <div 
+          data-card
+          style={{
+            borderRadius: '20px',
+            padding: '3rem',
+            marginTop: '4rem'
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>👥</div>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+              הצוות המקסים שלנו
+            </h2>
+            <p style={{ fontSize: '1.2rem', lineHeight: '1.6', maxWidth: '600px', margin: '0 auto' }}>
+              פגשו את הצוות המדהים שמביא את הקסם לכל אירוע ואירוע
+            </p>
+          </div>
+          
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+            gap: '1.5rem'
+          }}>
+            {teamMembers.map((member, index) => (
+              <div
+                key={index}
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
+                  border: `2px solid ${member.color}`,
+                  borderRadius: '15px',
+                  padding: '1.5rem',
+                  textAlign: 'center',
+                  transition: 'all 0.3s',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = `0 10px 25px ${member.color}40`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                }}
+              >
+                <div style={{ 
+                  fontSize: '2.5rem', 
+                  marginBottom: '1rem',
+                  background: `${member.color}20`,
+                  borderRadius: '50%',
+                  width: '80px',
+                  height: '80px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1rem auto'
+                }}>
+                  {member.icon}
+                </div>
+                <h3 style={{ 
+                  fontSize: '1.3rem', 
+                  fontWeight: 'bold', 
+                  color: member.color,
+                  marginBottom: '0.5rem'
+                }}>
+                  {member.name}
+                </h3>
+                <p style={{ 
+                  fontSize: '1rem', 
+                  color: '#666',
+                  fontWeight: '500'
+                }}>
+                  {member.role}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
