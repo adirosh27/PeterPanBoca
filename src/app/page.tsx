@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 
 export default function HomePage() {
   const [themeContent, setThemeContent] = useState({
-    heroTitle: "The Captain's Chronicles",
-    heroSubtitle: 'Sail through our elegant collection of sophisticated maritime memories',
+    heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון",
+    heroSubtitle: '',
     heroIcons: '⚓🚢👑',
     sectionTitle: '⚓ Ship\'s Log',
     sectionSubtitle: 'Peruse our most distinguished maritime events and elegant gatherings',
@@ -149,15 +149,17 @@ export default function HomePage() {
           }}>
             {themeContent.heroTitle}
           </h1>
-          <p style={{ 
-            fontSize: 'clamp(1.2rem, 3vw, 2rem)', 
-            marginBottom: '3rem',
-            maxWidth: '800px',
-            margin: '0 auto 3rem auto',
-            lineHeight: '1.4'
-          }}>
-            {themeContent.heroSubtitle}
-          </p>
+          {themeContent.heroSubtitle && (
+            <p style={{ 
+              fontSize: 'clamp(1.2rem, 3vw, 2rem)', 
+              marginBottom: '3rem',
+              maxWidth: '800px',
+              margin: '0 auto 3rem auto',
+              lineHeight: '1.4'
+            }}>
+              {themeContent.heroSubtitle}
+            </p>
+          )}
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link 
               href="/galleries" 
