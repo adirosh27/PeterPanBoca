@@ -137,7 +137,7 @@ export default function CharactersPage() {
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite'
           }}>
-            🎭 פגשו את חברי פיטר פן - TEAM DEPLOYED!
+            🎭 פגשו את חברי פיטר פן
           </h1>
           <p style={{ fontSize: '1.3rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
             הכירו את הדמויות הקסומות והצוות המדהים שמביאים את סיפור פיטר פן לחיים באירועים שלנו
