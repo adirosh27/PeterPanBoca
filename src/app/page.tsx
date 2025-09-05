@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 export default function HomePage() {
   const [themeContent, setThemeContent] = useState({
-    heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון - TEST UPDATED!",
+    heroTitle: "🔥 DEPLOYMENT WORKING NOW! - פיטר פן בבוקה רטון",
     heroSubtitle: '', 
     heroIcons: '⚓🚢👑',
     sectionTitle: '⚓ Ship\'s Log',
@@ -68,7 +68,7 @@ export default function HomePage() {
           yearTitle: '📆 Adventure Years'
         },
         'captain-hooks-log': {
-          heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון - TEST UPDATED!",
+          heroTitle: "🔥 DEPLOYMENT WORKING NOW! - פיטר פן בבוקה רטון",
           heroSubtitle: '',
           heroIcons: '⚓🚢👑',
           sectionTitle: '⚓ Ship\'s Log',
