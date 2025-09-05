@@ -70,9 +70,6 @@ export default function CharactersPage() {
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div style={{ fontSize: '4rem', marginBottom: '2rem', animation: 'bounce 2s infinite' }}>
-            🎭✨👑
-          </div>
           <h1 style={{ 
             fontSize: 'clamp(2.5rem, 6vw, 4rem)', 
             fontWeight: 'bold', 
