@@ -184,29 +184,167 @@ export default function RegisterPage() {
   const totalCost = selectedEvent ? (formData.adults + formData.children) * selectedEvent.price : 0;
 
   return (
-    <div style={{ padding: '2rem 0', minHeight: '100vh' }}>
+    <div style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite',
+      padding: '2rem 1rem',
+      fontFamily: 'system-ui, sans-serif'
+    }}>
+      <style jsx global>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        [data-card] {
+          background: rgba(255, 255, 255, 0.95);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+          backdrop-filter: blur(20px);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        [data-card]::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8);
+          background-size: 300% 100%;
+          animation: borderFlow 3s linear infinite;
+        }
+        
+        @keyframes borderFlow {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 300% 50%; }
+        }
+        
+        input, select, textarea {
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.9) 100%);
+          border: 2px solid transparent;
+          border-radius: 15px;
+          padding: 1rem 1.25rem;
+          font-size: 1rem;
+          width: 100%;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+          outline: none;
+          border: 2px solid #ff6b6b;
+          box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2), 0 8px 25px rgba(0, 0, 0, 0.15);
+          transform: translateY(-2px);
+        }
+        
+        input:hover, select:hover, textarea:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        button {
+          background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #45b7d1 50%, #96ceb4 75%, #fd79a8 100%);
+          background-size: 300% 100%;
+          color: white;
+          border: none;
+          padding: 1.25rem 2.5rem;
+          border-radius: 50px;
+          font-size: 1.2rem;
+          font-weight: bold;
+          cursor: pointer;
+          transition: all 0.4s ease;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          animation: buttonGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes buttonGlow {
+          from { 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background-position: 0% 50%;
+          }
+          to { 
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            background-position: 100% 50%;
+          }
+        }
+        
+        button:hover:not(:disabled) {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+          background-position: 100% 50%;
+        }
+        
+        button:active:not(:disabled) {
+          transform: translateY(-1px) scale(1.01);
+        }
+        
+        button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          animation: none;
+        }
+      `}</style>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 2rem' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎪</div>
+          <div style={{ 
+            fontSize: '4rem', 
+            marginBottom: '1rem',
+            animation: 'bounce 2s infinite'
+          }}>🎪✨🧚‍♀️✨</div>
           <h1 style={{ 
-            fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', 
+            fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
             fontWeight: 'bold', 
             marginBottom: '1rem',
-            color: '#15803d'
+            background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundSize: '300% 300%',
+            animation: 'textShimmer 3s ease-in-out infinite',
+            textShadow: '0 4px 8px rgba(0,0,0,0.2)'
           }}>
-            Event Registration
+            ✨ Peter Pan Boca Events ✨
           </h1>
           <p style={{ 
-            fontSize: '1.2rem', 
+            fontSize: '1.3rem', 
             maxWidth: '600px', 
             margin: '0 auto',
-            lineHeight: '1.6',
-            opacity: 0.8
+            lineHeight: '1.7',
+            color: 'rgba(255, 255, 255, 0.95)',
+            background: 'rgba(255, 255, 255, 0.1)',
+            padding: '1.5rem',
+            borderRadius: '20px',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
           }}>
-            Join us for magical Peter Pan adventures! Fill out the form below to register for your chosen event.
+            🌟 Join us for magical Peter Pan adventures! 🌟<br/>
+            Fill out the form below to register for your chosen event and embark on an unforgettable journey!
           </p>
         </div>
+        
+        <style jsx>{`
+          @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+          }
+          
+          @keyframes textShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
 
 
         {/* Registration Form */}
@@ -223,9 +361,16 @@ export default function RegisterPage() {
               fontSize: '1.8rem', 
               fontWeight: 'bold', 
               marginBottom: '2rem',
-              color: '#15803d',
-              borderBottom: '2px solid #facc15',
-              paddingBottom: '0.5rem'
+              background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'textShimmer 2s ease-in-out infinite',
+              borderBottom: '3px solid transparent',
+              borderImage: 'linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7) 1',
+              paddingBottom: '0.75rem',
+              textAlign: 'center'
             }}>
               📝 Personal Information
             </h2>
@@ -384,9 +529,16 @@ export default function RegisterPage() {
               fontSize: '1.8rem', 
               fontWeight: 'bold', 
               marginBottom: '2rem',
-              color: '#15803d',
-              borderBottom: '2px solid #facc15',
-              paddingBottom: '0.5rem'
+              background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'textShimmer 2s ease-in-out infinite',
+              borderBottom: '3px solid transparent',
+              borderImage: 'linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7) 1',
+              paddingBottom: '0.75rem',
+              textAlign: 'center'
             }}>
               🎭 Event Selection
             </h2>
@@ -490,9 +642,16 @@ export default function RegisterPage() {
               fontSize: '1.8rem', 
               fontWeight: 'bold', 
               marginBottom: '2rem',
-              color: '#15803d',
-              borderBottom: '2px solid #facc15',
-              paddingBottom: '0.5rem'
+              background: 'linear-gradient(45deg, #96ceb4, #ffeaa7, #fd79a8)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'textShimmer 2s ease-in-out infinite',
+              borderBottom: '3px solid transparent',
+              borderImage: 'linear-gradient(90deg, #96ceb4, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4) 1',
+              paddingBottom: '0.75rem',
+              textAlign: 'center'
             }}>
               👨‍👩‍👧‍👦 Party Information
             </h2>
@@ -637,14 +796,29 @@ export default function RegisterPage() {
               fontSize: '1.8rem', 
               fontWeight: 'bold', 
               marginBottom: '2rem',
-              color: '#15803d',
-              borderBottom: '2px solid #facc15',
-              paddingBottom: '0.5rem'
+              background: 'linear-gradient(45deg, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'textShimmer 2s ease-in-out infinite',
+              borderBottom: '3px solid transparent',
+              borderImage: 'linear-gradient(90deg, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4, #96ceb4) 1',
+              paddingBottom: '0.75rem',
+              textAlign: 'center'
             }}>
               💰 Payment Summary
             </h2>
 
-            <div style={{ backgroundColor: '#f0fdf4', padding: '1.5rem', borderRadius: '15px', border: '2px solid #15803d' }}>
+            <div style={{ 
+              background: 'linear-gradient(135deg, rgba(255, 235, 59, 0.2), rgba(76, 175, 80, 0.2), rgba(156, 39, 176, 0.2))', 
+              padding: '2rem', 
+              borderRadius: '20px', 
+              border: '3px solid transparent',
+              backgroundClip: 'padding-box',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255, 255, 255, 0.3)',
+              position: 'relative'
+            }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
                 <span>הרמת כוסית לראש השנה</span>

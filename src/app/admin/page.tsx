@@ -67,34 +67,74 @@ export default function AdminPage() {
   return (
     <div style={{ 
       minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite',
       padding: '2rem',
-      fontFamily: 'system-ui',
-      backgroundColor: '#f8fafc'
+      fontFamily: 'system-ui'
     }}>
+      <style jsx global>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-10px); }
+          60% { transform: translateY(-5px); }
+        }
+        
+        @keyframes textShimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '2rem'
+          textAlign: 'center',
+          marginBottom: '3rem'
         }}>
           <h1 style={{ 
-            fontSize: '2rem', 
+            fontSize: '2.5rem', 
             fontWeight: 'bold',
-            color: '#1e293b'
+            background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundSize: '300% 300%',
+            animation: 'textShimmer 3s ease-in-out infinite',
+            textShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            marginBottom: '2rem'
           }}>
-            Event Registrations
+            ✨ Event Registrations Dashboard ✨
           </h1>
           <button
             onClick={downloadExcel}
             style={{
-              backgroundColor: '#059669',
+              background: 'linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%)',
               color: 'white',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '0.5rem',
+              padding: '1rem 2rem',
+              borderRadius: '25px',
               border: 'none',
               cursor: 'pointer',
-              fontWeight: '500'
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
+              transition: 'all 0.3s ease',
+              animation: 'bounce 2s infinite'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-3px) scale(1.05)';
+              e.target.style.boxShadow = '0 12px 35px rgba(255, 107, 107, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0) scale(1)';
+              e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
             }}
           >
             📥 Download Excel
@@ -115,10 +155,13 @@ export default function AdminPage() {
         )}
 
         <div style={{
-          backgroundColor: 'white',
-          borderRadius: '0.5rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          overflow: 'hidden'
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+          backdropFilter: 'blur(20px)',
+          border: '2px solid rgba(255, 255, 255, 0.3)',
+          overflow: 'hidden',
+          position: 'relative'
         }}>
           {registrations.length === 0 ? (
             <div style={{ 
