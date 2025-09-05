@@ -183,24 +183,6 @@ export default function HomePage() {
           </div>
 
           {/* Video Section within Hero */}
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h3 style={{ 
-              fontSize: '2rem', 
-              fontWeight: 'bold', 
-              marginBottom: '1rem',
-              background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundSize: '300% 300%',
-              animation: 'textShimmer 3s ease-in-out infinite'
-            }}>
-              🎬 צפו בקסם שלנו
-            </h3>
-            <p style={{ fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
-              חוו את הרגעים המיוחדים מהאירועים שלנו דרך הסרטון הזה
-            </p>
-          </div>
 
           <div 
             data-card
