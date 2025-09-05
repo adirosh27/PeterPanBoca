@@ -159,58 +159,6 @@ export default function CharactersPage() {
           </div>
         </div>
 
-        {/* Fun Facts Section */}
-        <div 
-          data-card
-          style={{
-            borderRadius: '20px',
-            padding: '3rem',
-            textAlign: 'center',
-            marginTop: '4rem'
-          }}
-        >
-          <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>🎪</div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            פגשו את הדמויות באירועים שלנו!
-          </h2>
-          <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
-            כל הדמויות מגיעות לחיים באירועים שלנו עם תחפושות מדהימות, פעילויות אינטראקטיביות וחוויות בלתי נשכחות!
-          </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button
-              data-button
-              style={{
-                padding: '1rem 2rem',
-                borderRadius: '25px',
-                border: 'none',
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                transition: 'all 0.3s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              🎫 הרשמה לאירועים
-            </button>
-            <button
-              data-button
-              style={{
-                padding: '1rem 2rem',
-                borderRadius: '25px',
-                border: 'none',
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                transition: 'all 0.3s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              📸 גלריית תמונות
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
