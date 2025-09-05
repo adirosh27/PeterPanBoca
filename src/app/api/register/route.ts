@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const dataWithTimestamp = {
       ...registrationData,
       serverTimestamp: new Date().toISOString(),
-      id: Date.now().toString() // Simple unique ID
+      id: Date.now().toString()
     };
 
     // Define the data directory and file path
