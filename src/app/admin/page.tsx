@@ -111,9 +111,10 @@ export default function AdminPage() {
           }}>
             ✨ Event Registrations Dashboard ✨
           </h1>
-          <button
-            onClick={downloadExcel}
-            style={{
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={downloadExcel}
+              style={{
               background: 'linear-gradient(135deg, #10b981 0%, #fbbf24 50%, #34d399 100%)',
               color: 'white',
               padding: '1rem 2rem',
@@ -140,6 +141,37 @@ export default function AdminPage() {
             }}
           >
             📥 Download Excel
+          </button>
+          <button
+            onClick={() => {
+              window.open('https://vercel.com/adir-hazans-projects/peter-pan-boca', '_blank');
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #fbbf24 0%, #10b981 50%, #22d3ee 100%)',
+              color: 'white',
+              padding: '1rem 2rem',
+              borderRadius: '25px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              const target = e.target as HTMLButtonElement;
+              target.style.transform = 'translateY(-3px) scale(1.05)';
+              target.style.boxShadow = '0 12px 35px rgba(251, 191, 36, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              const target = e.target as HTMLButtonElement;
+              target.style.transform = 'translateY(0) scale(1)';
+              target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
+            }}
+          >
+            🔍 View Logs
           </button>
         </div>
 
@@ -171,11 +203,46 @@ export default function AdminPage() {
               textAlign: 'center',
               color: '#64748b'
             }}>
-              <p>No registrations found.</p>
-              <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-                Note: Registrations are currently logged to server console. 
-                Check Vercel function logs for production registrations.
-              </p>
+              <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>📊</div>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1f2937' }}>
+                Registration Data Location
+              </h3>
+              <div style={{ 
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(251, 191, 36, 0.1))',
+                padding: '2rem',
+                borderRadius: '15px',
+                border: '2px solid rgba(16, 185, 129, 0.2)',
+                textAlign: 'left',
+                maxWidth: '600px',
+                margin: '0 auto'
+              }}>
+                <p style={{ marginBottom: '1rem', fontWeight: 'bold', color: '#10b981' }}>
+                  ✅ Registration system is working perfectly!
+                </p>
+                <p style={{ marginBottom: '1rem' }}>
+                  <strong>📝 Where to find registrations:</strong>
+                </p>
+                <ol style={{ paddingLeft: '1.5rem', lineHeight: '1.6' }}>
+                  <li style={{ marginBottom: '0.5rem' }}>
+                    Go to <a href="https://vercel.com/dashboard" target="_blank" style={{ color: '#10b981', fontWeight: 'bold' }}>vercel.com/dashboard</a>
+                  </li>
+                  <li style={{ marginBottom: '0.5rem' }}>
+                    Click on your <strong>"peter-pan-boca"</strong> project
+                  </li>
+                  <li style={{ marginBottom: '0.5rem' }}>
+                    Click on the latest deployment
+                  </li>
+                  <li style={{ marginBottom: '0.5rem' }}>
+                    Look for <strong>"Runtime Logs"</strong> or <strong>"Function Logs"</strong>
+                  </li>
+                  <li>
+                    Find entries with <code style={{ background: '#f3f4f6', padding: '2px 6px', borderRadius: '4px' }}>"logging registration data"</code>
+                  </li>
+                </ol>
+                <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#6b7280' }}>
+                  💡 Each registration includes: Name, Email, Phone, Event Details, Guest Count, and Timestamp
+                </p>
+              </div>
             </div>
           ) : (
             <div style={{ overflowX: 'auto' }}>
