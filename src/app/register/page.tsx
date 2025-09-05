@@ -152,7 +152,7 @@ export default function RegisterPage() {
     } catch (error) {
       console.error('Error submitting registration:', error);
       setIsSubmitting(false);
-      alert(`There was an error processing your registration: ${error.message}. Please try again.`);
+      alert(`There was an error processing your registration: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
     }
   };
 
