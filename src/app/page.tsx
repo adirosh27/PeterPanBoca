@@ -197,6 +197,7 @@ export default function HomePage() {
           >
             <video
               controls
+              muted
               style={{
                 width: '100%',
                 height: '100%',
@@ -205,13 +206,18 @@ export default function HomePage() {
               poster="/videos/video-thumbnail.jpg"
               onMouseEnter={(e) => {
                 const video = e.currentTarget;
-                video.play().catch(() => {
-                  // Handle autoplay restrictions silently
+                console.log('Hover detected, trying to play video');
+                video.play().then(() => {
+                  console.log('Video started playing');
+                }).catch((error) => {
+                  console.log('Failed to play video:', error);
                 });
               }}
               onMouseLeave={(e) => {
                 const video = e.currentTarget;
+                console.log('Mouse left, pausing video');
                 video.pause();
+                video.currentTime = 0; // Reset to beginning
               }}
             >
               <source src="/videos/hero-video.mp4" type="video/mp4" />
