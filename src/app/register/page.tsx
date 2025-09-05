@@ -103,25 +103,25 @@ export default function RegisterPage() {
       };
 
       // Submit directly via Formspree (client-side)
-      const formData = new FormData();
-      formData.append('firstName', registrationData.firstName);
-      formData.append('lastName', registrationData.lastName);
-      formData.append('email', registrationData.email);
-      formData.append('phone', registrationData.phone);
-      formData.append('eventName', registrationData.eventName);
-      formData.append('eventDate', registrationData.eventDate);
-      formData.append('eventPrice', registrationData.eventPrice);
-      formData.append('adults', registrationData.adults.toString());
-      formData.append('children', registrationData.children.toString());
-      formData.append('childrenAges', registrationData.childrenAges || 'N/A');
-      formData.append('specialRequests', registrationData.specialRequests || 'None');
-      formData.append('totalCost', registrationData.totalCost);
-      formData.append('registrationId', Date.now().toString());
-      formData.append('timestamp', new Date().toISOString());
+      const submitFormData = new FormData();
+      submitFormData.append('firstName', registrationData.firstName);
+      submitFormData.append('lastName', registrationData.lastName);
+      submitFormData.append('email', registrationData.email);
+      submitFormData.append('phone', registrationData.phone);
+      submitFormData.append('eventName', registrationData.eventName);
+      submitFormData.append('eventDate', registrationData.eventDate);
+      submitFormData.append('eventPrice', registrationData.eventPrice);
+      submitFormData.append('adults', registrationData.adults.toString());
+      submitFormData.append('children', registrationData.children.toString());
+      submitFormData.append('childrenAges', registrationData.childrenAges || 'N/A');
+      submitFormData.append('specialRequests', registrationData.specialRequests || 'None');
+      submitFormData.append('totalCost', registrationData.totalCost);
+      submitFormData.append('registrationId', Date.now().toString());
+      submitFormData.append('timestamp', new Date().toISOString());
 
       const response = await fetch('https://formspree.io/f/mjkveqdk', {
         method: 'POST',
-        body: formData,
+        body: submitFormData,
         headers: {
           'Accept': 'application/json'
         }
@@ -148,13 +148,15 @@ export default function RegisterPage() {
           });
         }, 4000);
       } else {
-        throw new Error('Registration submission failed');
+        const errorText = await response.text();
+        console.error('Formspree error:', errorText);
+        throw new Error(`Registration submission failed: ${response.status}`);
       }
       
     } catch (error) {
       console.error('Error submitting registration:', error);
       setIsSubmitting(false);
-      alert('There was an error processing your registration. Please try again.');
+      alert(`There was an error processing your registration: ${error.message}. Please try again.`);
     }
   };
 
