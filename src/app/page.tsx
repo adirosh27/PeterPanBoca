@@ -219,6 +219,15 @@ export default function HomePage() {
                 video.pause();
                 video.currentTime = 0; // Reset to beginning
               }}
+              onTouchStart={(e) => {
+                const video = e.currentTarget;
+                console.log('Touch detected, trying to play video');
+                video.play().then(() => {
+                  console.log('Video started playing on mobile');
+                }).catch((error) => {
+                  console.log('Failed to play video on mobile:', error);
+                });
+              }}
             >
               <source src="/videos/hero-video.mp4" type="video/mp4" />
               <source src="/videos/hero-video.webm" type="video/webm" />
