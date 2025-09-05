@@ -129,12 +129,14 @@ export default function AdminPage() {
               animation: 'bounce 2s infinite'
             }}
             onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-3px) scale(1.05)';
-              e.target.style.boxShadow = '0 12px 35px rgba(255, 107, 107, 0.4)';
+              const target = e.target as HTMLButtonElement;
+              target.style.transform = 'translateY(-3px) scale(1.05)';
+              target.style.boxShadow = '0 12px 35px rgba(255, 107, 107, 0.4)';
             }}
             onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
+              const target = e.target as HTMLButtonElement;
+              target.style.transform = 'translateY(0) scale(1)';
+              target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
             }}
           >
             📥 Download Excel
