@@ -99,54 +99,44 @@ export default function RegisterPage() {
         registrationDate: new Date().toLocaleString()
       };
 
-      // Submit directly via Formspree (client-side)
-      const submitFormData = new FormData();
-      submitFormData.append('firstName', registrationData.firstName);
-      submitFormData.append('lastName', registrationData.lastName);
-      submitFormData.append('email', registrationData.email);
-      submitFormData.append('phone', registrationData.phone);
-      submitFormData.append('eventName', registrationData.eventName);
-      submitFormData.append('eventDate', registrationData.eventDate);
-      submitFormData.append('eventPrice', registrationData.eventPrice);
-      submitFormData.append('adults', registrationData.adults.toString());
-      submitFormData.append('children', registrationData.children.toString());
-      submitFormData.append('childrenAges', registrationData.childrenAges || 'N/A');
-      submitFormData.append('specialRequests', registrationData.specialRequests || 'None');
-      submitFormData.append('totalCost', registrationData.totalCost);
-      submitFormData.append('registrationId', Date.now().toString());
-      submitFormData.append('timestamp', new Date().toISOString());
-
-      const response = await fetch('https://formspree.io/f/mjkveqdk', {
+      // Submit via our Next.js API route
+      const response = await fetch('/api/register', {
         method: 'POST',
-        body: submitFormData,
         headers: {
+          'Content-Type': 'application/json',
           'Accept': 'application/json'
-        }
+        },
+        body: JSON.stringify(registrationData)
       });
 
       if (response.ok) {
-        setIsSubmitting(false);
-        setShowSuccess(true);
-        
-        // Reset form after success
-        setTimeout(() => {
-          setShowSuccess(false);
-          setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            event: '',
-            adults: 1,
-            children: 0,
-            childrenAges: '',
-            specialRequests: ''
-          });
-        }, 4000);
+        const result = await response.json();
+        if (result.success) {
+          setIsSubmitting(false);
+          setShowSuccess(true);
+          
+          // Reset form after success
+          setTimeout(() => {
+            setShowSuccess(false);
+            setFormData({
+              firstName: '',
+              lastName: '',
+              email: '',
+              phone: '',
+              event: '',
+              adults: 1,
+              children: 0,
+              childrenAges: '',
+              specialRequests: ''
+            });
+          }, 4000);
+        } else {
+          throw new Error(result.message || 'Registration failed');
+        }
       } else {
-        const errorText = await response.text();
-        console.error('Formspree error:', errorText);
-        throw new Error(`Registration submission failed: ${response.status}`);
+        const errorData = await response.json();
+        console.error('API error:', errorData);
+        throw new Error(errorData.message || `Registration submission failed: ${response.status}`);
       }
       
     } catch (error) {
