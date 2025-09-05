@@ -203,6 +203,16 @@ export default function HomePage() {
                 objectFit: 'cover'
               }}
               poster="/videos/video-thumbnail.jpg"
+              onMouseEnter={(e) => {
+                const video = e.currentTarget;
+                video.play().catch(() => {
+                  // Handle autoplay restrictions silently
+                });
+              }}
+              onMouseLeave={(e) => {
+                const video = e.currentTarget;
+                video.pause();
+              }}
             >
               <source src="/videos/hero-video.mp4" type="video/mp4" />
               <source src="/videos/hero-video.webm" type="video/webm" />
