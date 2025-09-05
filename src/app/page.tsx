@@ -197,7 +197,6 @@ export default function HomePage() {
           >
             <video
               controls
-              muted
               style={{
                 width: '100%',
                 height: '100%',
