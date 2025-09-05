@@ -68,7 +68,7 @@ export default function HomePage() {
           yearTitle: '📆 Adventure Years'
         },
         'captain-hooks-log': {
-          heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון",
+          heroTitle: "Welcome to Peter Pan Boca Test",
           heroSubtitle: '',
           heroIcons: '⚓🚢👑',
           sectionTitle: '⚓ Ship\'s Log',
