@@ -100,27 +100,18 @@ export default function RegisterPage() {
         registrationDate: new Date().toLocaleString()
       };
 
-      // Submit to Google Apps Script using a form approach to avoid CORS
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://script.google.com/macros/s/AKfycbxAHr-rvJFcrjx3BOZGV12U4uR6e6FNH5JkXVVAIqmvSPF91P3Az4Klae0-oxtoqs042A/exec';
-      form.target = '_blank';
-      
-      // Add form data as hidden inputs
-      Object.entries(registrationData).forEach(([key, value]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = String(value);
-        form.appendChild(input);
+      // Submit to our local API endpoint
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registrationData),
       });
+
+      const result = await response.json();
       
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
-      
-      // Simulate processing time
-      setTimeout(() => {
+      if (result.success) {
         setIsSubmitting(false);
         setShowSuccess(true);
         
@@ -140,10 +131,12 @@ export default function RegisterPage() {
             agreeTerms: false
           });
         }, 4000);
-      }, 1500);
+      } else {
+        throw new Error(result.message || 'Registration failed');
+      }
       
     } catch (error) {
-      console.error('Error submitting to Google Sheet:', error);
+      console.error('Error submitting registration:', error);
       setIsSubmitting(false);
       alert('There was an error processing your registration. Please try again.');
     }
@@ -173,7 +166,7 @@ export default function RegisterPage() {
             Registration Successful!
           </h1>
           <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6' }}>
-            Thank you for registering for הרמת כוסית לראש השנה! Your registration has been submitted successfully to our Google Sheet. A new tab may have opened to confirm the submission.
+            Thank you for registering for הרמת כוסית לראש השנה! Your registration has been saved successfully to our system. You should receive a confirmation email shortly.
           </p>
           <div style={{ fontSize: '3rem' }}>✨ ⭐ 🧚‍♀️ ✨</div>
         </div>
