@@ -43,8 +43,14 @@ export async function POST(request: NextRequest) {
         name: `${registrationData.firstName} ${registrationData.lastName}`,
         email: registrationData.email,
         event: registrationData.eventName,
-        timestamp: dataWithTimestamp.serverTimestamp
+        timestamp: dataWithTimestamp.serverTimestamp,
+        fullData: dataWithTimestamp
       });
+      
+      // Try to save to a simpler in-memory storage for admin page
+      // This won't persist between deployments but will work for current session
+      global.registrations = global.registrations || [];
+      global.registrations.push(dataWithTimestamp);
       
       // For now, return success (you can set up proper email notification later)
       return NextResponse.json({ 
@@ -71,20 +77,38 @@ export async function POST(request: NextRequest) {
 // Optional: GET endpoint to retrieve registrations (for admin use)
 export async function GET() {
   try {
+    // First try to read from file system (works in development)
     const dataDir = path.join(process.cwd(), 'data');
     const filePath = path.join(dataDir, 'registrations.json');
     
-    const fileContent = await fs.readFile(filePath, 'utf-8');
-    const registrations = JSON.parse(fileContent);
-    
-    return NextResponse.json({ 
-      success: true, 
-      count: registrations.length,
-      registrations 
-    });
+    try {
+      const fileContent = await fs.readFile(filePath, 'utf-8');
+      const registrations = JSON.parse(fileContent);
+      
+      return NextResponse.json({ 
+        success: true, 
+        count: registrations.length,
+        registrations,
+        source: 'filesystem'
+      });
+    } catch (fsError) {
+      // If file system not available, check in-memory storage
+      const memoryRegistrations = global.registrations || [];
+      
+      return NextResponse.json({ 
+        success: true, 
+        count: memoryRegistrations.length,
+        registrations: memoryRegistrations,
+        source: 'memory'
+      });
+    }
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: 'No registrations found' },
+      { 
+        success: false, 
+        message: 'No registrations found',
+        registrations: []
+      },
       { status: 404 }
     );
   }

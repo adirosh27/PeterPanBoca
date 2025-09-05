@@ -3,15 +3,26 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import * as XLSX from 'xlsx';
 
+declare global {
+  var registrations: any[] | undefined;
+}
+
 // GET endpoint to download registrations as Excel file
 export async function GET() {
   try {
+    let registrations: any[] = [];
+    
+    // First try to read from file system (works in development)
     const dataDir = path.join(process.cwd(), 'data');
     const jsonFilePath = path.join(dataDir, 'registrations.json');
     
-    // Read JSON data
-    const fileContent = await fs.readFile(jsonFilePath, 'utf-8');
-    const registrations = JSON.parse(fileContent);
+    try {
+      const fileContent = await fs.readFile(jsonFilePath, 'utf-8');
+      registrations = JSON.parse(fileContent);
+    } catch (fsError) {
+      // If file system not available, use in-memory storage
+      registrations = global.registrations || [];
+    }
     
     // Convert to Excel format
     const excelData = registrations.map((reg: any) => ({

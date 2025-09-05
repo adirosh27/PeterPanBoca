@@ -1,0 +1,226 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
+interface Registration {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  eventName: string;
+  eventDate: string;
+  eventPrice: string;
+  adults: number;
+  children: number;
+  childrenAges?: string;
+  specialRequests?: string;
+  totalCost: string;
+  registrationDate: string;
+  serverTimestamp?: string;
+}
+
+export default function AdminPage() {
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    fetchRegistrations();
+  }, []);
+
+  const fetchRegistrations = async () => {
+    try {
+      const response = await fetch('/api/register');
+      const data = await response.json();
+      
+      if (data.success) {
+        setRegistrations(data.registrations || []);
+      } else {
+        setError(data.message || 'Failed to load registrations');
+      }
+    } catch (err) {
+      setError('Error loading registrations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadExcel = () => {
+    window.open('/api/download', '_blank');
+  };
+
+  if (loading) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        fontFamily: 'system-ui'
+      }}>
+        <div>Loading registrations...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ 
+      minHeight: '100vh', 
+      padding: '2rem',
+      fontFamily: 'system-ui',
+      backgroundColor: '#f8fafc'
+    }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '2rem'
+        }}>
+          <h1 style={{ 
+            fontSize: '2rem', 
+            fontWeight: 'bold',
+            color: '#1e293b'
+          }}>
+            Event Registrations
+          </h1>
+          <button
+            onClick={downloadExcel}
+            style={{
+              backgroundColor: '#059669',
+              color: 'white',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '0.5rem',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: '500'
+            }}
+          >
+            📥 Download Excel
+          </button>
+        </div>
+
+        {error && (
+          <div style={{
+            backgroundColor: '#fee2e2',
+            border: '1px solid #fecaca',
+            color: '#dc2626',
+            padding: '1rem',
+            borderRadius: '0.5rem',
+            marginBottom: '1rem'
+          }}>
+            {error}
+          </div>
+        )}
+
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '0.5rem',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          overflow: 'hidden'
+        }}>
+          {registrations.length === 0 ? (
+            <div style={{ 
+              padding: '3rem', 
+              textAlign: 'center',
+              color: '#64748b'
+            }}>
+              <p>No registrations found.</p>
+              <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                Note: Registrations are currently logged to server console. 
+                Check Vercel function logs for production registrations.
+              </p>
+            </div>
+          ) : (
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ 
+                width: '100%', 
+                borderCollapse: 'collapse'
+              }}>
+                <thead style={{ backgroundColor: '#f8fafc' }}>
+                  <tr>
+                    <th style={tableHeaderStyle}>Name</th>
+                    <th style={tableHeaderStyle}>Email</th>
+                    <th style={tableHeaderStyle}>Phone</th>
+                    <th style={tableHeaderStyle}>Event</th>
+                    <th style={tableHeaderStyle}>Date</th>
+                    <th style={tableHeaderStyle}>Guests</th>
+                    <th style={tableHeaderStyle}>Total Cost</th>
+                    <th style={tableHeaderStyle}>Registered</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {registrations.map((reg) => (
+                    <tr key={reg.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                      <td style={tableCellStyle}>
+                        {reg.firstName} {reg.lastName}
+                      </td>
+                      <td style={tableCellStyle}>{reg.email}</td>
+                      <td style={tableCellStyle}>{reg.phone}</td>
+                      <td style={tableCellStyle}>
+                        <div style={{ fontSize: '0.875rem' }}>
+                          <div>{reg.eventName}</div>
+                          <div style={{ color: '#64748b' }}>{reg.eventDate}</div>
+                        </div>
+                      </td>
+                      <td style={tableCellStyle}>{reg.eventDate}</td>
+                      <td style={tableCellStyle}>
+                        <div style={{ fontSize: '0.875rem' }}>
+                          <div>👥 {reg.adults} adults</div>
+                          {reg.children > 0 && (
+                            <div>👶 {reg.children} children</div>
+                          )}
+                          {reg.childrenAges && reg.childrenAges !== 'N/A' && (
+                            <div style={{ color: '#64748b' }}>Ages: {reg.childrenAges}</div>
+                          )}
+                        </div>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <strong>{reg.totalCost}</strong>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                          {new Date(reg.registrationDate).toLocaleString()}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div style={{
+          marginTop: '2rem',
+          padding: '1rem',
+          backgroundColor: '#eff6ff',
+          border: '1px solid #dbeafe',
+          borderRadius: '0.5rem',
+          fontSize: '0.875rem',
+          color: '#1e40af'
+        }}>
+          <strong>📝 Note:</strong> This admin page shows registrations saved to the local file system. 
+          In production (Vercel), registrations are logged to the server console. 
+          Check your Vercel project's function logs for production registration data.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const tableHeaderStyle = {
+  padding: '0.75rem',
+  textAlign: 'left' as const,
+  fontWeight: '600',
+  fontSize: '0.875rem',
+  color: '#374151',
+  borderBottom: '1px solid #e2e8f0'
+};
+
+const tableCellStyle = {
+  padding: '0.75rem',
+  fontSize: '0.875rem',
+  color: '#1f2937'
+};
