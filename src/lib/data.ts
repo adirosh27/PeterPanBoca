@@ -1,3 +1,5 @@
+import { createPhotosFromDriveUrls, convertDriveUrl } from './drive-utils';
+
 export interface Photo {
   src: string;
   alt: string;
@@ -21,7 +23,119 @@ export interface Year {
   events: Event[];
 }
 
-// Sample data - replace with real content later
+// Temporary placeholder photos while Google Drive access is resolved
+const allPhotoUrls = [
+  'https://picsum.photos/800/600?random=1',
+  'https://picsum.photos/800/600?random=2',
+  'https://picsum.photos/800/600?random=3',
+  'https://picsum.photos/800/600?random=4',
+  'https://picsum.photos/800/600?random=5',
+  'https://picsum.photos/800/600?random=6',
+  'https://picsum.photos/800/600?random=7',
+  'https://picsum.photos/800/600?random=8',
+  'https://picsum.photos/800/600?random=9',
+  'https://picsum.photos/800/600?random=10',
+  'https://picsum.photos/800/600?random=11',
+  'https://picsum.photos/800/600?random=12',
+  'https://picsum.photos/800/600?random=13',
+  'https://picsum.photos/800/600?random=14',
+  'https://picsum.photos/800/600?random=15',
+  'https://picsum.photos/800/600?random=16',
+  'https://picsum.photos/800/600?random=17',
+  'https://picsum.photos/800/600?random=18',
+  'https://picsum.photos/800/600?random=19',
+  'https://picsum.photos/800/600?random=20',
+  'https://picsum.photos/800/600?random=21',
+  'https://picsum.photos/800/600?random=22',
+  'https://picsum.photos/800/600?random=23',
+  'https://picsum.photos/800/600?random=24',
+  'https://picsum.photos/800/600?random=25',
+  'https://picsum.photos/800/600?random=26',
+  'https://picsum.photos/800/600?random=27',
+  'https://picsum.photos/800/600?random=28',
+  'https://picsum.photos/800/600?random=29',
+  'https://picsum.photos/800/600?random=30',
+  'https://picsum.photos/800/600?random=31',
+  'https://picsum.photos/800/600?random=32',
+  'https://picsum.photos/800/600?random=33'
+];
+
+// Put all photos in the main event
+const neverlandGalaUrls = allPhotoUrls; // All 33 photos in one event
+const pirateAdventureUrls: string[] = []; // Empty other events for now
+const pixieDustUrls: string[] = [];
+const lostBoysUrls: string[] = [];
+const captainHookBallUrls: string[] = [];
+
+const neverlandGalaPhotos = createPhotosFromDriveUrls(
+  neverlandGalaUrls,
+  [
+    'Peter Pan Event Photo 1',
+    'Peter Pan Event Photo 2', 
+    'Peter Pan Event Photo 3',
+    'Peter Pan Event Photo 4',
+    'Peter Pan Event Photo 5',
+    'Peter Pan Event Photo 6',
+    'Peter Pan Event Photo 7',
+    'Peter Pan Event Photo 8',
+    'Peter Pan Event Photo 9',
+    'Peter Pan Event Photo 10',
+    'Peter Pan Event Photo 11',
+    'Peter Pan Event Photo 12',
+    'Peter Pan Event Photo 13',
+    'Peter Pan Event Photo 14',
+    'Peter Pan Event Photo 15',
+    'Peter Pan Event Photo 16',
+    'Peter Pan Event Photo 17',
+    'Peter Pan Event Photo 18',
+    'Peter Pan Event Photo 19',
+    'Peter Pan Event Photo 20',
+    'Peter Pan Event Photo 21',
+    'Peter Pan Event Photo 22',
+    'Peter Pan Event Photo 23',
+    'Peter Pan Event Photo 24',
+    'Peter Pan Event Photo 25',
+    'Peter Pan Event Photo 26',
+    'Peter Pan Event Photo 27',
+    'Peter Pan Event Photo 28',
+    'Peter Pan Event Photo 29',
+    'Peter Pan Event Photo 30',
+    'Peter Pan Event Photo 31',
+    'Peter Pan Event Photo 32',
+    'Peter Pan Event Photo 33'
+  ],
+  800,
+  600
+);
+
+const pirateAdventurePhotos = createPhotosFromDriveUrls(
+  pirateAdventureUrls,
+  [],
+  800,
+  600
+);
+
+const pixieDustPhotos = createPhotosFromDriveUrls(
+  pixieDustUrls,
+  [],
+  800,
+  600
+);
+
+const lostBoysPhotos = createPhotosFromDriveUrls(
+  lostBoysUrls,
+  [],
+  800,
+  600
+);
+
+const captainHookBallPhotos = createPhotosFromDriveUrls(
+  captainHookBallUrls,
+  [],
+  800,
+  600
+);
+
 export const galleryData: Year[] = [
   {
     year: 2023,
@@ -33,55 +147,12 @@ export const galleryData: Year[] = [
         date: '2023-06-15',
         year: 2023,
         coverImage: {
-          src: 'https://via.placeholder.com/800x600/1e40af/ffffff?text=Neverland+Gala',
+          src: convertDriveUrl('https://drive.google.com/file/d/1UMCny6IEvl-FhNLw7P1dW9PV0NVXDlRv/view?usp=drive_link'),
           alt: 'Neverland Gala cover image',
           width: 800,
           height: 600,
         },
-        photos: [
-          {
-            src: 'https://via.placeholder.com/800x600/1e40af/ffffff?text=Photo+1',
-            alt: 'Guests in Peter Pan costumes',
-            width: 800,
-            height: 600,
-            title: 'Costume Contest Winners',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/059669/ffffff?text=Photo+2',
-            alt: 'Tinker Bell performance',
-            width: 600,
-            height: 800,
-            title: 'Tinker Bell Flying Show',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/dc2626/ffffff?text=Photo+3',
-            alt: 'Captain Hook villain performance',
-            width: 800,
-            height: 600,
-            title: 'Captain Hook Arrives',
-          },
-          {
-            src: 'https://via.placeholder.com/600x600/7c3aed/ffffff?text=Photo+4',
-            alt: 'Children learning to fly',
-            width: 600,
-            height: 600,
-            title: 'Flying Lessons',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/ea580c/ffffff?text=Photo+5',
-            alt: 'Neverland feast table',
-            width: 800,
-            height: 600,
-            title: 'The Great Feast',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/0891b2/ffffff?text=Photo+6',
-            alt: 'Pirate ship decoration',
-            width: 600,
-            height: 800,
-            title: 'Jolly Roger Setup',
-          },
-        ],
+        photos: neverlandGalaPhotos,
       },
       {
         slug: 'pirate-ship-adventure',
@@ -90,55 +161,12 @@ export const galleryData: Year[] = [
         date: '2023-09-22',
         year: 2023,
         coverImage: {
-          src: 'https://via.placeholder.com/800x600/dc2626/ffffff?text=Pirate+Adventure',
+          src: convertDriveUrl('https://drive.google.com/file/d/1U_cSQqd4ScACjhrxpg9Slf4rwG4XSnug/view?usp=drive_link'),
           alt: 'Pirate Ship Adventure cover',
           width: 800,
           height: 600,
         },
-        photos: [
-          {
-            src: 'https://via.placeholder.com/800x600/dc2626/ffffff?text=Ship+1',
-            alt: 'The magnificent pirate ship',
-            width: 800,
-            height: 600,
-            title: 'All Aboard the Jolly Roger',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/0891b2/ffffff?text=Ship+2',
-            alt: 'Captain Hook at the helm',
-            width: 600,
-            height: 800,
-            title: 'Captain Hook Takes Command',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/059669/ffffff?text=Ship+3',
-            alt: 'Treasure hunt in progress',
-            width: 800,
-            height: 600,
-            title: 'X Marks the Spot',
-          },
-          {
-            src: 'https://via.placeholder.com/600x600/ea580c/ffffff?text=Ship+4',
-            alt: 'Pirates sharing treasure',
-            width: 600,
-            height: 600,
-            title: 'Sharing the Bounty',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/7c3aed/ffffff?text=Ship+5',
-            alt: 'Walking the plank game',
-            width: 800,
-            height: 600,
-            title: 'Walk the Plank Challenge',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/1e40af/ffffff?text=Ship+6',
-            alt: 'Sunset over the ship',
-            width: 600,
-            height: 800,
-            title: 'Sunset Sail Home',
-          },
-        ],
+        photos: pirateAdventurePhotos,
       },
     ],
   },
@@ -152,55 +180,12 @@ export const galleryData: Year[] = [
         date: '2024-05-18',
         year: 2024,
         coverImage: {
-          src: 'https://via.placeholder.com/800x600/7c3aed/ffffff?text=Pixie+Dust+Festival',
+          src: convertDriveUrl('https://drive.google.com/file/d/1UynwR-aZNmwSWvyRUD1-xDXI_3Apw14z/view?usp=drive_link'),
           alt: 'Pixie Dust Festival cover',
           width: 800,
           height: 600,
         },
-        photos: [
-          {
-            src: 'https://via.placeholder.com/800x600/7c3aed/ffffff?text=Pixie+1',
-            alt: 'Fairy garden entrance',
-            width: 800,
-            height: 600,
-            title: 'Welcome to Fairy Garden',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/ec4899/ffffff?text=Pixie+2',
-            alt: 'Children with fairy wings',
-            width: 600,
-            height: 800,
-            title: 'Little Fairies at Play',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/059669/ffffff?text=Pixie+3',
-            alt: 'Tinker Bell meet and greet',
-            width: 800,
-            height: 600,
-            title: 'Meeting Tinker Bell',
-          },
-          {
-            src: 'https://via.placeholder.com/600x600/ea580c/ffffff?text=Pixie+4',
-            alt: 'Fairy house building',
-            width: 600,
-            height: 600,
-            title: 'Building Fairy Houses',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/0891b2/ffffff?text=Pixie+5',
-            alt: 'Magic wand crafting',
-            width: 800,
-            height: 600,
-            title: 'Crafting Magic Wands',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/dc2626/ffffff?text=Pixie+6',
-            alt: 'Fairy dust ceremony',
-            width: 600,
-            height: 800,
-            title: 'The Great Dusting',
-          },
-        ],
+        photos: pixieDustPhotos,
       },
       {
         slug: 'lost-boys-campout',
@@ -209,55 +194,12 @@ export const galleryData: Year[] = [
         date: '2024-08-10',
         year: 2024,
         coverImage: {
-          src: 'https://via.placeholder.com/800x600/059669/ffffff?text=Lost+Boys+Campout',
+          src: convertDriveUrl('https://drive.google.com/file/d/1VLimnTWx0v-xjOvmnZUO_BUjmuGLwjSL/view?usp=drive_link'),
           alt: 'Lost Boys Campout cover',
           width: 800,
           height: 600,
         },
-        photos: [
-          {
-            src: 'https://via.placeholder.com/800x600/059669/ffffff?text=Camp+1',
-            alt: 'Campfire with Lost Boys',
-            width: 800,
-            height: 600,
-            title: 'Campfire Stories',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/ea580c/ffffff?text=Camp+2',
-            alt: 'Tree house adventure',
-            width: 600,
-            height: 800,
-            title: 'Tree House Hideout',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/1e40af/ffffff?text=Camp+3',
-            alt: 'Peter Pan teaching to fly',
-            width: 800,
-            height: 600,
-            title: 'Flying Lessons with Peter',
-          },
-          {
-            src: 'https://via.placeholder.com/600x600/7c3aed/ffffff?text=Camp+4',
-            alt: 'Lost Boys games',
-            width: 600,
-            height: 600,
-            title: 'Lost Boys Games',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/dc2626/ffffff?text=Camp+5',
-            alt: 'Stargazing in Neverland',
-            width: 800,
-            height: 600,
-            title: 'Neverland Night Sky',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/ec4899/ffffff?text=Camp+6',
-            alt: 'Morning in the forest',
-            width: 600,
-            height: 800,
-            title: 'Forest Morning',
-          },
-        ],
+        photos: lostBoysPhotos,
       },
     ],
   },
@@ -271,55 +213,12 @@ export const galleryData: Year[] = [
         date: '2025-03-15',
         year: 2025,
         coverImage: {
-          src: 'https://via.placeholder.com/800x600/dc2626/ffffff?text=Captain+Hook+Ball',
+          src: convertDriveUrl('https://drive.google.com/file/d/1VjfzKmRisJ_rrPMA8zIMt9tCVW-kHoaf/view?usp=drive_link'),
           alt: 'Captain Hook Ball cover',
           width: 800,
           height: 600,
         },
-        photos: [
-          {
-            src: 'https://via.placeholder.com/800x600/dc2626/ffffff?text=Ball+1',
-            alt: 'Grand ballroom setup',
-            width: 800,
-            height: 600,
-            title: 'The Grand Ballroom',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/0891b2/ffffff?text=Ball+2',
-            alt: 'Captain Hook welcoming guests',
-            width: 600,
-            height: 800,
-            title: 'Captain Hook\'s Welcome',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/ea580c/ffffff?text=Ball+3',
-            alt: 'Elegant masquerade masks',
-            width: 800,
-            height: 600,
-            title: 'Masquerade Elegance',
-          },
-          {
-            src: 'https://via.placeholder.com/600x600/7c3aed/ffffff?text=Ball+4',
-            alt: 'Dancing couples',
-            width: 600,
-            height: 600,
-            title: 'Ballroom Dancing',
-          },
-          {
-            src: 'https://via.placeholder.com/800x600/059669/ffffff?text=Ball+5',
-            alt: 'Pirate orchestra',
-            width: 800,
-            height: 600,
-            title: 'The Pirate Orchestra',
-          },
-          {
-            src: 'https://via.placeholder.com/600x800/ec4899/ffffff?text=Ball+6',
-            alt: 'Midnight fireworks',
-            width: 600,
-            height: 800,
-            title: 'Midnight Spectacular',
-          },
-        ],
+        photos: captainHookBallPhotos,
       },
     ],
   },

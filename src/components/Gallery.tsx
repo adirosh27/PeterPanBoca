@@ -2,12 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import PhotoAlbum from 'react-photo-album';
-import Lightbox from 'yet-another-react-lightbox';
-import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
-import 'yet-another-react-lightbox/styles.css';
-import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import { Photo } from '@/lib/data';
+import PhotoLightbox from './PhotoLightbox';
 
 interface GalleryProps {
   photos: Photo[];
@@ -15,59 +11,88 @@ interface GalleryProps {
 }
 
 export default function Gallery({ photos, title }: GalleryProps) {
-  const [index, setIndex] = useState(-1);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  // Transform our Photo interface to match react-photo-album's expected format
-  const albumPhotos = photos.map(photo => ({
-    src: photo.src,
-    width: photo.width,
-    height: photo.height,
-    alt: photo.alt,
-    title: photo.title,
-  }));
+  // Debug logging
+  console.log('Gallery received photos:', photos?.length || 0, photos);
 
-  // Transform for lightbox (includes titles in slides)
-  const lightboxSlides = photos.map(photo => ({
-    src: photo.src,
-    alt: photo.alt,
-    title: photo.title,
-    width: photo.width,
-    height: photo.height,
-  }));
+  if (!photos || photos.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <p>No photos available for this event.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div>
       {title && (
-        <h2 className="text-2xl font-display font-semibold text-gray-800 text-center">
+        <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem', textAlign: 'center' }}>
           {title}
         </h2>
       )}
       
-      <PhotoAlbum
-        photos={albumPhotos}
-        layout="masonry"
-        onClick={({ index: current }) => setIndex(current)}
-      />
-
-      <Lightbox
-        slides={lightboxSlides}
-        open={index >= 0}
-        index={index}
-        close={() => setIndex(-1)}
-        plugins={[Thumbnails]}
-        thumbnails={{
-          position: 'bottom',
-          width: 100,
-          height: 100,
-          border: 2,
-          borderRadius: 4,
-          gap: 16,
-        }}
-      />
-      
-      <div className="text-center text-sm text-gray-600">
-        {photos.length} {photos.length === 1 ? 'photo' : 'photos'}
+      {/* Photo Grid */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        gap: '1.5rem',
+        marginBottom: '2rem'
+      }}>
+        {photos.map((photo, index) => (
+          <div
+            key={index}
+            data-card
+            style={{
+              borderRadius: '15px',
+              overflow: 'hidden',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              position: 'relative'
+            }}
+            onClick={() => setLightboxIndex(index)}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0) scale(1)'}
+          >
+            <div style={{ position: 'relative', height: '250px' }}>
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                style={{ objectFit: 'cover' }}
+              />
+              {photo.title && (
+                <div style={{ 
+                  position: 'absolute',
+                  bottom: '0',
+                  left: '0',
+                  right: '0',
+                  background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+                  color: 'white',
+                  padding: '1rem',
+                  fontSize: '1rem',
+                  fontWeight: '500'
+                }}>
+                  {photo.title}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
+      
+      <div style={{ textAlign: 'center', fontSize: '0.9rem', opacity: '0.7' }}>
+        {photos.length} {photos.length === 1 ? 'photo' : 'photos'} • Click any photo to view larger
+      </div>
+
+      {/* Lightbox */}
+      {lightboxIndex !== null && (
+        <PhotoLightbox
+          photos={photos}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
     </div>
   );
 }

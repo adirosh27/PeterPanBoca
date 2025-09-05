@@ -27,6 +27,7 @@
     "react-photo-album": "^3.1.0",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.9.2",
+    "xlsx": "^0.18.5",
     "yet-another-react-lightbox": "^3.25.0"
   }
 }
