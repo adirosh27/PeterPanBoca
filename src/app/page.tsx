@@ -160,7 +160,7 @@ export default function HomePage() {
               {themeContent.heroSubtitle}
             </p>
           )}
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '4rem' }}>
             <Link 
               href="/galleries" 
               data-button
@@ -181,15 +181,11 @@ export default function HomePage() {
               {themeContent.buttonText}
             </Link>
           </div>
-        </div>
-      </section>
 
-      {/* Video Section */}
-      <section style={{ padding: '4rem 2rem' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 style={{ 
-              fontSize: '3rem', 
+          {/* Video Section within Hero */}
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h3 style={{ 
+              fontSize: '2rem', 
               fontWeight: 'bold', 
               marginBottom: '1rem',
               background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee)',
@@ -200,8 +196,8 @@ export default function HomePage() {
               animation: 'textShimmer 3s ease-in-out infinite'
             }}>
               🎬 צפו בקסם שלנו
-            </h2>
-            <p style={{ fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
+            </h3>
+            <p style={{ fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
               חוו את הרגעים המיוחדים מהאירועים שלנו דרך הסרטון הזה
             </p>
           </div>
@@ -212,7 +208,7 @@ export default function HomePage() {
               borderRadius: '20px',
               overflow: 'hidden',
               position: 'relative',
-              maxWidth: '800px',
+              maxWidth: '700px',
               margin: '0 auto',
               aspectRatio: '16/9'
             }}
