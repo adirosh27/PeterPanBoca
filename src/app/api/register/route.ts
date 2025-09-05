@@ -71,14 +71,25 @@ export async function POST(request: NextRequest) {
           id: dataWithTimestamp.id
         });
       } else {
-        throw new Error('Email submission failed');
+        const errorText = await response.text();
+        console.error('Formspree error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText
+        });
+        throw new Error(`Email submission failed: ${response.status} - ${errorText}`);
       }
     }
 
   } catch (error) {
     console.error('Error processing registration:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to save registration' },
+      { 
+        success: false, 
+        message: 'Failed to save registration',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        details: error instanceof Error ? error.stack : String(error)
+      },
       { status: 500 }
     );
   }
