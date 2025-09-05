@@ -186,7 +186,7 @@ export default function RegisterPage() {
   return (
     <div style={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
+      background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
       padding: '2rem 1rem',
@@ -215,7 +215,7 @@ export default function RegisterPage() {
           left: 0;
           right: 0;
           height: 4px;
-          background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8);
+          background: linear-gradient(90deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee, #a78bfa);
           background-size: 300% 100%;
           animation: borderFlow 3s linear infinite;
         }
@@ -238,8 +238,8 @@ export default function RegisterPage() {
         
         input:focus, select:focus, textarea:focus {
           outline: none;
-          border: 2px solid #ff6b6b;
-          box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2), 0 8px 25px rgba(0, 0, 0, 0.15);
+          border: 2px solid #10b981;
+          box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2), 0 8px 25px rgba(0, 0, 0, 0.15);
           transform: translateY(-2px);
         }
         
@@ -249,7 +249,7 @@ export default function RegisterPage() {
         }
         
         button {
-          background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #45b7d1 50%, #96ceb4 75%, #fd79a8 100%);
+          background: linear-gradient(135deg, #10b981 0%, #fbbf24 25%, #34d399 50%, #f59e0b 75%, #22d3ee 100%);
           background-size: 300% 100%;
           color: white;
           border: none;
@@ -271,14 +271,14 @@ export default function RegisterPage() {
             background-position: 0% 50%;
           }
           to { 
-            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
             background-position: 100% 50%;
           }
         }
         
         button:hover:not(:disabled) {
           transform: translateY(-3px) scale(1.02);
-          box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+          box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
           background-position: 100% 50%;
         }
         
@@ -321,7 +321,7 @@ export default function RegisterPage() {
             fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
             fontWeight: 'bold', 
             marginBottom: '1rem',
-            background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8)',
+            background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee, #a78bfa)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',

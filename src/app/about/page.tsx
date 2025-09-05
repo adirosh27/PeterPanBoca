@@ -74,7 +74,26 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div style={{ padding: '3rem 2rem', minHeight: '100vh' }}>
+    <div style={{ 
+      padding: '3rem 2rem', 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite'
+    }}>
+      <style jsx global>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes textShimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         {/* Hero Section */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
@@ -82,7 +101,13 @@ export default function AboutPage() {
           <h1 style={{ 
             fontSize: 'clamp(2.5rem, 6vw, 4rem)', 
             fontWeight: 'bold', 
-            marginBottom: '1.5rem' 
+            marginBottom: '1.5rem',
+            background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundSize: '300% 300%',
+            animation: 'textShimmer 3s ease-in-out infinite'
           }}>
             {themeContent.title}
           </h1>

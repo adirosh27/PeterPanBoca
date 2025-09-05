@@ -92,7 +92,32 @@ export default function HomePage() {
   const years = getYears();
 
   return (
-    <div style={{ paddingBottom: '4rem' }}>
+    <div style={{ 
+      paddingBottom: '4rem',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite'
+    }}>
+      <style jsx global>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-10px); }
+          60% { transform: translateY(-5px); }
+        }
+        
+        @keyframes textShimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
       {/* Hero Section */}
       <section 
         data-hero
@@ -114,6 +139,12 @@ export default function HomePage() {
             fontSize: 'clamp(3rem, 8vw, 6rem)', 
             fontWeight: 'bold', 
             marginBottom: '2rem',
+            background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundSize: '300% 300%',
+            animation: 'textShimmer 3s ease-in-out infinite',
             textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
           }}>
             {themeContent.heroTitle}

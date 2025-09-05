@@ -67,7 +67,7 @@ export default function AdminPage() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
+      background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
       padding: '2rem',
@@ -100,7 +100,7 @@ export default function AdminPage() {
           <h1 style={{ 
             fontSize: '2.5rem', 
             fontWeight: 'bold',
-            background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8)',
+            background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee, #a78bfa)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -114,7 +114,7 @@ export default function AdminPage() {
           <button
             onClick={downloadExcel}
             style={{
-              background: 'linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%)',
+              background: 'linear-gradient(135deg, #10b981 0%, #fbbf24 50%, #34d399 100%)',
               color: 'white',
               padding: '1rem 2rem',
               borderRadius: '25px',
@@ -131,7 +131,7 @@ export default function AdminPage() {
             onMouseOver={(e) => {
               const target = e.target as HTMLButtonElement;
               target.style.transform = 'translateY(-3px) scale(1.05)';
-              target.style.boxShadow = '0 12px 35px rgba(255, 107, 107, 0.4)';
+              target.style.boxShadow = '0 12px 35px rgba(16, 185, 129, 0.4)';
             }}
             onMouseOut={(e) => {
               const target = e.target as HTMLButtonElement;
