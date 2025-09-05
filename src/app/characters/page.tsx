@@ -98,15 +98,6 @@ export default function CharactersPage() {
             marginTop: '4rem'
           }}
         >
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>👥</div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-              הצוות המקסים שלנו
-            </h2>
-            <p style={{ fontSize: '1.2rem', lineHeight: '1.6', maxWidth: '600px', margin: '0 auto' }}>
-              פגשו את הצוות המדהים שמביא את הקסם לכל אירוע ואירוע
-            </p>
-          </div>
           
           <div style={{ 
             display: 'grid', 
