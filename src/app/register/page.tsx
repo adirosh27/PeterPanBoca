@@ -222,6 +222,47 @@ export default function RegisterPage() {
           </p>
         </div>
 
+        {/* Pricing Info Banner */}
+        <div style={{
+          backgroundColor: '#15803d',
+          color: '#ffffff',
+          padding: '1.5rem',
+          borderRadius: '15px',
+          textAlign: 'center',
+          marginBottom: '2rem',
+          border: '3px solid #facc15'
+        }}>
+          <h3 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: 'bold', 
+            margin: '0 0 0.5rem 0',
+            color: '#facc15'
+          }}>
+            💰 Event Pricing
+          </h3>
+          <p style={{ 
+            fontSize: '1.2rem', 
+            margin: '0 0 1rem 0'
+          }}>
+            <strong>הרמת כוסית לראש השנה</strong><br/>
+            September 13, 2025 at 20:00
+          </p>
+          <div style={{ 
+            fontSize: '1.8rem', 
+            fontWeight: 'bold',
+            color: '#facc15'
+          }}>
+            $45 per person
+          </div>
+          <div style={{ 
+            fontSize: '1.2rem', 
+            marginTop: '0.5rem',
+            color: '#ffffff'
+          }}>
+            Total for {formData.adults + formData.children} people: <strong>${(formData.adults + formData.children) * 45}</strong>
+          </div>
+        </div>
+
         {/* Registration Form */}
         <form onSubmit={handleSubmit}>
           <div 
