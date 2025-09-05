@@ -184,6 +184,56 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Video Section */}
+      <section style={{ padding: '4rem 2rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <h2 style={{ 
+              fontSize: '3rem', 
+              fontWeight: 'bold', 
+              marginBottom: '1rem',
+              background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '300% 300%',
+              animation: 'textShimmer 3s ease-in-out infinite'
+            }}>
+              🎬 צפו בקסם שלנו
+            </h2>
+            <p style={{ fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
+              חוו את הרגעים המיוחדים מהאירועים שלנו דרך הסרטון הזה
+            </p>
+          </div>
+
+          <div 
+            data-card
+            style={{
+              borderRadius: '20px',
+              overflow: 'hidden',
+              position: 'relative',
+              maxWidth: '800px',
+              margin: '0 auto',
+              aspectRatio: '16/9'
+            }}
+          >
+            <video
+              controls
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+              poster="/videos/video-thumbnail.jpg"
+            >
+              <source src="/videos/hero-video.mp4" type="video/mp4" />
+              <source src="/videos/hero-video.webm" type="video/webm" />
+              הדפדפן שלכם לא תומך בוידיאו HTML5.
+            </video>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Events */}
       <section style={{ padding: '4rem 2rem' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
