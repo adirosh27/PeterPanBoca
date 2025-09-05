@@ -141,6 +141,9 @@ export default function CharactersPage() {
           <p style={{ fontSize: '1.3rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
             הכירו את הדמויות הקסומות והצוות המדהים שמביאים את סיפור פיטר פן לחיים באירועים שלנו
           </p>
+          <div style={{ fontSize: '0.8rem', opacity: 0.7, marginTop: '1rem' }}>
+            עודכן: {new Date().toLocaleString('he-IL')}
+          </div>
         </div>
 
         {/* Character Selector */}
