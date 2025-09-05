@@ -68,8 +68,8 @@ export default function HomePage() {
           yearTitle: '📆 Adventure Years'
         },
         'captain-hooks-log': {
-          heroTitle: "The Captain's Chronicles",
-          heroSubtitle: 'Sail through our elegant collection of sophisticated maritime memories',
+          heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון",
+          heroSubtitle: '',
           heroIcons: '⚓🚢👑',
           sectionTitle: '⚓ Ship\'s Log',
           sectionSubtitle: 'Peruse our most distinguished maritime events and elegant gatherings',
