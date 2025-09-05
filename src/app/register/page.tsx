@@ -16,7 +16,7 @@ interface FormData {
 }
 
 const EVENTS = [
-  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00', price: '$45' }
+  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00', price: 45 }
 ];
 
 export default function RegisterPage() {
@@ -83,8 +83,9 @@ export default function RegisterPage() {
     try {
       // Get the selected event details
       const selectedEvent = EVENTS.find(event => event.id === formData.event);
+      const totalCost = selectedEvent ? (formData.adults + formData.children) * selectedEvent.price : 0;
       
-      // Prepare data for Google Sheet submission
+      // Prepare data for submission
       const registrationData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -92,11 +93,12 @@ export default function RegisterPage() {
         phone: formData.phone,
         eventName: selectedEvent?.name || '',
         eventDate: selectedEvent?.date || '',
-        eventPrice: selectedEvent?.price || '',
+        eventPrice: `$${selectedEvent?.price || 0} per person`,
         adults: formData.adults,
         children: formData.children,
         childrenAges: formData.childrenAges || 'N/A',
         specialRequests: formData.specialRequests || 'None',
+        totalCost: `$${totalCost}`,
         registrationDate: new Date().toLocaleString()
       };
 
@@ -113,6 +115,7 @@ export default function RegisterPage() {
       formData.append('children', registrationData.children.toString());
       formData.append('childrenAges', registrationData.childrenAges || 'N/A');
       formData.append('specialRequests', registrationData.specialRequests || 'None');
+      formData.append('totalCost', registrationData.totalCost);
       formData.append('registrationId', Date.now().toString());
       formData.append('timestamp', new Date().toISOString());
 
@@ -188,6 +191,9 @@ export default function RegisterPage() {
   }
 
   const selectedEvent = EVENTS.find(event => event.id === formData.event);
+  
+  // Calculate total cost
+  const totalCost = selectedEvent ? (formData.adults + formData.children) * selectedEvent.price : 0;
 
   return (
     <div style={{ padding: '2rem 0', minHeight: '100vh' }}>
@@ -448,7 +454,7 @@ export default function RegisterPage() {
                         {event.name}
                       </div>
                       <div style={{ color: '#666', fontSize: '0.9rem' }}>
-                        📅 {event.date} • 💰 {event.price}
+                        📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>
                   </label>
@@ -476,7 +482,7 @@ export default function RegisterPage() {
                   ✨ Selected Event: {selectedEvent.name}
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>
-                  📅 {selectedEvent.date} • 💰 {selectedEvent.price} per person
+                  📅 {selectedEvent.date} • 💰 ${selectedEvent.price} per person
                 </p>
               </div>
             )}
@@ -628,6 +634,58 @@ export default function RegisterPage() {
               />
             </div>
           </div>
+
+          {/* Payment Summary */}
+          {selectedEvent && (formData.adults > 0 || formData.children > 0) && (
+            <div 
+              data-card
+              style={{
+                padding: '2.5rem',
+                borderRadius: '20px',
+                marginBottom: '2rem'
+              }}
+            >
+              <h2 style={{ 
+                fontSize: '1.8rem', 
+                fontWeight: 'bold', 
+                marginBottom: '2rem',
+                color: '#15803d',
+                borderBottom: '2px solid #facc15',
+                paddingBottom: '0.5rem'
+              }}>
+                💰 Payment Summary
+              </h2>
+
+              <div style={{ backgroundColor: '#f0fdf4', padding: '1.5rem', borderRadius: '15px', border: '2px solid #15803d' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
+                  <span>{selectedEvent.name}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Adults ({formData.adults}):</span>
+                  <span>${formData.adults * selectedEvent.price}</span>
+                </div>
+                {formData.children > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <span>Children ({formData.children}):</span>
+                    <span>${formData.children * selectedEvent.price}</span>
+                  </div>
+                )}
+                <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
+                  <span>Total Cost:</span>
+                  <span>${totalCost}</span>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#fffbeb', borderRadius: '10px', border: '1px solid #facc15' }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e' }}>
+                  💳 <strong>Payment:</strong> After registration, you will receive payment instructions via email. 
+                  You can pay via PayPal, Venmo, or check. Full payment is required within 7 days to secure your spot.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Terms and Submit */}
           <div 
