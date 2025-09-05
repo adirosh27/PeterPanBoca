@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 
 export default function AboutPage() {
   const [themeContent, setThemeContent] = useState({
-    title: '⚓ About Our Maritime Adventures',
-    subtitle: 'Learn about Captain Hook\'s distinguished photo gallery experiences in Boca Raton',
+    title: '⚓ אודות ההרפתקאות הימיות שלנו',
+    subtitle: 'למדו על חוויות גלריית התמונות המכובדות של קפטן הוק בבוקה רטון',
     storyTitle: 'Our Nautical Journey',
     missionTitle: 'Our Maritime Mission',
     eventsTitle: 'Types of Expeditions',
@@ -15,7 +15,7 @@ export default function AboutPage() {
 
   useEffect(() => {
     const updateContent = () => {
-      const currentTheme = (window as any).currentTheme || 'captain-hooks-log';
+      const currentTheme = 'captain-hooks-log';
       
       const themeTexts = {
         'neverland-night': {
@@ -55,8 +55,8 @@ export default function AboutPage() {
           ctaButton: '🌲 Join the Adventure'
         },
         'captain-hooks-log': {
-          title: '⚓ About Our Maritime Adventures',
-          subtitle: 'Learn about Captain Hook\'s distinguished photo gallery experiences in Boca Raton',
+          title: '⚓ אודות ההרפתקאות הימיות שלנו',
+          subtitle: 'למדו על חוויות גלריית התמונות המכובדות של קפטן הוק בבוקה רטון',
           storyTitle: 'Our Nautical Journey',
           missionTitle: 'Our Maritime Mission',
           eventsTitle: 'Types of Expeditions',

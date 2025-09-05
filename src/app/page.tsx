@@ -20,7 +20,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const updateContent = () => {
-      const currentTheme = (window as any).currentTheme || 'captain-hooks-log';
+      const currentTheme = 'captain-hooks-log';
       
       const themeTexts = {
         'neverland-night': {
