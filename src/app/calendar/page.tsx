@@ -15,19 +15,31 @@ interface Event {
   spotsLeft: number;
 }
 
+interface Holiday {
+  date: string;
+  name: string;
+  emoji: string;
+  color: string;
+}
+
+const holidays: Holiday[] = [
+  { date: '2025-09-13', name: 'ראש השנה', emoji: '🍯', color: '#f59e0b' },
+  { date: '2025-10-12', name: 'יום כיפור', emoji: '🕊️', color: '#6b7280' },
+  { date: '2025-10-17', name: 'סוכות', emoji: '🌿', color: '#10b981' },
+  { date: '2025-09-21', name: 'הושענא רבה', emoji: '📯', color: '#8b5cf6' },
+  { date: '2025-09-22', name: 'שמחת תורה', emoji: '📜', color: '#3b82f6' },
+  { date: '2025-12-25', name: 'חנוכה', emoji: '🕯️', color: '#0ea5e9' },
+  { date: '2026-02-13', name: 'ט״ו בשבט', emoji: '🌳', color: '#22c55e' },
+  { date: '2026-03-01', name: 'ראש חודש אדר', emoji: '🌙', color: '#ec4899' },
+  { date: '2026-03-14', name: 'פורים', emoji: '🎭', color: '#f97316' },
+  { date: '2026-04-13', name: 'פסח', emoji: '🍞', color: '#eab308' },
+  { date: '2026-05-18', name: 'ל״ג בעומר', emoji: '🏹', color: '#84cc16' },
+  { date: '2026-06-02', name: 'שבועות', emoji: '🌾', color: '#06b6d4' },
+  { date: '2026-07-29', name: 'תשעה באב', emoji: '🕯️', color: '#6b7280' },
+  { date: '2026-08-15', name: 'ט״ו באב', emoji: '💕', color: '#f43f5e' },
+];
+
 const events: Event[] = [
-  {
-    id: 1,
-    date: '2025-09-13',
-    title: 'הרמת כוסית לראש השנה',
-    description: 'חגיגת ראש השנה מיוחדת עם פיטר פן והחבורה! ערב חגיגי עם הרמת כוסית, ברכות לשנה החדשה ופעילויות משפחתיות קסומות.',
-    time: '20:00-22:00',
-    location: 'אולם האירועים המרכזי',
-    type: 'special',
-    price: '$45',
-    ageGroup: 'כל המשפחה',
-    spotsLeft: 30
-  },
   {
     id: 2,
     date: '2024-01-15',
@@ -100,186 +112,6 @@ const events: Event[] = [
     ageGroup: '2-99',
     spotsLeft: 25
   },
-  {
-    id: 7,
-    date: '2025-10-12',
-    title: 'יום כיפור עם פיטר פן',
-    description: 'יום רוחני ומיוחד עם פיטר פן והחבורה. פעילויות משפחתיות, זמן למחשבה ויצירת חוויות משמעותיות.',
-    time: '19:00-21:00',
-    location: 'אולם האירועים המרכזי',
-    type: 'special',
-    price: '$40',
-    ageGroup: 'כל המשפחה',
-    spotsLeft: 40
-  },
-  {
-    id: 8,
-    date: '2025-10-17',
-    title: 'חג סוכות בנברלנד',
-    description: 'בניית סוכה קסומה עם פיטר פן! נלמד על החג, נבנה סוכה יחד ונהנה מפעילויות חגיגיות.',
-    time: '16:00-18:30',
-    location: 'פארק בוקה רטון',
-    type: 'special',
-    price: '$38',
-    ageGroup: '3-16',
-    spotsLeft: 35
-  },
-  {
-    id: 9,
-    date: '2025-12-25',
-    title: 'חנוכה עם אור קסום',
-    description: 'חגיגת חנוכה מיוחדת עם הדלקת נרות קסומים! סביבונים, לביבות וחוויות אור מרהיבות עם הדמויות.',
-    time: '17:30-20:00',
-    location: 'מרכז הקהילה',
-    type: 'special',
-    price: '$42',
-    ageGroup: 'כל הגילאים',
-    spotsLeft: 50
-  },
-  {
-    id: 10,
-    date: '2026-02-13',
-    title: 'ט״ו בשבט - חגיגת העצים',
-    description: 'חגיגת ט״ו בשבט עם פיטר פן! נטיעת עצים, יצירות טבע והכרת הטבע הקסום של נברלנד.',
-    time: '10:00-13:00',
-    location: 'פארק בוקה רטון',
-    type: 'adventure',
-    price: '$32',
-    ageGroup: '4-14',
-    spotsLeft: 25
-  },
-  {
-    id: 11,
-    date: '2026-03-14',
-    title: 'מסיבת פורים בנברלנד',
-    description: 'מסיבת תחפושות פורים עם כל הדמויות! תחרות תחפושות, אזני המן וחגיגה ענקית של שמחה.',
-    time: '15:00-18:00',
-    location: 'אולם האירועים המרכזי',
-    type: 'special',
-    price: '$48',
-    ageGroup: '2-99',
-    spotsLeft: 60
-  },
-  {
-    id: 12,
-    date: '2026-04-13',
-    title: 'פסח בנברלנד',
-    description: 'סדר פסח קסום עם פיטר פן! סיפור יציאת מצרים בגרסת נברלנד, משחקים ופעילויות חגיגיות.',
-    time: '18:00-21:00',
-    location: 'אולם האירועים המרכזי',
-    type: 'special',
-    price: '$55',
-    ageGroup: 'כל המשפחה',
-    spotsLeft: 45
-  },
-  {
-    id: 13,
-    date: '2026-05-18',
-    title: 'ל״ג בעומר - יום הרפתקאות',
-    description: 'חגיגת ל״ג בעומר עם פיטר פן! מדורות, חץ וקשת, משחקי שדה והרפתקאות בטבע.',
-    time: '16:00-20:00',
-    location: 'פארק בוקה רטון',
-    type: 'adventure',
-    price: '$35',
-    ageGroup: '5-16',
-    spotsLeft: 30
-  },
-  {
-    id: 14,
-    date: '2026-06-02',
-    title: 'שבועות - חג הקציר',
-    description: 'חגיגת שבועות עם פיטר פן! למידה על החג, קציר פירות וירקות בגינה הקסומה של נברלנד.',
-    time: '09:00-12:00',
-    location: 'מרכז הקהילה',
-    type: 'adventure',
-    price: '$28',
-    ageGroup: '3-12',
-    spotsLeft: 20
-  },
-  {
-    id: 15,
-    date: '2026-01-20',
-    title: 'שבת מיוחדת עם פיטר פן',
-    description: 'שבת משפחתית קסומה עם פיטר פן! הדלקת נרות, קידוש, סעודת שבת ופעילויות רוחניות מיוחדות.',
-    time: '17:00-20:00',
-    location: 'אולם האירועים המרכזי',
-    type: 'special',
-    price: '$35',
-    ageGroup: 'כל המשפחה',
-    spotsLeft: 40
-  },
-  {
-    id: 16,
-    date: '2025-09-21',
-    title: 'הושענא רבה - יום השופר',
-    description: 'חגיגת הושענא רבה עם פיטר פן! תקיעות שופר קסומות, מעגלי הושענות ופעילויות חגיגיות.',
-    time: '16:30-19:00',
-    location: 'פארק בוקה רטון',
-    type: 'special',
-    price: '$40',
-    ageGroup: '4-16',
-    spotsLeft: 35
-  },
-  {
-    id: 17,
-    date: '2025-09-22',
-    title: 'שמחת תורה בנברלנד',
-    description: 'חגיגת שמחת תורה עם פיטר פן! ריקודים עם ספרי תורה, דגלים צבעוניים ושמחה רבה.',
-    time: '15:00-18:00',
-    location: 'מרכז הקהילה',
-    type: 'special',
-    price: '$42',
-    ageGroup: 'כל הגילאים',
-    spotsLeft: 50
-  },
-  {
-    id: 18,
-    date: '2026-07-29',
-    title: 'תשעה באב - יום זכרון',
-    description: 'יום זכרון ומחשבה עם פיטר פן. פעילויות רגישות, סיפורים היסטוריים וזמן לרפלקציה.',
-    time: '19:00-21:00',
-    location: 'אולם האירועים המרכזי',
-    type: 'special',
-    price: '$30',
-    ageGroup: '8+',
-    spotsLeft: 25
-  },
-  {
-    id: 19,
-    date: '2026-08-15',
-    title: 'ט״ו באב - חגיגת האהבה',
-    description: 'חגיגת ט״ו באב עם פיטר פן! יום האהבה היהודי, פעילויות זוגיות ומשפחתיות וחגיגה מיוחדת.',
-    time: '17:00-20:00',
-    location: 'פארק בוקה רטון',
-    type: 'special',
-    price: '$45',
-    ageGroup: 'כל המשפחה',
-    spotsLeft: 30
-  },
-  {
-    id: 20,
-    date: '2025-12-07',
-    title: 'חנוכת הבית עם פיטר פן',
-    description: 'חנוכת בית חדש עם ברכות ופיטר פן! טקס חנוכה מיוחד, ברכות לבית החדש ואירוח קסום.',
-    time: '18:00-20:30',
-    location: 'לפי בחירה',
-    type: 'special',
-    price: '$85',
-    ageGroup: 'כל המשפחה',
-    spotsLeft: 15
-  },
-  {
-    id: 21,
-    date: '2026-03-01',
-    title: 'ראש חודש אדר - חודש השמחה',
-    description: 'חגיגת ראש חודש אדר עם פיטר פן! תחילת חודש השמחה, הכנות לפורים ופעילויות שמחה.',
-    time: '16:00-18:00',
-    location: 'מרכז הקהילה',
-    type: 'special',
-    price: '$25',
-    ageGroup: '3-14',
-    spotsLeft: 40
-  }
 ];
 
 const typeColors = {
@@ -311,6 +143,11 @@ export default function CalendarPage() {
     return events.filter(event => event.date === dateString);
   };
 
+  const getHolidaysForDate = (date: Date) => {
+    const dateString = date.toISOString().split('T')[0];
+    return holidays.filter(holiday => holiday.date === dateString);
+  };
+
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -333,6 +170,7 @@ export default function CalendarPage() {
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(selectedYear, selectedMonth, day);
       const dayEvents = getEventsForDate(date);
+      const dayHolidays = getHolidaysForDate(date);
       const isToday = date.toDateString() === new Date().toDateString();
       
       days.push(
@@ -363,9 +201,24 @@ export default function CalendarPage() {
           <div style={{ 
             fontWeight: isToday ? 'bold' : 'normal',
             color: isToday ? '#92400e' : '#374151',
-            marginBottom: '0.25rem'
+            marginBottom: '0.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.25rem'
           }}>
             {day}
+            {dayHolidays.map(holiday => (
+              <span
+                key={holiday.name}
+                style={{
+                  fontSize: '0.8rem',
+                  color: holiday.color
+                }}
+                title={holiday.name}
+              >
+                {holiday.emoji}
+              </span>
+            ))}
           </div>
           {dayEvents.map(event => (
             <div
@@ -384,6 +237,15 @@ export default function CalendarPage() {
               {typeIcons[event.type]} {event.title.substring(0, 15)}...
             </div>
           ))}
+          {dayHolidays.length > 0 && (
+            <div style={{
+              fontSize: '0.7rem',
+              color: '#666',
+              marginTop: '0.25rem'
+            }}>
+              {dayHolidays.map(holiday => holiday.name).join(', ')}
+            </div>
+          )}
         </div>
       );
     }
