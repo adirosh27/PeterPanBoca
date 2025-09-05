@@ -100,18 +100,31 @@ export default function RegisterPage() {
         registrationDate: new Date().toLocaleString()
       };
 
-      // Submit to our local API endpoint
-      const response = await fetch('/api/register', {
+      // Submit directly via Formspree (client-side)
+      const formData = new FormData();
+      formData.append('firstName', registrationData.firstName);
+      formData.append('lastName', registrationData.lastName);
+      formData.append('email', registrationData.email);
+      formData.append('phone', registrationData.phone);
+      formData.append('eventName', registrationData.eventName);
+      formData.append('eventDate', registrationData.eventDate);
+      formData.append('eventPrice', registrationData.eventPrice);
+      formData.append('adults', registrationData.adults.toString());
+      formData.append('children', registrationData.children.toString());
+      formData.append('childrenAges', registrationData.childrenAges || 'N/A');
+      formData.append('specialRequests', registrationData.specialRequests || 'None');
+      formData.append('registrationId', Date.now().toString());
+      formData.append('timestamp', new Date().toISOString());
+
+      const response = await fetch('https://formspree.io/f/mjkveqdk', {
         method: 'POST',
+        body: formData,
         headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registrationData),
+          'Accept': 'application/json'
+        }
       });
 
-      const result = await response.json();
-      
-      if (result.success) {
+      if (response.ok) {
         setIsSubmitting(false);
         setShowSuccess(true);
         
@@ -132,7 +145,7 @@ export default function RegisterPage() {
           });
         }, 4000);
       } else {
-        throw new Error(result.message || 'Registration failed');
+        throw new Error('Registration submission failed');
       }
       
     } catch (error) {
@@ -166,7 +179,7 @@ export default function RegisterPage() {
             Registration Successful!
           </h1>
           <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6' }}>
-            Thank you for registering for הרמת כוסית לראש השנה! Your registration has been saved successfully to our system. You should receive a confirmation email shortly.
+            Thank you for registering for הרמת כוסית לראש השנה! Your registration has been submitted successfully. The event organizers will receive your details and contact you with further information.
           </p>
           <div style={{ fontSize: '3rem' }}>✨ ⭐ 🧚‍♀️ ✨</div>
         </div>
