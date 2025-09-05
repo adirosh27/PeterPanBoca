@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 export default function HomePage() {
   const [themeContent, setThemeContent] = useState({
     heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון",
-    heroSubtitle: '',
+    heroSubtitle: '', 
     heroIcons: '⚓🚢👑',
     sectionTitle: '⚓ Ship\'s Log',
     sectionSubtitle: 'Peruse our most distinguished maritime events and elegant gatherings',
