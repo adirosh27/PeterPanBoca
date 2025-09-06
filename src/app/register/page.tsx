@@ -573,7 +573,7 @@ export default function RegisterPage() {
                 Choose Your Peter Pan Adventure *
               </label>
               
-              <div style={{ display: 'grid', gap: '1rem', width: '100%', overflowWrap: 'break-word' }}>
+              <div style={{ display: 'grid', gap: '1rem', width: '100%' }}>
                 {EVENTS.map((event) => (
                   <label
                     key={event.id}
@@ -615,10 +615,10 @@ export default function RegisterPage() {
                       }}
                     />
                     <div style={{ flex: 1, minWidth: 0, flexShrink: 1 }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', hyphens: 'auto' }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', overflowWrap: 'break-word', wordWrap: 'break-word' }}>
                         {event.name}
                       </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word' }}>
+                      <div style={{ color: '#666', fontSize: '0.9rem', overflowWrap: 'break-word', wordWrap: 'break-word' }}>
                         📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>
