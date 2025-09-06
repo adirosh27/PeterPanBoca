@@ -1,49 +1,47 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 
-const photos = [
-  { src: '/images/ACJL7605.JPG', alt: 'Peter Pan Club Event', title: 'אירוע מיוחד במועדון פיטר פן' },
-  { src: '/images/AMZC6816.JPG', alt: 'Peter Pan Adventure', title: 'הרפתקאות קסומות עם פיטר פן' },
-  { src: '/images/IMG-20230226-WA0030.jpg', alt: 'Peter Pan Event February 2023', title: 'אירוע פברואר 2023' },
-  { src: '/images/IMG-20230430-WA0048.jpg', alt: 'Peter Pan Event April 2023', title: 'אירוע פיטר פן אפריל 2023' },
-  { src: '/images/IMG-20230823-WA0021.jpg', alt: 'Peter Pan Event August 2023', title: 'הרפתקאות קיץ עם פיטר פן' },
-  { src: '/images/IMG-20230926-WA0023.jpg', alt: 'Peter Pan Event September 2023', title: 'חגיגת ראש השנה במועדון' },
-  { src: '/images/IMG-20231209-WA0027.jpg', alt: 'Peter Pan Event December 2023', title: 'אירוע חנוכה מיוחד' },
-  { src: '/images/IMG-20240126-WA0076.jpg', alt: 'Peter Pan Event January 2024', title: 'כיף משפחתי בחורף' },
-  { src: '/images/IMG-20250119-WA0086.jpg', alt: 'Peter Pan Event January 2025', title: 'פעילות ינואר 2025' },
-  { src: '/images/IMG-20250823-WA0057.jpg', alt: 'Peter Pan Event August 2025', title: 'הרפתקאות קיץ 2025' },
-  { src: '/images/PUEJ1954.JPG', alt: 'Peter Pan Club Activity', title: 'פעילות מועדון פיטר פן' },
-  { src: '/images/VYQJ4092.JPG', alt: 'Peter Pan Group Photo', title: 'תמונה קבוצתית במועדון' },
-  { src: '/images/WhatsApp Image 2024-02-25 at 17.18.06_a7e6fcdc.jpg', alt: 'Peter Pan Event February 2024', title: 'רגעים קסומים פברואר 2024' },
-  { src: '/images/WhatsApp Image 2024-03-09 at 11.48.13_a9fa229a.jpg', alt: 'Peter Pan Event March 2024', title: 'אירוע מרץ 2024' },
-];
+// Define the gallery structure based on the actual folder structure
+const galleryData = {
+  2025: [
+    { name: 'Karting - April 26th, 2025', folder: 'Karting - April 26th, 2025' },
+    { name: 'Orlando - January 2025', folder: 'Orlando - January 2025' },
+    { name: 'חיפוש המטמון - אוגוסט 2025', folder: 'חיפוש המטמון - אוגוסט 2025' },
+    { name: 'שייט - מרץ 2025', folder: 'שייט - מרץ 2025' }
+  ],
+  2024: [
+    { name: 'טרקטורונים - מרץ 2024', folder: 'טרקטורונים - מרץ 2024' },
+    { name: 'על האש בפארק - פברואר 2024', folder: 'על האש בפארק - פברואר 2024' },
+    { name: 'עצמאות - מאי 2024', folder: 'עצמאות - מאי 2024' },
+    { name: 'ערב ציור - יולי 2024', folder: 'ערב ציור - יולי 2024' },
+    { name: 'שישי ישראלי - ינואר 2024', folder: 'שישי ישראלי - ינואר 2024' }
+  ],
+  2023: [
+    { name: 'חנוכה 2023', folder: 'חנוכה 2023' },
+    { name: 'טופ גולף - אוגוסט 2023', folder: 'טופ גולף - אוגוסט 2023' },
+    { name: 'טעימות וויסקי - ספטמבר 2023', folder: 'טעימות וויסקי - ספטמבר 2023' },
+    { name: 'מסיבת בריכה - מאי 2023', folder: 'מסיבת בריכה - מאי 2023' },
+    { name: 'ספא 2023', folder: 'ספא 2023' }
+  ],
+  2022: [
+    { name: 'באולינג - יולי 2022', folder: 'באולינג - יולי 2022' },
+    { name: 'גמר מונדיאל - דצמבר 2022', folder: 'גמר מונדיאל - דצמבר 2022' },
+    { name: 'זריקת גרזנים - ינואר 2022', folder: 'זריקת גרזנים - ינואר 2022' },
+    { name: 'מסעדה יוונית - 2022', folder: 'מסעדה יוונית - 2022' },
+    { name: 'ערב זוגות - מאי 2022', folder: 'ערב זוגות - מאי 2022' }
+  ],
+  2021: [
+    { name: 'שייט - אוקטובר 2021', folder: 'שייט - אוקטובר 2021' }
+  ]
+};
 
 export default function PhotosPage() {
-  const [currentPhoto, setCurrentPhoto] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isAutoPlaying) {
-      const interval = setInterval(() => {
-        setCurrentPhoto((prev) => (prev + 1) % photos.length);
-      }, 4000);
-      return () => clearInterval(interval);
-    }
-  }, [isAutoPlaying]);
-
-  const nextPhoto = () => {
-    setCurrentPhoto((prev) => (prev + 1) % photos.length);
-  };
-
-  const prevPhoto = () => {
-    setCurrentPhoto((prev) => (prev - 1 + photos.length) % photos.length);
-  };
-
-  const goToPhoto = (index: number) => {
-    setCurrentPhoto(index);
-  };
+  const years = Object.keys(galleryData).map(Number).sort((a, b) => b - a); // Sort years descending
 
   return (
     <div style={{ 
@@ -51,7 +49,7 @@ export default function PhotosPage() {
       background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
-      padding: '3rem 2rem'
+      padding: '2rem'
     }}>
       <style>{`
         @keyframes gradientShift {
@@ -71,16 +69,21 @@ export default function PhotosPage() {
           40% { transform: translateY(-10px); }
           60% { transform: translateY(-5px); }
         }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
       `}</style>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div style={{ fontSize: '4rem', marginBottom: '2rem', animation: 'bounce 2s infinite' }}>
             📸✨🎭
           </div>
           <h1 style={{ 
-            fontSize: 'clamp(2.5rem, 6vw, 4rem)', 
+            fontSize: 'clamp(2rem, 6vw, 3.5rem)', 
             fontWeight: 'bold', 
             marginBottom: '1.5rem',
             background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee)',
@@ -90,126 +93,268 @@ export default function PhotosPage() {
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite'
           }}>
-            📸 גלריית התמונות הקסומה
+            📸 גלריית הזכרונות הקסומה
           </h1>
-          <p style={{ fontSize: '1.3rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
-            צפו ברגעים הקסומים מהאירועים שלנו - כל תמונה מספרת סיפור של הרפתקה ושמחה
+          <p style={{ fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
+            מסע בזמן דרך השנים - צפו בכל האירועים המיוחדים שלנו מאורגנים לפי שנים
           </p>
         </div>
 
-        {/* Main Slideshow */}
-        <div 
-          data-card
-          style={{
-            borderRadius: '20px',
-            overflow: 'hidden',
-            position: 'relative',
-            maxWidth: '900px',
-            margin: '0 auto 3rem auto',
-            aspectRatio: '16/10',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)'
-          }}
-        >
-          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-            <Image
-              src={photos[currentPhoto].src}
-              alt={photos[currentPhoto].alt}
-              fill
-              style={{ objectFit: 'cover' }}
-              onError={(e) => {
-                // Fallback to a default image if the image fails to load
-                const target = e.target as HTMLImageElement;
-                target.src = '/images/IMG-20230430-WA0048.jpg';
-              }}
-            />
-            
-            {/* Photo Title Overlay */}
-            <div style={{ 
-              position: 'absolute',
-              bottom: '0',
-              left: '0',
-              right: '0',
-              background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-              color: 'white',
-              padding: '2rem',
-              textAlign: 'center'
+        {/* Year Selection */}
+        {!selectedYear && (
+          <div>
+            <h2 style={{ 
+              textAlign: 'center', 
+              fontSize: '2rem', 
+              marginBottom: '3rem',
+              color: '#1f2937',
+              fontWeight: 'bold'
             }}>
-              <h3 style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0' }}>
-                {photos[currentPhoto].title}
-              </h3>
+              🗓️ בחרו שנה לצפייה
+            </h2>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+              gap: '2rem',
+              marginBottom: '3rem'
+            }}>
+              {years.map((year) => (
+                <div
+                  key={year}
+                  onClick={() => setSelectedYear(year)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '20px',
+                    padding: '2rem',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+                    backdropFilter: 'blur(10px)',
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    transition: 'all 0.3s ease',
+                    animation: `float 3s ease-in-out infinite ${year * 0.2}s`
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-10px) scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(16, 185, 129, 0.3)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15)';
+                  }}
+                >
+                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+                    {year === 2025 ? '🌟' : year === 2024 ? '🎊' : year === 2023 ? '🎭' : year === 2022 ? '🎪' : '⚡'}
+                  </div>
+                  <h3 style={{ 
+                    fontSize: '2rem', 
+                    fontWeight: 'bold', 
+                    color: '#10b981',
+                    margin: '0 0 1rem 0'
+                  }}>
+                    {year}
+                  </h3>
+                  <p style={{ 
+                    color: '#6b7280', 
+                    fontSize: '1rem',
+                    margin: '0 0 1rem 0'
+                  }}>
+                    {galleryData[year as keyof typeof galleryData].length} אירועים
+                  </p>
+                  <div style={{
+                    background: 'linear-gradient(135deg, #10b981, #fbbf24)',
+                    color: 'white',
+                    padding: '0.5rem 1.5rem',
+                    borderRadius: '25px',
+                    fontSize: '0.9rem',
+                    fontWeight: 'bold',
+                    display: 'inline-block'
+                  }}>
+                    צפו בתמונות ←
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Events for Selected Year */}
+        {selectedYear && !selectedEvent && (
+          <div>
+            <div style={{ 
+              textAlign: 'center', 
+              marginBottom: '3rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1rem'
+            }}>
+              <button
+                onClick={() => setSelectedYear(null)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  border: '2px solid #10b981',
+                  borderRadius: '15px',
+                  padding: '0.8rem 1.5rem',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  color: '#10b981',
+                  transition: 'all 0.3s'
+                }}
+              >
+                ← חזור לבחירת שנה
+              </button>
+              <h2 style={{ 
+                fontSize: '2.5rem', 
+                color: '#1f2937',
+                fontWeight: 'bold',
+                margin: '0'
+              }}>
+                🎭 אירועי {selectedYear}
+              </h2>
             </div>
 
-            
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+              gap: '2rem'
+            }}>
+              {galleryData[selectedYear as keyof typeof galleryData].map((event, index) => (
+                <div
+                  key={index}
+                  onClick={() => setSelectedEvent(event.folder)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '20px',
+                    padding: '1.5rem',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+                    backdropFilter: 'blur(10px)',
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    transition: 'all 0.3s ease',
+                    animation: `float 3s ease-in-out infinite ${index * 0.3}s`
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 15px 35px rgba(251, 191, 36, 0.3)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15)';
+                  }}
+                >
+                  <div style={{ 
+                    width: '80px', 
+                    height: '80px', 
+                    background: 'linear-gradient(135deg, #fbbf24, #10b981)',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '2rem',
+                    margin: '0 auto 1.5rem auto'
+                  }}>
+                    🎪
+                  </div>
+                  <h3 style={{ 
+                    fontSize: '1.3rem', 
+                    fontWeight: 'bold', 
+                    color: '#1f2937',
+                    margin: '0 0 1rem 0',
+                    lineHeight: '1.4'
+                  }}>
+                    {event.name}
+                  </h3>
+                  <div style={{
+                    background: 'linear-gradient(135deg, #fbbf24, #10b981)',
+                    color: 'white',
+                    padding: '0.6rem 1.5rem',
+                    borderRadius: '25px',
+                    fontSize: '0.9rem',
+                    fontWeight: 'bold',
+                    display: 'inline-block'
+                  }}>
+                    פתח גלריה →
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Thumbnail Navigation */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '10px', 
-          flexWrap: 'wrap',
-          marginBottom: '3rem'
-        }}>
-          {photos.map((photo, index) => (
-            <button
-              key={index}
-              onClick={() => goToPhoto(index)}
-              style={{
-                border: currentPhoto === index ? '3px solid #fbbf24' : '3px solid transparent',
-                borderRadius: '10px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                width: '80px',
-                height: '60px',
-                position: 'relative',
-                transition: 'all 0.3s',
-                transform: currentPhoto === index ? 'scale(1.1)' : 'scale(1)'
-              }}
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                style={{ objectFit: 'cover' }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/images/IMG-20230430-WA0048.jpg';
+        {/* Event Photos Gallery */}
+        {selectedEvent && (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ 
+              marginBottom: '3rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1rem',
+              flexWrap: 'wrap'
+            }}>
+              <button
+                onClick={() => setSelectedEvent(null)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  border: '2px solid #10b981',
+                  borderRadius: '15px',
+                  padding: '0.8rem 1.5rem',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  color: '#10b981'
                 }}
-              />
-            </button>
-          ))}
-        </div>
+              >
+                ← חזור לאירועים
+              </button>
+              <h2 style={{ 
+                fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', 
+                color: '#1f2937',
+                fontWeight: 'bold',
+                margin: '0'
+              }}>
+                📸 {selectedEvent}
+              </h2>
+            </div>
 
-        {/* Controls */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <button
-            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-            data-button
-            style={{
-              padding: '1rem 2rem',
-              borderRadius: '25px',
-              border: 'none',
-              fontSize: '1.1rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-          >
-            {isAutoPlaying ? '⏸️ עצור אוטומטי' : '▶️ הפעל אוטומטי'}
-          </button>
-        </div>
-
-        {/* Photo Counter */}
-        <div style={{ 
-          textAlign: 'center',
-          fontSize: '1.2rem',
-          fontWeight: 'bold',
-          marginBottom: '2rem'
-        }}>
-          תמונה {currentPhoto + 1} מתוך {photos.length}
-        </div>
-
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: '20px',
+              padding: '2rem',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+              backdropFilter: 'blur(20px)',
+              border: '2px solid rgba(255, 255, 255, 0.3)'
+            }}>
+              <div style={{ 
+                fontSize: '3rem', 
+                marginBottom: '2rem'
+              }}>
+                🎭✨
+              </div>
+              <p style={{ 
+                fontSize: '1.2rem',
+                color: '#6b7280',
+                marginBottom: '2rem'
+              }}>
+                התמונות נטענות... בקרוב תוכלו לצפות בכל התמונות מהאירוע!
+              </p>
+              <div style={{
+                background: 'linear-gradient(135deg, #10b981, #fbbf24)',
+                color: 'white',
+                padding: '1rem 2rem',
+                borderRadius: '25px',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                display: 'inline-block'
+              }}>
+                🔄 בפיתוח...
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
