@@ -280,7 +280,7 @@ export default function SimpleThemedHomePage() {
               Join us for upcoming Peter Pan events and create magical memories that will last a lifetime.
             </p>
             <Link 
-              href="/about" 
+              href="/register" 
               data-button
               style={{
                 padding: '1rem 2rem',

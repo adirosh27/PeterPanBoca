@@ -53,7 +53,7 @@ export default function PhotosPage() {
       animation: 'gradientShift 15s ease infinite',
       padding: '3rem 2rem'
     }}>
-      <style jsx global>{`
+      <style>{`
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -261,41 +261,6 @@ export default function PhotosPage() {
           תמונה {currentPhoto + 1} מתוך {photos.length}
         </div>
 
-        {/* Call to Action */}
-        <div 
-          data-card
-          style={{
-            borderRadius: '20px',
-            padding: '3rem',
-            textAlign: 'center',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}
-        >
-          <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>📷</div>
-          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            רוצים להיות חלק מהקסם?
-          </h2>
-          <p style={{ fontSize: '1.1rem', marginBottom: '2rem', lineHeight: '1.6' }}>
-            הצטרפו לאירועים הקרובים שלנו וצרו זכרונות בלתי נשכחים עם המשפחה
-          </p>
-          <button
-            data-button
-            style={{
-              padding: '1rem 2rem',
-              borderRadius: '25px',
-              border: 'none',
-              fontSize: '1.2rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            🎫 הרשמה לאירועים
-          </button>
-        </div>
       </div>
     </div>
   );
