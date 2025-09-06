@@ -571,3 +571,364 @@ export default function RegisterPage() {
                 Choose Your Peter Pan Adventure *
               </label>
               
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {EVENTS.map((event) => (
+                  <label
+                    key={event.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '1rem',
+                      border: formData.event === event.id ? '3px solid #15803d' : '2px solid #facc15',
+                      borderRadius: '15px',
+                      cursor: 'pointer',
+                      backgroundColor: formData.event === event.id ? '#f0fdf4' : 'transparent',
+                      transition: 'all 0.3s ease',
+                      gap: '1rem'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (formData.event !== event.id) {
+                        e.currentTarget.style.backgroundColor = '#f9fdf7';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (formData.event !== event.id) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="event"
+                      value={event.id}
+                      checked={formData.event === event.id}
+                      onChange={handleInputChange}
+                      style={{ 
+                        transform: 'scale(1.2)',
+                        accentColor: '#15803d',
+                        flexShrink: 0
+                      }}
+                    />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
+                        {event.name}
+                      </div>
+                      <div style={{ color: '#666', fontSize: '0.9rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
+                        📅 {event.date} • 💰 ${event.price} per person
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              
+              {errors.event && (
+                <p style={{ color: '#dc2626', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                  {errors.event}
+                </p>
+              )}
+            </div>
+
+            {selectedEvent && (
+              <div 
+                style={{
+                  backgroundColor: '#f0fdf4',
+                  padding: '1rem',
+                  borderRadius: '10px',
+                  border: '2px solid #15803d',
+                  marginTop: '1rem'
+                }}
+              >
+                <h4 style={{ color: '#15803d', marginBottom: '0.5rem' }}>
+                  ✨ Selected Event: {selectedEvent.name}
+                </h4>
+                <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                  📅 {selectedEvent.date} • 💰 ${selectedEvent.price} per person
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Party Size */}
+          <div 
+            data-card
+            style={{
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
+              borderRadius: '20px',
+              marginBottom: '2rem'
+            }}
+          >
+            <h2 style={{ 
+              fontSize: '1.8rem', 
+              fontWeight: 'bold', 
+              marginBottom: '2rem',
+              background: 'linear-gradient(45deg, #96ceb4, #ffeaa7, #fd79a8)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'textShimmer 2s ease-in-out infinite',
+              borderBottom: '3px solid transparent',
+              borderImage: 'linear-gradient(90deg, #96ceb4, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4) 1',
+              paddingBottom: '0.75rem',
+              textAlign: 'center'
+            }}>
+              👨‍👩‍👧‍👦 Party Information
+            </h2>
+
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+              gap: 'clamp(1rem, 3vw, 1.5rem)', 
+              marginBottom: '1.5rem' 
+            }}>
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  fontWeight: 'bold', 
+                  marginBottom: '0.5rem',
+                  color: '#15803d'
+                }}>
+                  Number of Adults *
+                </label>
+                <input
+                  type="number"
+                  name="adults"
+                  value={formData.adults}
+                  onChange={handleInputChange}
+                  min="1"
+                  max="10"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    borderRadius: '10px',
+                    border: errors.adults ? '2px solid #dc2626' : '2px solid #facc15',
+                    fontSize: '1rem',
+                    backgroundColor: '#f0fdf4'
+                  }}
+                />
+                {errors.adults && (
+                  <p style={{ color: '#dc2626', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+                    {errors.adults}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  fontWeight: 'bold', 
+                  marginBottom: '0.5rem',
+                  color: '#15803d'
+                }}>
+                  Number of Children
+                </label>
+                <input
+                  type="number"
+                  name="children"
+                  value={formData.children}
+                  onChange={handleInputChange}
+                  min="0"
+                  max="10"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    borderRadius: '10px',
+                    border: '2px solid #facc15',
+                    fontSize: '1rem',
+                    backgroundColor: '#f0fdf4'
+                  }}
+                />
+              </div>
+            </div>
+
+            {formData.children > 0 && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontWeight: 'bold', 
+                  marginBottom: '0.5rem',
+                  color: '#15803d'
+                }}>
+                  Children Ages *
+                </label>
+                <input
+                  type="text"
+                  name="childrenAges"
+                  value={formData.childrenAges}
+                  onChange={handleInputChange}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    borderRadius: '10px',
+                    border: errors.childrenAges ? '2px solid #dc2626' : '2px solid #facc15',
+                    fontSize: '1rem',
+                    backgroundColor: '#f0fdf4'
+                  }}
+                  placeholder="e.g., 5, 8, 12"
+                />
+                {errors.childrenAges && (
+                  <p style={{ color: '#dc2626', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+                    {errors.childrenAges}
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ 
+                display: 'block', 
+                fontWeight: 'bold', 
+                marginBottom: '0.5rem',
+                color: '#15803d'
+              }}>
+                Special Requests or Dietary Restrictions
+              </label>
+              <textarea
+                name="specialRequests"
+                value={formData.specialRequests}
+                onChange={handleInputChange}
+                rows={4}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '10px',
+                  border: '2px solid #facc15',
+                  fontSize: '1rem',
+                  backgroundColor: '#f0fdf4',
+                  resize: 'vertical'
+                }}
+                placeholder="Let us know about any allergies, accessibility needs, or special requests..."
+              />
+            </div>
+          </div>
+
+          {/* Payment Summary */}
+          <div 
+            data-card
+            style={{
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
+              borderRadius: '20px',
+              marginBottom: '2rem'
+            }}
+          >
+            <h2 style={{ 
+              fontSize: '1.8rem', 
+              fontWeight: 'bold', 
+              marginBottom: '2rem',
+              background: 'linear-gradient(45deg, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'textShimmer 2s ease-in-out infinite',
+              borderBottom: '3px solid transparent',
+              borderImage: 'linear-gradient(90deg, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4, #96ceb4) 1',
+              paddingBottom: '0.75rem',
+              textAlign: 'center'
+            }}>
+              💰 Payment Summary
+            </h2>
+
+            <div style={{ 
+              background: 'linear-gradient(135deg, rgba(255, 235, 59, 0.2), rgba(76, 175, 80, 0.2), rgba(156, 39, 176, 0.2))', 
+              padding: '2rem', 
+              borderRadius: '20px', 
+              border: '3px solid transparent',
+              backgroundClip: 'padding-box',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255, 255, 255, 0.3)',
+              position: 'relative'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
+                <span>הרמת כוסית לראש השנה</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Date:</span>
+                <span>September 13, 2025 at 20:00</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Price per person:</span>
+                <span>$45</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <span>Adults ({formData.adults}):</span>
+                <span>${formData.adults * 45}</span>
+              </div>
+              {formData.children > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Children ({formData.children}):</span>
+                  <span>${formData.children * 45}</span>
+                </div>
+              )}
+              <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
+                <span>Total Cost:</span>
+                <span>${(formData.adults + formData.children) * 45}</span>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#fffbeb', borderRadius: '10px', border: '1px solid #facc15' }}>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: '#92400e' }}>
+                💳 <strong>Payment:</strong> After registration, you will receive payment instructions via email. 
+                You can pay via PayPal, Venmo, or check. Full payment is required within 7 days to secure your spot.
+              </p>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div 
+            data-card
+            style={{
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
+              borderRadius: '20px',
+              marginBottom: '2rem'
+            }}
+          >
+            <div style={{ textAlign: 'center' }}>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                data-button
+                style={{
+                  padding: '1.25rem 3rem',
+                  fontSize: '1.2rem',
+                  fontWeight: 'bold',
+                  borderRadius: '15px',
+                  border: 'none',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  opacity: isSubmitting ? 0.7 : 1,
+                  transition: 'all 0.3s ease',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.75rem'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  }
+                }}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span style={{ animation: 'spin 1s linear infinite' }}>⏳</span>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    🎪 Register for Event
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  );
+}
