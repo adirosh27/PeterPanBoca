@@ -562,9 +562,8 @@ export default function RegisterPage() {
                   <label
                     key={event.id}
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '1rem',
+                      display: 'block',
+                      padding: '1.5rem',
                       border: formData.event === event.id ? '3px solid #15803d' : '2px solid #facc15',
                       borderRadius: '15px',
                       cursor: 'pointer',
@@ -582,24 +581,27 @@ export default function RegisterPage() {
                       }
                     }}
                   >
-                    <input
-                      type="radio"
-                      name="event"
-                      value={event.id}
-                      checked={formData.event === event.id}
-                      onChange={handleInputChange}
-                      style={{ 
-                        marginRight: '1rem', 
-                        transform: 'scale(1.2)',
-                        accentColor: '#15803d'
-                      }}
-                    />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>
-                        {event.name}
-                      </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem' }}>
-                        📅 {event.date} • 💰 ${event.price} per person
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                      <input
+                        type="radio"
+                        name="event"
+                        value={event.id}
+                        checked={formData.event === event.id}
+                        onChange={handleInputChange}
+                        style={{ 
+                          marginTop: '0.2rem',
+                          transform: 'scale(1.2)',
+                          accentColor: '#15803d',
+                          flexShrink: 0
+                        }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
+                          {event.name}
+                        </div>
+                        <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                          📅 {event.date} • 💰 ${event.price} per person
+                        </div>
                       </div>
                     </div>
                   </label>
