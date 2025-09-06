@@ -610,10 +610,10 @@ export default function RegisterPage() {
                       }}
                     />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>
                         {event.name}
                       </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
+                      <div style={{ color: '#666', fontSize: '0.9rem' }}>
                         📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>

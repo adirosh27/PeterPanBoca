@@ -139,58 +139,7 @@ export default function PhotosPage() {
               </h3>
             </div>
 
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevPhoto}
-              style={{
-                position: 'absolute',
-                left: '20px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'rgba(255, 255, 255, 0.9)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '60px',
-                height: '60px',
-                fontSize: '2rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1)'}
-            >
-              ←
-            </button>
-
-            <button
-              onClick={nextPhoto}
-              style={{
-                position: 'absolute',
-                right: '20px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'rgba(255, 255, 255, 0.9)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '60px',
-                height: '60px',
-                fontSize: '2rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1)'}
-            >
-              →
-            </button>
+            
           </div>
         </div>
 
