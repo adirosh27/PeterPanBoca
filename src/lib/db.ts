@@ -1,6 +1,5 @@
 // Simple database utility for registration persistence
-import { promises as fs } from 'fs';
-import path from 'path';
+// Uses global memory storage that persists during serverless function lifetime
 
 interface Registration {
   id: string;
@@ -18,118 +17,57 @@ interface Registration {
   registrationDate: string;
 }
 
-// In-memory fallback for when filesystem isn't available
-let memoryStorage: Registration[] = [];
-
-const DB_FILE = 'registrations.json';
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DB_PATH = path.join(DATA_DIR, DB_FILE);
-
-// Ensure data directory exists
-async function ensureDataDir() {
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    return true;
-  } catch (error) {
-    console.log('Could not create data directory:', error);
-    return false;
-  }
+// Global storage that persists across function calls
+declare global {
+  var __REGISTRATIONS__: Registration[] | undefined;
 }
 
-// Load registrations from file
-async function loadFromFile(): Promise<Registration[]> {
-  try {
-    await ensureDataDir();
-    const data = await fs.readFile(DB_PATH, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    // File doesn't exist or can't be read, return empty array
-    return [];
+// Initialize global storage
+function initGlobalStorage(): Registration[] {
+  if (!global.__REGISTRATIONS__) {
+    global.__REGISTRATIONS__ = [];
+    console.log('Initialized global registration storage');
   }
+  return global.__REGISTRATIONS__;
 }
 
-// Save registrations to file
-async function saveToFile(registrations: Registration[]): Promise<boolean> {
-  try {
-    const dirCreated = await ensureDataDir();
-    if (!dirCreated) return false;
-    
-    await fs.writeFile(DB_PATH, JSON.stringify(registrations, null, 2));
-    console.log(`Saved ${registrations.length} registrations to file`);
-    return true;
-  } catch (error) {
-    console.log('Could not save to file:', error);
-    return false;
-  }
-}
-
-// Get all registrations (tries file first, falls back to memory)
+// Get all registrations from global storage
 export async function getAllRegistrations(): Promise<Registration[]> {
-  try {
-    // Try to load from file first
-    const fileData = await loadFromFile();
-    
-    // If we have file data, use it and sync memory
-    if (fileData.length > 0) {
-      memoryStorage = fileData;
-      console.log(`Loaded ${fileData.length} registrations from file`);
-      return fileData;
-    }
-    
-    // Otherwise use memory storage
-    console.log(`Using memory storage: ${memoryStorage.length} registrations`);
-    return memoryStorage;
-  } catch (error) {
-    console.error('Error loading registrations:', error);
-    return memoryStorage; // Fallback to memory
-  }
+  const registrations = initGlobalStorage();
+  console.log(`Retrieved ${registrations.length} registrations from global storage`);
+  return [...registrations]; // Return copy to prevent mutations
 }
 
 // Add a new registration
 export async function addRegistration(registration: Registration): Promise<boolean> {
   try {
-    // Load existing data
-    const existing = await getAllRegistrations();
+    const registrations = initGlobalStorage();
     
-    // Add new registration
-    existing.push(registration);
+    // Add new registration to global storage
+    registrations.push(registration);
     
-    // Update memory storage
-    memoryStorage = existing;
-    
-    // Try to save to file
-    const fileSaved = await saveToFile(existing);
-    
-    console.log('Registration saved:', {
+    console.log('Registration saved to global storage:', {
       id: registration.id,
       name: `${registration.firstName} ${registration.lastName}`,
       email: registration.email,
-      totalRegistrations: existing.length,
-      savedToFile: fileSaved,
-      savedToMemory: true
+      totalRegistrations: registrations.length
     });
     
     return true;
   } catch (error) {
-    console.error('Error adding registration:', error);
+    console.error('Error adding registration to global storage:', error);
     return false;
   }
 }
 
 // Initialize database
 export async function initDatabase(): Promise<void> {
-  try {
-    const existing = await loadFromFile();
-    memoryStorage = existing;
-    console.log(`Database initialized with ${existing.length} existing registrations`);
-  } catch (error) {
-    console.log('Database initialized with empty memory storage');
-    memoryStorage = [];
-  }
+  const registrations = initGlobalStorage();
+  console.log(`Database initialized with ${registrations.length} existing registrations`);
 }
 
 // Get registration count
 export async function getRegistrationCount(): Promise<number> {
-  const registrations = await getAllRegistrations();
+  const registrations = initGlobalStorage();
   return registrations.length;
 }
