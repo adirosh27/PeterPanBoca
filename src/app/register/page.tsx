@@ -609,7 +609,7 @@ export default function RegisterPage() {
                         flexShrink: 0
                       }}
                     />
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ flex: 1, minWidth: 0, maxWidth: "100%" }}>
                       <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word' }}>
                         {event.name}
                       </div>
