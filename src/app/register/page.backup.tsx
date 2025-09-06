@@ -571,7 +571,55 @@ export default function RegisterPage() {
                 Choose Your Peter Pan Adventure *
               </label>
               
-              <div style={{ display: 'block' }}>                {EVENTS.map((event) => (                  <div                    key={event.id}                    style={{                      border: formData.event === event.id ? '2px solid #15803d' : '2px solid #ccc',                      borderRadius: '8px',                      padding: '16px',                      marginBottom: '12px',                      backgroundColor: formData.event === event.id ? '#f0fdf4' : '#ffffff',                      cursor: 'pointer'                    }}                    onClick={() => setFormData(prev => ({...prev, event: event.id}))}                  >                    <input                      type="radio"                      name="event"                      value={event.id}                      checked={formData.event === event.id}                      onChange={handleInputChange}                      style={{ marginRight: '12px' }}                    />                    <span style={{ fontWeight: 'bold' }}>{event.name}</span>                    <br />                    <span style={{ color: '#666', fontSize: '14px' }}>                      📅 {event.date} • 💰 ${event.price} per person                    </span>                  </div>                ))}              </div>
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {EVENTS.map((event) => (
+                  <label
+                    key={event.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '1rem',
+                      border: formData.event === event.id ? '3px solid #15803d' : '2px solid #facc15',
+                      borderRadius: '15px',
+                      cursor: 'pointer',
+                      backgroundColor: formData.event === event.id ? '#f0fdf4' : 'transparent',
+                      transition: 'all 0.3s ease',
+                      gap: '1rem'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (formData.event !== event.id) {
+                        e.currentTarget.style.backgroundColor = '#f9fdf7';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (formData.event !== event.id) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="event"
+                      value={event.id}
+                      checked={formData.event === event.id}
+                      onChange={handleInputChange}
+                      style={{ 
+                        transform: 'scale(1.2)',
+                        accentColor: '#15803d',
+                        flexShrink: 0
+                      }}
+                    />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
+                        {event.name}
+                      </div>
+                      <div style={{ color: '#666', fontSize: '0.9rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
+                        📅 {event.date} • 💰 ${event.price} per person
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
               
               {errors.event && (
                 <p style={{ color: '#dc2626', fontSize: '0.9rem', marginTop: '0.5rem' }}>
