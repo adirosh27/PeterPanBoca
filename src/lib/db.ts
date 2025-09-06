@@ -19,12 +19,26 @@ interface Registration {
 
 const REGISTRATIONS_KEY = 'peter-pan-registrations';
 
-// Initialize Redis client using fromEnv for automatic configuration
-const redis = Redis.fromEnv();
+// Initialize Redis client - handle both naming conventions
+const redis = (() => {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  
+  if (url && token) {
+    return new Redis({ url, token });
+  }
+  
+  // Fallback to fromEnv if available
+  try {
+    return Redis.fromEnv();
+  } catch {
+    return null;
+  }
+})();
 
 // Check if Redis is available
 function isRedisAvailable(): boolean {
-  return !!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN;
+  return !!redis;
 }
 
 // Get all registrations from Redis database
