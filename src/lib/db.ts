@@ -1,5 +1,5 @@
-// Simple database utility for registration persistence
-// Uses global memory storage that persists during serverless function lifetime
+// Persistent database utility using Vercel KV (Redis)
+import { kv } from '@vercel/kv';
 
 interface Registration {
   id: string;
@@ -17,57 +17,73 @@ interface Registration {
   registrationDate: string;
 }
 
-// Global storage that persists across function calls
-declare global {
-  var __REGISTRATIONS__: Registration[] | undefined;
+const REGISTRATIONS_KEY = 'peter-pan-registrations';
+
+// Check if KV is available
+function isKvAvailable(): boolean {
+  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 }
 
-// Initialize global storage
-function initGlobalStorage(): Registration[] {
-  if (!global.__REGISTRATIONS__) {
-    global.__REGISTRATIONS__ = [];
-    console.log('Initialized global registration storage');
-  }
-  return global.__REGISTRATIONS__;
-}
-
-// Get all registrations from global storage
+// Get all registrations from KV database
 export async function getAllRegistrations(): Promise<Registration[]> {
-  const registrations = initGlobalStorage();
-  console.log(`Retrieved ${registrations.length} registrations from global storage`);
-  return [...registrations]; // Return copy to prevent mutations
+  try {
+    if (!isKvAvailable()) {
+      console.log('KV not available, returning empty array');
+      return [];
+    }
+
+    const registrations = await kv.get<Registration[]>(REGISTRATIONS_KEY);
+    const result = registrations || [];
+    console.log(`Retrieved ${result.length} registrations from KV database`);
+    return result;
+  } catch (error) {
+    console.error('Error getting registrations from KV:', error);
+    return [];
+  }
 }
 
 // Add a new registration
 export async function addRegistration(registration: Registration): Promise<boolean> {
   try {
-    const registrations = initGlobalStorage();
+    if (!isKvAvailable()) {
+      console.log('KV not available, cannot save registration');
+      return false;
+    }
+
+    // Get existing registrations
+    const existingRegistrations = await getAllRegistrations();
     
-    // Add new registration to global storage
-    registrations.push(registration);
+    // Add new registration
+    const updatedRegistrations = [...existingRegistrations, registration];
     
-    console.log('Registration saved to global storage:', {
+    // Save back to KV
+    await kv.set(REGISTRATIONS_KEY, updatedRegistrations);
+    
+    console.log('Registration saved to KV database:', {
       id: registration.id,
       name: `${registration.firstName} ${registration.lastName}`,
       email: registration.email,
-      totalRegistrations: registrations.length
+      totalRegistrations: updatedRegistrations.length
     });
     
     return true;
   } catch (error) {
-    console.error('Error adding registration to global storage:', error);
+    console.error('Error adding registration to KV:', error);
     return false;
   }
 }
 
 // Initialize database
 export async function initDatabase(): Promise<void> {
-  const registrations = initGlobalStorage();
-  console.log(`Database initialized with ${registrations.length} existing registrations`);
+  if (isKvAvailable()) {
+    console.log('KV database is available and initialized');
+  } else {
+    console.log('KV database not available - check environment variables');
+  }
 }
 
 // Get registration count
 export async function getRegistrationCount(): Promise<number> {
-  const registrations = initGlobalStorage();
+  const registrations = await getAllRegistrations();
   return registrations.length;
 }
