@@ -320,6 +320,7 @@ export default function RegisterPage() {
             marginBottom: '1rem',
             animation: 'bounce 2s infinite',
             wordWrap: 'break-word',
+            overflowWrap: 'break-word',
             maxWidth: '100%'
           }}>🎪✨🧚‍♀️✨</div>
           <h1 style={{ 
@@ -334,6 +335,7 @@ export default function RegisterPage() {
             animation: 'textShimmer 3s ease-in-out infinite',
             textShadow: '0 4px 8px rgba(0,0,0,0.2)',
             wordWrap: 'break-word',
+            overflowWrap: 'break-word',
             maxWidth: '100%',
             lineHeight: '1.2'
           }}>
@@ -352,6 +354,7 @@ export default function RegisterPage() {
             border: '1px solid rgba(255, 255, 255, 0.2)',
             boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
             wordWrap: 'break-word',
+            overflowWrap: 'break-word',
             width: '100%',
             boxSizing: 'border-box'
           }}>
