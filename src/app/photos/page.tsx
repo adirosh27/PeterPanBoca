@@ -4,16 +4,17 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const photos = [
-  { src: '/gallery/photo1.jpg', alt: 'Peter Pan Adventure 1', title: 'Flying with Peter Pan' },
-  { src: '/gallery/photo2.jpg', alt: 'Peter Pan Adventure 2', title: 'Pirate Ship Adventure' },
-  { src: '/gallery/photo3.jpg', alt: 'Peter Pan Adventure 3', title: 'Fairy Magic Moments' },
-  { src: '/gallery/photo4.jpg', alt: 'Peter Pan Adventure 4', title: 'Neverland Celebration' },
-  // Add fallback images if specific photos don't exist
-  { src: '/gallery/img1.jpg', alt: 'Event Memory 1', title: 'Magical Moments' },
-  { src: '/gallery/img2.jpg', alt: 'Event Memory 2', title: 'Adventure Time' },
-  { src: '/gallery/img3.jpg', alt: 'Event Memory 3', title: 'Family Fun' },
-  { src: '/gallery/img4.jpg', alt: 'Event Memory 4', title: 'Pirate Adventures' },
-  { src: '/gallery/img5.jpg', alt: 'Event Memory 5', title: 'Fairy Tales' },
+  // Photos from the new /images folder
+  // Add your photos here when you upload them to public/images/
+  // Example format:
+  // { src: '/images/your-photo-name.jpg', alt: 'Description of the photo', title: 'Photo Title' },
+  
+  // Placeholder photos - replace these with your actual photos
+  { src: '/images/photo1.jpg', alt: 'Peter Pan Event Photo 1', title: 'אירוע פיטר פן מיוחד' },
+  { src: '/images/photo2.jpg', alt: 'Peter Pan Event Photo 2', title: 'הרפתקאות עם פיטר פן' },
+  { src: '/images/photo3.jpg', alt: 'Peter Pan Event Photo 3', title: 'רגעים קסומים' },
+  { src: '/images/photo4.jpg', alt: 'Peter Pan Event Photo 4', title: 'חגיגה במועדון' },
+  { src: '/images/photo5.jpg', alt: 'Peter Pan Event Photo 5', title: 'משפחות מאושרות' },
 ];
 
 export default function PhotosPage() {
@@ -115,7 +116,7 @@ export default function PhotosPage() {
               onError={(e) => {
                 // Fallback to a default image if the image fails to load
                 const target = e.target as HTMLImageElement;
-                target.src = '/gallery/img1.jpg';
+                target.src = '/images/photo1.jpg';
               }}
             />
             
@@ -221,7 +222,7 @@ export default function PhotosPage() {
                 style={{ objectFit: 'cover' }}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/gallery/img1.jpg';
+                  target.src = '/images/photo1.jpg';
                 }}
               />
             </button>
