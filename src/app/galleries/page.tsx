@@ -1,150 +1,232 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { galleryData } from '@/lib/data';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function GalleriesPage() {
-  const [themeContent, setThemeContent] = useState({
-    title: '⚓ Maritime Archives',
-    subtitle: 'Peruse our distinguished collection of elegant nautical events'
-  });
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    const updateContent = () => {
-      const currentTheme = (window as any).currentTheme || 'captain-hooks-log';
-      
-      const themeTexts = {
-        'neverland-night': {
-          title: '🌟 Photo Galleries',
-          subtitle: 'Explore our magical collection of Neverland adventures, organized by year'
-        },
-        'skull-rock-shores': {
-          title: '🏴‍☠️ Treasure Galleries',
-          subtitle: 'Browse our collection of swashbuckling adventures across the seven seas'
-        },
-        'pixie-dust-pastels': {
-          title: '✨ Magical Galleries', 
-          subtitle: 'Discover our enchanting collection of fairy tale moments and dreams'
-        },
-        'lost-boys-scrapbook': {
-          title: '📖 Adventure Albums',
-          subtitle: 'Flip through our handcrafted collection of wilderness memories'
-        },
-        'captain-hooks-log': {
-          title: '⚓ Maritime Archives',
-          subtitle: 'Peruse our distinguished collection of elegant nautical events'
-        }
-      };
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 1000);
+    }, 3000);
 
-      setThemeContent(themeTexts[currentTheme as keyof typeof themeTexts] || themeTexts['captain-hooks-log']);
-    };
-
-    updateContent();
-    window.addEventListener('theme-change', updateContent);
-    return () => window.removeEventListener('theme-change', updateContent);
+    return () => clearInterval(interval);
   }, []);
 
-  // Sort years in descending order (newest first)
-  const sortedData = [...galleryData].sort((a, b) => b.year - a.year);
-
   return (
-    <div style={{ padding: '3rem 2rem', minHeight: '100vh' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 style={{ 
-            fontSize: 'clamp(2.5rem, 6vw, 4rem)', 
-            fontWeight: 'bold', 
-            marginBottom: '1rem' 
-          }}>
-            {themeContent.title}
-          </h1>
-          <p style={{ fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
-            {themeContent.subtitle}
+    <div style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
+      backgroundSize: '400% 400%',
+      animation: 'gradientShift 15s ease infinite',
+      padding: '3rem 2rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <style>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-20px); }
+          60% { transform: translateY(-10px); }
+        }
+        
+        @keyframes wiggle {
+          0% { transform: rotate(0deg); }
+          25% { transform: rotate(5deg); }
+          75% { transform: rotate(-5deg); }
+          100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes textShimmer {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+      `}</style>
+
+      <div style={{ 
+        textAlign: 'center',
+        maxWidth: '800px',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: '30px',
+        padding: '4rem 3rem',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
+        border: '5px dashed #fbbf24',
+        position: 'relative'
+      }}>
+        
+        {/* Construction Warning Sign */}
+        <div style={{
+          position: 'absolute',
+          top: '-25px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: '#fbbf24',
+          color: '#000',
+          padding: '0.5rem 2rem',
+          borderRadius: '25px',
+          fontWeight: 'bold',
+          fontSize: '1rem',
+          border: '3px solid #f59e0b',
+          animation: isAnimating ? 'shake 0.5s ease-in-out' : 'none'
+        }}>
+          ⚠️ CONSTRUCTION ZONE ⚠️
+        </div>
+
+        {/* Main Construction Icon */}
+        <div style={{ 
+          fontSize: '8rem',
+          marginBottom: '2rem',
+          animation: isAnimating ? 'wiggle 1s ease-in-out' : 'bounce 3s infinite'
+        }}>
+          🚧
+        </div>
+
+        {/* Title */}
+        <h1 style={{ 
+          fontSize: 'clamp(2.5rem, 6vw, 4rem)', 
+          fontWeight: 'bold', 
+          marginBottom: '2rem',
+          background: 'linear-gradient(45deg, #f59e0b, #dc2626, #7c2d12, #fbbf24)',
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundSize: '300% 300%',
+          animation: 'textShimmer 3s ease-in-out infinite'
+        }}>
+          🏗️ Gallery Under Construction! 🏗️
+        </h1>
+
+        {/* Funny Message */}
+        <div style={{ 
+          fontSize: '1.5rem',
+          marginBottom: '2rem',
+          lineHeight: '1.6',
+          color: '#374151'
+        }}>
+          <p style={{ marginBottom: '1rem' }}>
+            🎭 <strong>פיטר פן וחברים</strong> עובדים קשה על משהו מיוחד!
+          </p>
+          <p style={{ marginBottom: '1rem', fontSize: '1.2rem' }}>
+            Our pixie dust-powered developers are currently:
           </p>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-          {sortedData.map((yearData) => (
-            <section key={yearData.year} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              <div style={{ textAlign: 'center' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-                  {yearData.year}
-                </h2>
-                <div style={{ 
-                  width: '100px', 
-                  height: '4px', 
-                  margin: '0 auto',
-                  borderRadius: '2px'
-                }} data-button />
-              </div>
-
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: '2rem'
-              }}>
-                {yearData.events.map((event) => (
-                  <Link 
-                    key={event.slug}
-                    href={`/galleries/${yearData.year}/${event.slug}`}
-                    data-card
-                    style={{
-                      textDecoration: 'none',
-                      borderRadius: '15px',
-                      overflow: 'hidden',
-                      transition: 'all 0.3s',
-                      cursor: 'pointer',
-                      display: 'block'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0) scale(1)'}
-                  >
-                    <div style={{ position: 'relative', height: '250px', overflow: 'hidden' }}>
-                      <Image
-                        src={event.coverImage.src}
-                        alt={event.coverImage.alt}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                      />
-                      <div style={{ 
-                        position: 'absolute',
-                        bottom: '0',
-                        left: '0',
-                        right: '0',
-                        background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-                        color: 'white',
-                        padding: '1rem'
-                      }}>
-                        <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', margin: '0 0 0.5rem 0' }}>
-                          {event.title}
-                        </h3>
-                        <p style={{ fontSize: '0.9rem', margin: '0' }}>
-                          {new Date(event.date).toLocaleDateString('en-US', { 
-                            month: 'long', 
-                            day: 'numeric' 
-                          })}
-                        </p>
-                      </div>
-                    </div>
-                    <div style={{ padding: '1.5rem' }}>
-                      <p style={{ lineHeight: '1.6', marginBottom: '1rem' }}>
-                        {event.description}
-                      </p>
-                      <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
-                        <span>{event.photos.length} photos</span>
-                        <svg style={{ width: '16px', height: '16px', marginLeft: '8px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          ))}
+        {/* Construction Activities */}
+        <div style={{ 
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '1.5rem',
+          marginBottom: '3rem',
+          textAlign: 'left'
+        }}>
+          <div style={{ 
+            backgroundColor: '#f0fdf4',
+            padding: '1.5rem',
+            borderRadius: '15px',
+            border: '2px solid #22c55e'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🧚‍♀️</div>
+            <strong>Organizing magical memories</strong><br/>
+            <small>Sorting through thousands of enchanted moments!</small>
+          </div>
+          
+          <div style={{ 
+            backgroundColor: '#fef3c7',
+            padding: '1.5rem',
+            borderRadius: '15px',
+            border: '2px solid #fbbf24'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏴‍☠️</div>
+            <strong>Teaching Captain Hook to code</strong><br/>
+            <small>He keeps using his hook instead of a mouse...</small>
+          </div>
+          
+          <div style={{ 
+            backgroundColor: '#ddd6fe',
+            padding: '1.5rem',
+            borderRadius: '15px',
+            border: '2px solid #8b5cf6'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✨</div>
+            <strong>Sprinkling extra pixie dust</strong><br/>
+            <small>Making sure every photo sparkles!</small>
+          </div>
         </div>
+
+        {/* Progress Bar */}
+        <div style={{
+          backgroundColor: '#e5e7eb',
+          height: '30px',
+          borderRadius: '15px',
+          overflow: 'hidden',
+          marginBottom: '2rem',
+          position: 'relative'
+        }}>
+          <div style={{
+            background: 'linear-gradient(90deg, #22c55e, #fbbf24, #f59e0b)',
+            height: '100%',
+            width: '73%',
+            borderRadius: '15px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 'bold',
+            animation: isAnimating ? 'wiggle 0.5s ease-in-out' : 'none'
+          }}>
+            73% Complete! 🚀
+          </div>
+        </div>
+
+        {/* Call to Action */}
+        <div style={{ 
+          fontSize: '1.3rem',
+          marginBottom: '2rem',
+          color: '#6b7280'
+        }}>
+          <p>בינתיים, תבדקו את <strong>📸 התמונות</strong> שלנו!</p>
+          <p style={{ fontSize: '1rem', marginTop: '1rem' }}>
+            Meanwhile, check out our <strong>Photos</strong> page for magical moments! 🌟
+          </p>
+        </div>
+
+        {/* Construction Workers */}
+        <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '1rem',
+          fontSize: '3rem',
+          marginBottom: '2rem'
+        }}>
+          <span style={{ animation: 'bounce 2s infinite' }}>👷‍♂️</span>
+          <span style={{ animation: 'bounce 2s infinite 0.2s' }}>🧝‍♀️</span>
+          <span style={{ animation: 'bounce 2s infinite 0.4s' }}>🏴‍☠️</span>
+          <span style={{ animation: 'bounce 2s infinite 0.6s' }}>🧚‍♀️</span>
+        </div>
+
+        {/* Footer Message */}
+        <p style={{ 
+          fontSize: '0.9rem',
+          color: '#9ca3af',
+          fontStyle: 'italic'
+        }}>
+          "All the best galleries are worth waiting for!" - Peter Pan ✨
+        </p>
       </div>
     </div>
   );
