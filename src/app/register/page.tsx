@@ -605,13 +605,9 @@ export default function RegisterPage() {
                       value={event.id}
                       checked={formData.event === event.id}
                       onChange={handleInputChange}
-                      style={{ 
-                        transform: 'scale(1.2)',
-                        accentColor: '#15803d',
-                        flexShrink: 0
-                      }}
+                      style={{ display: 'none' }}
                     />
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>
                         {event.name}
                       </div>
