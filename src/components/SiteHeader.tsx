@@ -211,10 +211,12 @@ export default function SiteHeader() {
           </Link>
           
           {/* Desktop Navigation */}
-          <div style={{ 
-            display: isMobile ? 'none' : 'flex', 
-            alignItems: 'center', 
-            gap: '2rem'
+          <div style={{
+            display: isMobile ? 'none' : 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '0.5rem',
+            justifyContent: 'flex-end',
           }}>
             <Link 
               href="/" 
