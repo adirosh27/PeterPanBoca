@@ -619,8 +619,7 @@ export default function RegisterPage() {
                         fontWeight: 'bold', 
                         fontSize: '1.1rem', 
                         marginBottom: '0.25rem',
-                        wordWrap: 'break-word',
-                        overflowWrap: 'anywhere'
+                        wordWrap: 'break-word'
                       }}>
                         {event.name}
                       </div>
