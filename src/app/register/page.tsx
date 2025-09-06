@@ -614,8 +614,16 @@ export default function RegisterPage() {
                         flexShrink: 0
                       }}
                     />
-                    <div style={{ flex: 1, minWidth: 0, flexShrink: 1 }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', overflowWrap: 'break-word', wordWrap: 'break-word' }}>
+                    <div style={{ flex: 1, minWidth: 0, flexShrink: 1, maxWidth: 'calc(100% - 2rem)', overflow: 'hidden' }}>
+                      <div style={{ 
+                        fontWeight: 'bold', 
+                        fontSize: '1.1rem', 
+                        marginBottom: '0.25rem', 
+                        overflowWrap: 'break-word', 
+                        wordWrap: 'break-word',
+                        whiteSpace: 'normal',
+                        lineHeight: '1.3'
+                      }}>
                         {event.name}
                       </div>
                       <div style={{ color: '#666', fontSize: '0.9rem', overflowWrap: 'break-word', wordWrap: 'break-word' }}>
