@@ -4,17 +4,12 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const photos = [
-  // Photos from the new /images folder
-  // Add your photos here when you upload them to public/images/
-  // Example format:
-  // { src: '/images/your-photo-name.jpg', alt: 'Description of the photo', title: 'Photo Title' },
-  
-  // Placeholder photos - replace these with your actual photos
-  { src: '/images/photo1.jpg', alt: 'Peter Pan Event Photo 1', title: 'אירוע פיטר פן מיוחד' },
-  { src: '/images/photo2.jpg', alt: 'Peter Pan Event Photo 2', title: 'הרפתקאות עם פיטר פן' },
-  { src: '/images/photo3.jpg', alt: 'Peter Pan Event Photo 3', title: 'רגעים קסומים' },
-  { src: '/images/photo4.jpg', alt: 'Peter Pan Event Photo 4', title: 'חגיגה במועדון' },
-  { src: '/images/photo5.jpg', alt: 'Peter Pan Event Photo 5', title: 'משפחות מאושרות' },
+  { src: '/images/IMG-20230430-WA0048.jpg', alt: 'Peter Pan Event April 2023', title: 'אירוע פיטר פן אפריל 2023' },
+  { src: '/images/IMG-20230823-WA0021.jpg', alt: 'Peter Pan Event August 2023', title: 'הרפתקאות קיץ עם פיטר פן' },
+  { src: '/images/IMG-20230926-WA0023.jpg', alt: 'Peter Pan Event September 2023', title: 'חגיגת ראש השנה במועדון' },
+  { src: '/images/IMG-20231209-WA0027.jpg', alt: 'Peter Pan Event December 2023', title: 'אירוע חנוכה מיוחד' },
+  { src: '/images/IMG-20240126-WA0076.jpg', alt: 'Peter Pan Event January 2024', title: 'כיף משפחתי בחורף' },
+  { src: '/images/WhatsApp Image 2024-02-25 at 17.18.06_a7e6fcdc.jpg', alt: 'Peter Pan Event February 2024', title: 'רגעים קסומים בפברuary' },
 ];
 
 export default function PhotosPage() {
@@ -116,7 +111,7 @@ export default function PhotosPage() {
               onError={(e) => {
                 // Fallback to a default image if the image fails to load
                 const target = e.target as HTMLImageElement;
-                target.src = '/images/photo1.jpg';
+                target.src = '/images/IMG-20230430-WA0048.jpg';
               }}
             />
             
@@ -222,7 +217,7 @@ export default function PhotosPage() {
                 style={{ objectFit: 'cover' }}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/images/photo1.jpg';
+                  target.src = '/images/IMG-20230430-WA0048.jpg';
                 }}
               />
             </button>
