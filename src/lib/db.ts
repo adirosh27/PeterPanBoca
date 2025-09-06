@@ -44,7 +44,7 @@ function isRedisAvailable(): boolean {
 // Get all registrations from Redis database
 export async function getAllRegistrations(): Promise<Registration[]> {
   try {
-    if (!isRedisAvailable()) {
+    if (!redis) {
       console.log('Redis not available, returning empty array');
       return [];
     }
@@ -62,7 +62,7 @@ export async function getAllRegistrations(): Promise<Registration[]> {
 // Add a new registration
 export async function addRegistration(registration: Registration): Promise<boolean> {
   try {
-    if (!isRedisAvailable()) {
+    if (!redis) {
       console.log('Redis not available, cannot save registration');
       return false;
     }
