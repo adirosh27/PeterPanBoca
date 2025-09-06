@@ -309,11 +309,11 @@ export default function RegisterPage() {
           to { transform: rotate(360deg); }
         }
       `}</style>
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 2rem' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 1rem' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <div style={{ 
-            fontSize: '4rem', 
+            fontSize: 'clamp(2.5rem, 8vw, 4rem)', 
             marginBottom: '1rem',
             animation: 'bounce 2s infinite'
           }}>🎪✨🧚‍♀️✨</div>
@@ -332,13 +332,13 @@ export default function RegisterPage() {
             ✨ Peter Pan Boca Events ✨
           </h1>
           <p style={{ 
-            fontSize: '1.3rem', 
+            fontSize: 'clamp(1rem, 3vw, 1.3rem)', 
             maxWidth: '600px', 
             margin: '0 auto',
             lineHeight: '1.7',
             color: 'rgba(255, 255, 255, 0.95)',
             background: 'rgba(255, 255, 255, 0.1)',
-            padding: '1.5rem',
+            padding: 'clamp(1rem, 4vw, 1.5rem)',
             borderRadius: '20px',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -356,13 +356,13 @@ export default function RegisterPage() {
           <div 
             data-card
             style={{
-              padding: '2.5rem',
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
               borderRadius: '20px',
               marginBottom: '2rem'
             }}
           >
             <h2 style={{ 
-              fontSize: '1.8rem', 
+              fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', 
               fontWeight: 'bold', 
               marginBottom: '2rem',
               background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1)',
@@ -382,8 +382,8 @@ export default function RegisterPage() {
             {/* Name Fields */}
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-              gap: '1.5rem', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+              gap: 'clamp(1rem, 3vw, 1.5rem)', 
               marginBottom: '1.5rem' 
             }}>
               <div>
@@ -452,8 +452,8 @@ export default function RegisterPage() {
             {/* Contact Fields */}
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-              gap: '1.5rem', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+              gap: 'clamp(1rem, 3vw, 1.5rem)', 
               marginBottom: '1.5rem' 
             }}>
               <div>
@@ -524,13 +524,13 @@ export default function RegisterPage() {
           <div 
             data-card
             style={{
-              padding: '2.5rem',
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
               borderRadius: '20px',
               marginBottom: '2rem'
             }}
           >
             <h2 style={{ 
-              fontSize: '1.8rem', 
+              fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', 
               fontWeight: 'bold', 
               marginBottom: '2rem',
               background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1)',
@@ -638,7 +638,7 @@ export default function RegisterPage() {
           <div 
             data-card
             style={{
-              padding: '2.5rem',
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
               borderRadius: '20px',
               marginBottom: '2rem'
             }}
@@ -664,7 +664,7 @@ export default function RegisterPage() {
             <div style={{ 
               display: 'grid', 
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-              gap: '1.5rem', 
+              gap: 'clamp(1rem, 3vw, 1.5rem)', 
               marginBottom: '1.5rem' 
             }}>
               <div>
@@ -792,7 +792,7 @@ export default function RegisterPage() {
           <div 
             data-card
             style={{
-              padding: '2.5rem',
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
               borderRadius: '20px',
               marginBottom: '2rem'
             }}
@@ -865,7 +865,7 @@ export default function RegisterPage() {
           <div 
             data-card
             style={{
-              padding: '2.5rem',
+              padding: 'clamp(1.5rem, 5vw, 2.5rem)',
               borderRadius: '20px',
               marginBottom: '2rem'
             }}
