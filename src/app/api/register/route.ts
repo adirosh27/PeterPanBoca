@@ -2,18 +2,31 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+// Global in-memory storage for registrations (persists during server runtime)
+declare global {
+  var registrations: any[] | undefined;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const registrationData = await request.json();
     
-    // Add server timestamp
+    // Add server timestamp and ID
     const dataWithTimestamp = {
       ...registrationData,
       serverTimestamp: new Date().toISOString(),
       id: Date.now().toString()
     };
 
-    // Try to save locally (works in development)
+    // Initialize global registrations if it doesn't exist
+    if (!global.registrations) {
+      global.registrations = [];
+    }
+
+    // Always save to global memory (works in both dev and production)
+    global.registrations.push(dataWithTimestamp);
+
+    // Also try to save locally for development
     try {
       const dataDir = path.join(process.cwd(), 'data');
       const filePath = path.join(dataDir, 'registrations.json');
@@ -30,35 +43,26 @@ export async function POST(request: NextRequest) {
 
       existingData.push(dataWithTimestamp);
       await fs.writeFile(filePath, JSON.stringify(existingData, null, 2));
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Registration saved successfully',
-        id: dataWithTimestamp.id
-      });
     } catch (fsError) {
-      // Filesystem not available (serverless), log the registration data
-      console.log('Filesystem not available, logging registration data:', {
-        id: dataWithTimestamp.id,
-        name: `${registrationData.firstName} ${registrationData.lastName}`,
-        email: registrationData.email,
-        event: registrationData.eventName,
-        timestamp: dataWithTimestamp.serverTimestamp,
-        fullData: dataWithTimestamp
-      });
-      
-      // Try to save to a simpler in-memory storage for admin page
-      // This won't persist between deployments but will work for current session
-      global.registrations = global.registrations || [];
-      global.registrations.push(dataWithTimestamp);
-      
-      // For now, return success (you can set up proper email notification later)
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Registration submitted successfully - data has been logged',
-        id: dataWithTimestamp.id
-      });
+      // Filesystem not available in production, but that's ok - we have memory storage
     }
+
+    // Log for debugging
+    console.log('Registration saved:', {
+      id: dataWithTimestamp.id,
+      name: `${registrationData.firstName} ${registrationData.lastName}`,
+      email: registrationData.email,
+      event: registrationData.eventName,
+      timestamp: dataWithTimestamp.serverTimestamp,
+      totalRegistrations: global.registrations.length
+    });
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Registration saved successfully',
+      id: dataWithTimestamp.id,
+      totalRegistrations: global.registrations.length
+    });
 
   } catch (error) {
     console.error('Error processing registration:', error);
@@ -66,50 +70,70 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         message: 'Failed to save registration',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        details: error instanceof Error ? error.stack : String(error)
+        error: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
   }
 }
 
-// Optional: GET endpoint to retrieve registrations (for admin use)
+// GET endpoint to retrieve registrations (for admin use)
 export async function GET() {
   try {
-    // First try to read from file system (works in development)
-    const dataDir = path.join(process.cwd(), 'data');
-    const filePath = path.join(dataDir, 'registrations.json');
-    
-    try {
-      const fileContent = await fs.readFile(filePath, 'utf-8');
-      const registrations = JSON.parse(fileContent);
-      
-      return NextResponse.json({ 
-        success: true, 
-        count: registrations.length,
-        registrations,
-        source: 'filesystem'
-      });
-    } catch (fsError) {
-      // If file system not available, check in-memory storage
-      const memoryRegistrations = global.registrations || [];
-      
-      return NextResponse.json({ 
-        success: true, 
-        count: memoryRegistrations.length,
-        registrations: memoryRegistrations,
-        source: 'memory'
-      });
+    // Initialize global registrations if it doesn't exist
+    if (!global.registrations) {
+      global.registrations = [];
     }
+
+    // First check in-memory storage (works in production)
+    const memoryRegistrations = global.registrations || [];
+    
+    // Also try to merge with filesystem data (development only)
+    let fileRegistrations = [];
+    try {
+      const dataDir = path.join(process.cwd(), 'data');
+      const filePath = path.join(dataDir, 'registrations.json');
+      const fileContent = await fs.readFile(filePath, 'utf-8');
+      fileRegistrations = JSON.parse(fileContent);
+    } catch (fsError) {
+      // Filesystem not available or no file - use memory only
+    }
+
+    // Merge and deduplicate registrations by ID
+    const allRegistrations = [...fileRegistrations, ...memoryRegistrations];
+    const uniqueRegistrations = allRegistrations.filter((reg, index, self) => 
+      index === self.findIndex((r) => r.id === reg.id)
+    );
+
+    // Sort by timestamp (newest first)
+    uniqueRegistrations.sort((a, b) => 
+      new Date(b.serverTimestamp || b.registrationDate).getTime() - 
+      new Date(a.serverTimestamp || a.registrationDate).getTime()
+    );
+
+    console.log('GET /api/register - returning registrations:', {
+      memoryCount: memoryRegistrations.length,
+      fileCount: fileRegistrations.length,
+      uniqueCount: uniqueRegistrations.length,
+      source: memoryRegistrations.length > 0 ? 'memory+file' : 'file-only'
+    });
+    
+    return NextResponse.json({ 
+      success: true, 
+      count: uniqueRegistrations.length,
+      registrations: uniqueRegistrations,
+      source: memoryRegistrations.length > 0 ? 'memory+file' : 'file-only'
+    });
   } catch (error) {
+    console.error('Error in GET /api/register:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: 'No registrations found',
-        registrations: []
+        message: 'Error retrieving registrations',
+        registrations: [],
+        error: error instanceof Error ? error.message : 'Unknown error'
       },
-      { status: 404 }
+      { status: 500 }
     );
   }
 }
