@@ -19,39 +19,23 @@ interface Registration {
 
 const REGISTRATIONS_KEY = 'peter-pan-registrations';
 
-// Initialize Redis client
-let redis: Redis | null = null;
-
-function getRedisClient(): Redis | null {
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    return null;
-  }
-  
-  if (!redis) {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
-  }
-  
-  return redis;
-}
+// Initialize Redis client using fromEnv for automatic configuration
+const redis = Redis.fromEnv();
 
 // Check if Redis is available
 function isRedisAvailable(): boolean {
-  return !!getRedisClient();
+  return !!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN;
 }
 
 // Get all registrations from Redis database
 export async function getAllRegistrations(): Promise<Registration[]> {
   try {
-    const client = getRedisClient();
-    if (!client) {
+    if (!isRedisAvailable()) {
       console.log('Redis not available, returning empty array');
       return [];
     }
 
-    const registrations = await client.get<Registration[]>(REGISTRATIONS_KEY);
+    const registrations = await redis.get<Registration[]>(REGISTRATIONS_KEY);
     const result = registrations || [];
     console.log(`Retrieved ${result.length} registrations from Redis database`);
     return result;
@@ -64,8 +48,7 @@ export async function getAllRegistrations(): Promise<Registration[]> {
 // Add a new registration
 export async function addRegistration(registration: Registration): Promise<boolean> {
   try {
-    const client = getRedisClient();
-    if (!client) {
+    if (!isRedisAvailable()) {
       console.log('Redis not available, cannot save registration');
       return false;
     }
@@ -77,7 +60,7 @@ export async function addRegistration(registration: Registration): Promise<boole
     const updatedRegistrations = [...existingRegistrations, registration];
     
     // Save back to Redis
-    await client.set(REGISTRATIONS_KEY, updatedRegistrations);
+    await redis.set(REGISTRATIONS_KEY, updatedRegistrations);
     
     console.log('Registration saved to Redis database:', {
       id: registration.id,
