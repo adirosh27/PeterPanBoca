@@ -4,12 +4,20 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const photos = [
+  { src: '/images/ACJL7605.JPG', alt: 'Peter Pan Club Event', title: 'אירוע מיוחד במועדון פיטר פן' },
+  { src: '/images/AMZC6816.JPG', alt: 'Peter Pan Adventure', title: 'הרפתקאות קסומות עם פיטר פן' },
+  { src: '/images/IMG-20230226-WA0030.jpg', alt: 'Peter Pan Event February 2023', title: 'אירוע פברואר 2023' },
   { src: '/images/IMG-20230430-WA0048.jpg', alt: 'Peter Pan Event April 2023', title: 'אירוע פיטר פן אפריל 2023' },
   { src: '/images/IMG-20230823-WA0021.jpg', alt: 'Peter Pan Event August 2023', title: 'הרפתקאות קיץ עם פיטר פן' },
   { src: '/images/IMG-20230926-WA0023.jpg', alt: 'Peter Pan Event September 2023', title: 'חגיגת ראש השנה במועדון' },
   { src: '/images/IMG-20231209-WA0027.jpg', alt: 'Peter Pan Event December 2023', title: 'אירוע חנוכה מיוחד' },
   { src: '/images/IMG-20240126-WA0076.jpg', alt: 'Peter Pan Event January 2024', title: 'כיף משפחתי בחורף' },
-  { src: '/images/WhatsApp Image 2024-02-25 at 17.18.06_a7e6fcdc.jpg', alt: 'Peter Pan Event February 2024', title: 'רגעים קסומים בפברuary' },
+  { src: '/images/IMG-20250119-WA0086.jpg', alt: 'Peter Pan Event January 2025', title: 'פעילות ינואר 2025' },
+  { src: '/images/IMG-20250823-WA0057.jpg', alt: 'Peter Pan Event August 2025', title: 'הרפתקאות קיץ 2025' },
+  { src: '/images/PUEJ1954.JPG', alt: 'Peter Pan Club Activity', title: 'פעילות מועדון פיטר פן' },
+  { src: '/images/VYQJ4092.JPG', alt: 'Peter Pan Group Photo', title: 'תמונה קבוצתית במועדון' },
+  { src: '/images/WhatsApp Image 2024-02-25 at 17.18.06_a7e6fcdc.jpg', alt: 'Peter Pan Event February 2024', title: 'רגעים קסומים פברואר 2024' },
+  { src: '/images/WhatsApp Image 2024-03-09 at 11.48.13_a9fa229a.jpg', alt: 'Peter Pan Event March 2024', title: 'אירוע מרץ 2024' },
 ];
 
 export default function PhotosPage() {
