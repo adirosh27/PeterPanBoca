@@ -1,5 +1,5 @@
-// Persistent database utility using Vercel KV (Redis)
-import { kv } from '@vercel/kv';
+// Persistent database utility using Upstash Redis
+import { Redis } from '@upstash/redis';
 
 interface Registration {
   id: string;
@@ -19,25 +19,44 @@ interface Registration {
 
 const REGISTRATIONS_KEY = 'peter-pan-registrations';
 
-// Check if KV is available
-function isKvAvailable(): boolean {
-  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+// Initialize Redis client
+let redis: Redis | null = null;
+
+function getRedisClient(): Redis | null {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  
+  if (!redis) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  }
+  
+  return redis;
 }
 
-// Get all registrations from KV database
+// Check if Redis is available
+function isRedisAvailable(): boolean {
+  return !!getRedisClient();
+}
+
+// Get all registrations from Redis database
 export async function getAllRegistrations(): Promise<Registration[]> {
   try {
-    if (!isKvAvailable()) {
-      console.log('KV not available, returning empty array');
+    const client = getRedisClient();
+    if (!client) {
+      console.log('Redis not available, returning empty array');
       return [];
     }
 
-    const registrations = await kv.get<Registration[]>(REGISTRATIONS_KEY);
+    const registrations = await client.get<Registration[]>(REGISTRATIONS_KEY);
     const result = registrations || [];
-    console.log(`Retrieved ${result.length} registrations from KV database`);
+    console.log(`Retrieved ${result.length} registrations from Redis database`);
     return result;
   } catch (error) {
-    console.error('Error getting registrations from KV:', error);
+    console.error('Error getting registrations from Redis:', error);
     return [];
   }
 }
@@ -45,8 +64,9 @@ export async function getAllRegistrations(): Promise<Registration[]> {
 // Add a new registration
 export async function addRegistration(registration: Registration): Promise<boolean> {
   try {
-    if (!isKvAvailable()) {
-      console.log('KV not available, cannot save registration');
+    const client = getRedisClient();
+    if (!client) {
+      console.log('Redis not available, cannot save registration');
       return false;
     }
 
@@ -56,10 +76,10 @@ export async function addRegistration(registration: Registration): Promise<boole
     // Add new registration
     const updatedRegistrations = [...existingRegistrations, registration];
     
-    // Save back to KV
-    await kv.set(REGISTRATIONS_KEY, updatedRegistrations);
+    // Save back to Redis
+    await client.set(REGISTRATIONS_KEY, updatedRegistrations);
     
-    console.log('Registration saved to KV database:', {
+    console.log('Registration saved to Redis database:', {
       id: registration.id,
       name: `${registration.firstName} ${registration.lastName}`,
       email: registration.email,
@@ -68,17 +88,17 @@ export async function addRegistration(registration: Registration): Promise<boole
     
     return true;
   } catch (error) {
-    console.error('Error adding registration to KV:', error);
+    console.error('Error adding registration to Redis:', error);
     return false;
   }
 }
 
 // Initialize database
 export async function initDatabase(): Promise<void> {
-  if (isKvAvailable()) {
-    console.log('KV database is available and initialized');
+  if (isRedisAvailable()) {
+    console.log('Redis database is available and initialized');
   } else {
-    console.log('KV database not available - check environment variables');
+    console.log('Redis database not available - check environment variables');
   }
 }
 

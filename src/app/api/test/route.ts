@@ -11,8 +11,8 @@ export async function GET() {
       hasGmailUser: !!process.env.GMAIL_USER,
       hasGmailPassword: !!process.env.GMAIL_APP_PASSWORD,
       hasAdminEmail: !!process.env.ADMIN_EMAIL,
-      hasKvUrl: !!process.env.KV_REST_API_URL,
-      hasKvToken: !!process.env.KV_REST_API_TOKEN,
+      hasRedisUrl: !!process.env.UPSTASH_REDIS_REST_URL,
+      hasRedisToken: !!process.env.UPSTASH_REDIS_REST_TOKEN,
       gmailUserLength: process.env.GMAIL_USER ? process.env.GMAIL_USER.length : 0,
     };
     
