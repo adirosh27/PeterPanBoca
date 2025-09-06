@@ -76,15 +76,6 @@ const holidays: Holiday[] = [
   { date: '2025-09-03', name: 'ראש השנה', emoji: '🍯', color: '#f59e0b' },
   { date: '2025-09-12', name: 'יום כיפור', emoji: '🕊️', color: '#6b7280' },
   { date: '2025-09-17', name: 'סוכות', emoji: '🌿', color: '#10b981' },
-  // Test birthday entries
-  { date: '2024-01-03', name: 'יום הולדת Momy Shoshan', emoji: '🎂', color: '#ec4899' },
-  { date: '2024-01-21', name: 'יום הולדת Ofer Gilady', emoji: '🎂', color: '#ec4899' },
-  { date: '2024-12-03', name: 'יום הולדת Steven Michaels', emoji: '🎂', color: '#ec4899' },
-  { date: '2024-12-10', name: 'יום הולדת Eyal Bishri', emoji: '🎂', color: '#ec4899' },
-  // Today's test birthday (September 6, 2025)
-  { date: '2025-09-06', name: 'יום הולדת Test User', emoji: '🎂', color: '#ec4899' },
-  { date: '2025-09-06', name: 'יום הולדת Adir Hazan', emoji: '🎂', color: '#ec4899' },
-  { date: '2025-09-06', name: 'יום הולדת Special Demo', emoji: '🎂', color: '#ec4899' },
   // Add birthdays for multiple years (2024-2030)
   ...generateBirthdays(2024, 2030)
 ];
@@ -187,13 +178,11 @@ export default function CalendarPage() {
   const todaysBirthdays = React.useMemo(() => {
     const today = new Date();
     const todayString = today.toISOString().split('T')[0];
-    console.log('Today is:', todayString); // Debug log
     const birthdaysToday = holidays.filter(holiday => 
       holiday.date === todayString && 
       holiday.name && 
       holiday.name.includes('יום הולדת')
     );
-    console.log('Birthdays today:', birthdaysToday); // Debug log
     return birthdaysToday;
   }, []);
 
