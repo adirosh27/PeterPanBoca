@@ -15,7 +15,8 @@ interface FormData {
 }
 
 const EVENTS = [
-  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00', price: 45 }
+  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00', price: 45 },
+  { id: 'sukkot-celebration', name: 'חגיגת סוכות עם פיטר פן', date: 'October 18, 2025 at 19:30', price: 55 }
 ];
 
 export default function RegisterPage() {
