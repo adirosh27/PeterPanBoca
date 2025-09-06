@@ -40,6 +40,7 @@ const birthdays = [
   { name: 'Roee Vulkan', month: 10, day: 6 },
   { name: 'Roei Wagner', month: 7, day: 21 },
   { name: 'Shay Zaidenberg', month: 12, day: 24 },
+  { name: 'Shalom Sapir', month: 6, day: 23 },
 ];
 
 // Generate birthday events for multiple years
