@@ -584,7 +584,10 @@ export default function RegisterPage() {
                       cursor: 'pointer',
                       backgroundColor: formData.event === event.id ? '#f0fdf4' : 'transparent',
                       transition: 'all 0.3s ease',
-                      gap: '1rem'
+                      gap: '1rem',
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      overflow: 'hidden'
                     }}
                     onMouseEnter={(e) => {
                       if (formData.event !== event.id) {
@@ -606,14 +609,26 @@ export default function RegisterPage() {
                       style={{ 
                         transform: 'scale(1.2)',
                         accentColor: '#15803d',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        margin: 0
                       }}
                     />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word' }}>
+                    <div style={{ flex: 1,
+                      minWidth: 0,
+                      width: '100%',
+                      overflow: 'hidden' }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'break-word',
+                        lineHeight: '1.3',
+                        width: '100%' }}>
                         {event.name}
                       </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem', wordWrap: 'break-word' }}>
+                      <div style={{ color: '#666', fontSize: '0.9rem',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'break-word',
+                        lineHeight: '1.4',
+                        width: '100%' }}>
                         📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>
