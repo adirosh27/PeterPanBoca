@@ -595,11 +595,11 @@ export default function RegisterPage() {
                         flexShrink: 0
                       }}
                     />
-                    <div>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word' }}>
                         {event.name}
                       </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                      <div style={{ color: '#666', fontSize: '0.9rem', wordWrap: 'break-word' }}>
                         📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>
