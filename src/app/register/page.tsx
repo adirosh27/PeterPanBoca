@@ -566,7 +566,9 @@ export default function RegisterPage() {
                 display: 'block', 
                 fontWeight: 'bold', 
                 marginBottom: '1rem',
-                color: '#15803d'
+                color: '#15803d',
+                wordWrap: 'break-word',
+                whiteSpace: 'pre-wrap'
               }}>
                 Choose Your Peter Pan Adventure *
               </label>
