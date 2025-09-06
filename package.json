@@ -25,6 +25,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-photo-album": "^3.1.0",
+    "resend": "^6.0.2",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.9.2",
     "xlsx": "^0.18.5",

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllRegistrations, addRegistration, initDatabase, getRegistrationCount } from '@/lib/db';
+import { sendConfirmationEmail, sendAdminNotification } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,6 +23,12 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to save registration to database');
     }
 
+    // Send confirmation email to registrant
+    const confirmationSent = await sendConfirmationEmail(registrationData, dataWithTimestamp.id);
+    
+    // Send admin notification
+    const adminNotificationSent = await sendAdminNotification(registrationData, dataWithTimestamp.id);
+
     // Get updated count
     const totalRegistrations = await getRegistrationCount();
     
@@ -29,7 +36,9 @@ export async function POST(request: NextRequest) {
       success: true, 
       message: 'Registration saved successfully',
       id: dataWithTimestamp.id,
-      totalRegistrations
+      totalRegistrations,
+      emailSent: confirmationSent,
+      adminNotified: adminNotificationSent
     });
 
   } catch (error) {
