@@ -1,0 +1,21 @@
+              <div style={{padding: "20px", border: "2px solid #15803d", borderRadius: "10px", backgroundColor: "#f9fffe"}}>
+                <label style={{display: "block", cursor: "pointer"}}>
+                  <input
+                    type="radio"
+                    name="event"
+                    value="rosh-hashana-toast"
+                    checked={formData.event === "rosh-hashana-toast"}
+                    onChange={handleInputChange}
+                    style={{marginRight: "15px", transform: "scale(1.2)"}}
+                  />
+                  <span style={{fontSize: "18px", fontWeight: "bold", color: "#15803d"}}>
+                    הרמת כוסית לראש השנה
+                  </span>
+                </label>
+                <div style={{marginTop: "10px", marginLeft: "35px", color: "#666", fontSize: "16px"}}>
+                  📅 September 13, 2025 at 20:00
+                </div>
+                <div style={{marginLeft: "35px", color: "#666", fontSize: "16px"}}>
+                  💰 $45 per person
+                </div>
+              </div>

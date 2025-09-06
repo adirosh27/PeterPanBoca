@@ -1,0 +1,20 @@
+              <p style={{marginBottom: "10px", fontSize: "16px", fontWeight: "bold"}}>
+                Choose Your Peter Pan Adventure *
+              </p>
+              
+              <div style={{border: "2px solid #ccc", padding: "15px", borderRadius: "8px", backgroundColor: "#f9f9f9"}}>
+                <input
+                  type="radio"
+                  name="event"
+                  value="rosh-hashana-toast"
+                  checked={formData.event === "rosh-hashana-toast"}
+                  onChange={handleInputChange}
+                />
+                <span style={{marginLeft: "10px", fontSize: "16px"}}>
+                  <strong>הרמת כוסית לראש השנה</strong>
+                </span>
+                <br />
+                <span style={{marginLeft: "25px", color: "#666", fontSize: "14px"}}>
+                  📅 September 13, 2025 at 20:00 • 💰 $45 per person
+                </span>
+              </div>
