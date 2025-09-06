@@ -6,13 +6,13 @@ import SiteFooter from '@/components/SiteFooter';
 export const metadata: Metadata = {
   title: {
     template: '%s | Peter Pan Boca',
-    default: 'Peter Pan Boca - Magical Photo Galleries',
+    default: 'Peter Pan Boca',
   },
   description: 'Capturing the magic of Peter Pan events in Boca Raton. Browse our photo galleries from enchanting galas, pirate adventures, and fairy festivals.',
   keywords: ['Peter Pan', 'Boca Raton', 'photo gallery', 'events', 'family', 'entertainment', 'Neverland'],
   authors: [{ name: 'Peter Pan Boca Team' }],
   openGraph: {
-    title: 'Peter Pan Boca - Magical Photo Galleries',
+    title: 'Peter Pan Boca',
     description: 'Capturing the magic of Peter Pan events in Boca Raton',
     url: 'https://peter-pan-boca.vercel.app',
     siteName: 'Peter Pan Boca',
@@ -22,13 +22,13 @@ export const metadata: Metadata = {
         url: 'https://via.placeholder.com/1200x630/1e40af/ffffff?text=Peter+Pan+Boca',
         width: 1200,
         height: 630,
-        alt: 'Peter Pan Boca - Magical Photo Galleries',
+        alt: 'Peter Pan Boca',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Peter Pan Boca - Magical Photo Galleries',
+    title: 'Peter Pan Boca',
     description: 'Capturing the magic of Peter Pan events in Boca Raton',
   },
   robots: {
