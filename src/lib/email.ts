@@ -1,6 +1,19 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Create transporter for Gmail
+const createTransporter = () => {
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    return null;
+  }
+
+  return nodemailer.createTransporter({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
+};
 
 interface RegistrationData {
   firstName: string;
@@ -16,9 +29,10 @@ interface RegistrationData {
 
 export async function sendConfirmationEmail(registrationData: RegistrationData, registrationId: string): Promise<boolean> {
   try {
-    // Check if API key is configured
-    if (!process.env.RESEND_API_KEY) {
-      console.log('RESEND_API_KEY not configured - skipping email');
+    // Create transporter
+    const transporter = createTransporter();
+    if (!transporter) {
+      console.log('Gmail credentials not configured - skipping email');
       return false;
     }
 
@@ -213,21 +227,18 @@ Best regards,
 The Peter Pan Boca Team
     `;
 
-    const { data, error } = await resend.emails.send({
-      from: 'Peter Pan Boca <noreply@peterpanboca.com>',
-      to: [email],
+    const mailOptions = {
+      from: `"Peter Pan Boca" <${process.env.GMAIL_USER}>`,
+      to: email,
       subject: `🎭 Registration Confirmed - ${eventName}`,
       html: emailHtml,
       text: emailText,
-    });
+    };
 
-    if (error) {
-      console.error('Error sending confirmation email:', error);
-      return false;
-    }
+    const info = await transporter.sendMail(mailOptions);
 
     console.log('Confirmation email sent successfully:', {
-      emailId: data?.id,
+      messageId: info.messageId,
       recipient: email,
       registrationId: registrationId
     });
@@ -241,9 +252,10 @@ The Peter Pan Boca Team
 
 export async function sendAdminNotification(registrationData: RegistrationData, registrationId: string): Promise<boolean> {
   try {
-    // Check if API key and admin email are configured
-    if (!process.env.RESEND_API_KEY || !process.env.ADMIN_EMAIL) {
-      console.log('Email not configured - skipping admin notification');
+    // Create transporter and check admin email
+    const transporter = createTransporter();
+    if (!transporter || !process.env.ADMIN_EMAIL) {
+      console.log('Gmail or admin email not configured - skipping admin notification');
       return false;
     }
 
@@ -307,20 +319,17 @@ export async function sendAdminNotification(registrationData: RegistrationData, 
 </html>
     `;
 
-    const { data, error } = await resend.emails.send({
-      from: 'Peter Pan Boca <noreply@peterpanboca.com>',
-      to: [process.env.ADMIN_EMAIL],
+    const mailOptions = {
+      from: `"Peter Pan Boca" <${process.env.GMAIL_USER}>`,
+      to: process.env.ADMIN_EMAIL,
       subject: `🎪 New Registration: ${firstName} ${lastName} - ${eventName}`,
       html: adminEmailHtml,
-    });
+    };
 
-    if (error) {
-      console.error('Error sending admin notification:', error);
-      return false;
-    }
+    const info = await transporter.sendMail(mailOptions);
 
     console.log('Admin notification sent successfully:', {
-      emailId: data?.id,
+      messageId: info.messageId,
       registrationId: registrationId
     });
 
