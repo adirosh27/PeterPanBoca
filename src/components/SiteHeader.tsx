@@ -357,34 +357,6 @@ export default function SiteHeader() {
               📅 לוח שנה
             </Link>
             <Link 
-              href="/testimonials" 
-              style={{
-                fontWeight: '600',
-                fontSize: '1.1rem',
-                textDecoration: 'none',
-                color: isActive('/testimonials') ? theme.activeColor : theme.linkColor,
-                transition: 'all 0.3s ease',
-                padding: '0.75rem 1.25rem',
-                borderRadius: '25px',
-                position: 'relative',
-                background: isActive('/testimonials') ? 'rgba(255, 255, 255, 0.1)' : 'transparent'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = theme.hoverColor;
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = isActive('/testimonials') ? theme.activeColor : theme.linkColor;
-                e.currentTarget.style.background = isActive('/testimonials') ? 'rgba(255, 255, 255, 0.1)' : 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-              onFocus={(e) => e.currentTarget.style.outline = `2px solid ${theme.activeColor}`}
-              onBlur={(e) => e.currentTarget.style.outline = 'none'}
-            >
-              ⭐ חוות דעת
-            </Link>
-            <Link 
               href="/about" 
               style={{
                 fontWeight: '600',
@@ -601,27 +573,6 @@ export default function SiteHeader() {
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isActive('/calendar') ? 'rgba(255, 255, 255, 0.1)' : 'transparent'}
             >
               📅 לוח שנה
-            </Link>
-            <Link 
-              href="/testimonials" 
-              style={{
-                fontWeight: '600',
-                fontSize: '1.2rem',
-                textDecoration: 'none',
-                color: isActive('/testimonials') ? theme.activeColor : theme.linkColor,
-                padding: '1rem',
-                borderRadius: '10px',
-                backgroundColor: isActive('/testimonials') ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem'
-              }}
-              onClick={() => setMobileMenuOpen(false)}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isActive('/testimonials') ? 'rgba(255, 255, 255, 0.1)' : 'transparent'}
-            >
-              ⭐ חוות דעת
             </Link>
             <Link 
               href="/about" 
