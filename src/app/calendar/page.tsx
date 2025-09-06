@@ -43,8 +43,8 @@ const birthdays = [
 ];
 
 // Generate birthday events for multiple years
-const generateBirthdays = (startYear: number, endYear: number) => {
-  const birthdayEvents = [];
+const generateBirthdays = (startYear: number, endYear: number): Holiday[] => {
+  const birthdayEvents: Holiday[] = [];
   for (let year = startYear; year <= endYear; year++) {
     birthdays.forEach(birthday => {
       const date = `${year}-${birthday.month.toString().padStart(2, '0')}-${birthday.day.toString().padStart(2, '0')}`;
