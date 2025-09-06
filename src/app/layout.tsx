@@ -19,10 +19,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://via.placeholder.com/1200x630/1e40af/ffffff?text=Peter+Pan+Boca',
+        url: 'https://peter-pan-boca.vercel.app/images/PP_Logo.png',
         width: 1200,
         height: 630,
-        alt: 'Peter Pan Boca',
+        alt: 'Peter Pan Boca Logo',
       },
     ],
   },
