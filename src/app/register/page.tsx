@@ -618,7 +618,9 @@ export default function RegisterPage() {
                       <div style={{ 
                         fontWeight: 'bold', 
                         fontSize: '1.1rem', 
-                        marginBottom: '0.25rem'
+                        marginBottom: '0.25rem',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'anywhere'
                       }}>
                         {event.name}
                       </div>
