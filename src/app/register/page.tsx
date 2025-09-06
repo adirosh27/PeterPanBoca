@@ -319,7 +319,7 @@ export default function RegisterPage() {
             fontSize: 'clamp(2rem, 6vw, 4rem)', 
             marginBottom: '1rem',
             animation: 'bounce 2s infinite',
-            wordWrap: 'break-word',
+            wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb',
             overflowWrap: 'break-word',
             maxWidth: '100%'
           }}>🎪✨🧚‍♀️✨</div>
@@ -334,7 +334,7 @@ export default function RegisterPage() {
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite',
             textShadow: '0 4px 8px rgba(0,0,0,0.2)',
-            wordWrap: 'break-word',
+            wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb',
             overflowWrap: 'break-word',
             maxWidth: '100%',
             lineHeight: '1.2'
@@ -353,7 +353,7 @@ export default function RegisterPage() {
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
             boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
-            wordWrap: 'break-word',
+            wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb',
             overflowWrap: 'break-word',
             width: '100%',
             boxSizing: 'border-box'
@@ -610,10 +610,10 @@ export default function RegisterPage() {
                       }}
                     />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word' }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
                         {event.name}
                       </div>
-                      <div style={{ color: '#666', fontSize: '0.9rem', wordWrap: 'break-word' }}>
+                      <div style={{ color: '#666', fontSize: '0.9rem', wordWrap: 'break-word', display: 'inline', whiteSpace: 'pre-wrap', writingMode: 'horizontal-tb' }}>
                         📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>
