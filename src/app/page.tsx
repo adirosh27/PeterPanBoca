@@ -122,7 +122,7 @@ export default function HomePage() {
       <section 
         data-hero
         style={{ 
-          padding: '6rem 2rem',
+          padding: 'clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 2rem)',
           textAlign: 'center',
           position: 'relative',
           minHeight: '80vh',
@@ -132,7 +132,7 @@ export default function HomePage() {
         }}
       >
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ fontSize: '4rem', marginBottom: '2rem', animation: 'bounce 2s infinite' }}>
+          <div style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', marginBottom: 'clamp(1rem, 4vw, 2rem)', animation: 'bounce 2s infinite' }}>
             {themeContent.heroIcons}
           </div>
           <h1 style={{ 
@@ -248,116 +248,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Events */}
-      <section style={{ padding: '4rem 2rem' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-              {themeContent.sectionTitle}
-            </h2>
-            <p style={{ fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
-              {themeContent.sectionSubtitle}
-            </p>
-          </div>
 
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '2rem'
-          }}>
-            {featuredEvents.map((event) => (
-              <Link 
-                key={`${event.year}-${event.slug}`}
-                href={`/galleries/${event.year}/${event.slug}`}
-                data-card
-                style={{
-                  textDecoration: 'none',
-                  borderRadius: '15px',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s',
-                  cursor: 'pointer',
-                  display: 'block'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0) scale(1)'}
-              >
-                <div style={{ position: 'relative', height: '250px', overflow: 'hidden' }}>
-                  <Image
-                    src={event.coverImage.src}
-                    alt={event.coverImage.alt}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
-                  <div style={{ 
-                    position: 'absolute',
-                    bottom: '0',
-                    left: '0',
-                    right: '0',
-                    background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-                    color: 'white',
-                    padding: '1rem'
-                  }}>
-                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: '0 0 0.5rem 0' }}>
-                      {event.title}
-                    </h3>
-                    <p style={{ fontSize: '0.9rem', margin: '0' }}>
-                      {new Date(event.date).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      })}
-                    </p>
-                  </div>
-                </div>
-                <div style={{ padding: '1.5rem' }}>
-                  <p style={{ lineHeight: '1.6', margin: '0' }}>
-                    {event.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Years Overview */}
-      <section data-card style={{ padding: '4rem 2rem', margin: '4rem 0' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            {themeContent.yearTitle}
-          </h2>
-          <p style={{ fontSize: '1.2rem', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem auto' }}>
-            Journey through years of magical memories
-          </p>
-          
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-            {years.map((year) => (
-              <Link 
-                key={year}
-                href={`/galleries/${year}`}
-                data-button
-                style={{
-                  padding: '1.5rem 2.5rem',
-                  borderRadius: '15px',
-                  textDecoration: 'none',
-                  fontSize: '2rem',
-                  fontWeight: 'bold',
-                  transition: 'all 0.3s',
-                  display: 'inline-block',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-              >
-                {year}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Call to Action */}
-      <section style={{ padding: '4rem 2rem' }}>
+      <section style={{ padding: 'clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem)' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <div 
             data-card

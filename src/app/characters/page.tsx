@@ -40,7 +40,7 @@ export default function CharactersPage() {
       background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
-      padding: '3rem 2rem'
+      padding: 'clamp(2rem, 6vw, 3rem) clamp(1rem, 4vw, 2rem)'
     }}>
       <style jsx global>{`
         @keyframes gradientShift {
@@ -94,15 +94,15 @@ export default function CharactersPage() {
           data-card
           style={{
             borderRadius: '20px',
-            padding: '3rem',
+            padding: 'clamp(2rem, 5vw, 3rem)',
             marginTop: '4rem'
           }}
         >
           
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: '1.5rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+            gap: 'clamp(1rem, 3vw, 1.5rem)'
           }}>
             {teamMembers.map((member, index) => (
               <div
@@ -111,7 +111,7 @@ export default function CharactersPage() {
                   background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
                   border: `2px solid ${member.color}`,
                   borderRadius: '15px',
-                  padding: '1.5rem',
+                  padding: 'clamp(1rem, 3vw, 1.5rem)',
                   textAlign: 'center',
                   transition: 'all 0.3s',
                   cursor: 'pointer'

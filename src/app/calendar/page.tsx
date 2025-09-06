@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Event {
   id: number;
@@ -22,21 +22,71 @@ interface Holiday {
   color: string;
 }
 
+const birthdays = [
+  { name: 'Oren Benvenisti', month: 8, day: 30 },
+  { name: 'Eyal Bishri', month: 12, day: 10 },
+  { name: 'Ron Dickson', month: 11, day: 1 },
+  { name: 'Ofer Gilady', month: 1, day: 21 },
+  { name: 'Adir Hazan', month: 10, day: 27 },
+  { name: 'Nadav Houri', month: 5, day: 13 },
+  { name: 'Daniel Kern', month: 3, day: 3 },
+  { name: 'Avi Levi', month: 7, day: 8 },
+  { name: 'Steven (Shuly) Michaels', month: 12, day: 3 },
+  { name: 'Tal Shaked', month: 7, day: 25 },
+  { name: 'Sagie Shanun', month: 2, day: 21 },
+  { name: 'Momy Shoshan', month: 1, day: 3 },
+  { name: 'Lior Tamir', month: 12, day: 6 },
+  { name: 'Amit Tirosh', month: 12, day: 15 },
+  { name: 'Roee Vulkan', month: 10, day: 6 },
+  { name: 'Roei Wagner', month: 7, day: 21 },
+  { name: 'Shay Zaidenberg', month: 12, day: 24 },
+];
+
+// Generate birthday events for multiple years
+const generateBirthdays = (startYear: number, endYear: number) => {
+  const birthdayEvents = [];
+  for (let year = startYear; year <= endYear; year++) {
+    birthdays.forEach(birthday => {
+      const date = `${year}-${birthday.month.toString().padStart(2, '0')}-${birthday.day.toString().padStart(2, '0')}`;
+      birthdayEvents.push({
+        date,
+        name: `יום הולדת ${birthday.name}`,
+        emoji: '🎂',
+        color: '#ec4899'
+      });
+    });
+  }
+  return birthdayEvents;
+};
+
 const holidays: Holiday[] = [
-  { date: '2025-09-13', name: 'ראש השנה', emoji: '🍯', color: '#f59e0b' },
-  { date: '2025-10-12', name: 'יום כיפור', emoji: '🕊️', color: '#6b7280' },
-  { date: '2025-10-17', name: 'סוכות', emoji: '🌿', color: '#10b981' },
-  { date: '2025-09-21', name: 'הושענא רבה', emoji: '📯', color: '#8b5cf6' },
-  { date: '2025-09-22', name: 'שמחת תורה', emoji: '📜', color: '#3b82f6' },
-  { date: '2025-12-25', name: 'חנוכה', emoji: '🕯️', color: '#0ea5e9' },
-  { date: '2026-02-13', name: 'ט״ו בשבט', emoji: '🌳', color: '#22c55e' },
-  { date: '2026-03-01', name: 'ראש חודש אדר', emoji: '🌙', color: '#ec4899' },
-  { date: '2026-03-14', name: 'פורים', emoji: '🎭', color: '#f97316' },
-  { date: '2026-04-13', name: 'פסח', emoji: '🍞', color: '#eab308' },
-  { date: '2026-05-18', name: 'ל״ג בעומר', emoji: '🏹', color: '#84cc16' },
-  { date: '2026-06-02', name: 'שבועות', emoji: '🌾', color: '#06b6d4' },
-  { date: '2026-07-29', name: 'תשעה באב', emoji: '🕯️', color: '#6b7280' },
-  { date: '2026-08-15', name: 'ט״ו באב', emoji: '💕', color: '#f43f5e' },
+  { date: '2024-09-16', name: 'ראש השנה', emoji: '🍯', color: '#f59e0b' },
+  { date: '2024-09-25', name: 'יום כיפור', emoji: '🕊️', color: '#6b7280' },
+  { date: '2024-09-30', name: 'סוכות', emoji: '🌿', color: '#10b981' },
+  { date: '2024-10-06', name: 'הושענא רבה', emoji: '📯', color: '#8b5cf6' },
+  { date: '2024-10-07', name: 'שמחת תורה', emoji: '📜', color: '#3b82f6' },
+  { date: '2024-12-25', name: 'חנוכה', emoji: '🕯️', color: '#0ea5e9' },
+  { date: '2025-02-13', name: 'ט״ו בשבט', emoji: '🌳', color: '#22c55e' },
+  { date: '2025-03-14', name: 'פורים', emoji: '🎭', color: '#f97316' },
+  { date: '2025-04-13', name: 'פסח', emoji: '🍞', color: '#eab308' },
+  { date: '2025-05-18', name: 'ל״ג בעומר', emoji: '🏹', color: '#84cc16' },
+  { date: '2025-06-02', name: 'שבועות', emoji: '🌾', color: '#06b6d4' },
+  { date: '2025-07-17', name: 'תשעה באב', emoji: '🕯️', color: '#6b7280' },
+  { date: '2025-08-11', name: 'ט״ו באב', emoji: '💕', color: '#f43f5e' },
+  { date: '2025-09-03', name: 'ראש השנה', emoji: '🍯', color: '#f59e0b' },
+  { date: '2025-09-12', name: 'יום כיפור', emoji: '🕊️', color: '#6b7280' },
+  { date: '2025-09-17', name: 'סוכות', emoji: '🌿', color: '#10b981' },
+  // Test birthday entries
+  { date: '2024-01-03', name: 'יום הולדת Momy Shoshan', emoji: '🎂', color: '#ec4899' },
+  { date: '2024-01-21', name: 'יום הולדת Ofer Gilady', emoji: '🎂', color: '#ec4899' },
+  { date: '2024-12-03', name: 'יום הולדת Steven Michaels', emoji: '🎂', color: '#ec4899' },
+  { date: '2024-12-10', name: 'יום הולדת Eyal Bishri', emoji: '🎂', color: '#ec4899' },
+  // Today's test birthday (September 6, 2025)
+  { date: '2025-09-06', name: 'יום הולדת Test User', emoji: '🎂', color: '#ec4899' },
+  { date: '2025-09-06', name: 'יום הולדת Adir Hazan', emoji: '🎂', color: '#ec4899' },
+  { date: '2025-09-06', name: 'יום הולדת Special Demo', emoji: '🎂', color: '#ec4899' },
+  // Add birthdays for multiple years (2024-2030)
+  ...generateBirthdays(2024, 2030)
 ];
 
 const events: Event[] = [
@@ -133,6 +183,20 @@ export default function CalendarPage() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
+  // Get today's birthdays - memoized to avoid recalculation
+  const todaysBirthdays = React.useMemo(() => {
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0];
+    console.log('Today is:', todayString); // Debug log
+    const birthdaysToday = holidays.filter(holiday => 
+      holiday.date === todayString && 
+      holiday.name && 
+      holiday.name.includes('יום הולדת')
+    );
+    console.log('Birthdays today:', birthdaysToday); // Debug log
+    return birthdaysToday;
+  }, []);
+
   const months = [
     'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
     'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
@@ -177,8 +241,8 @@ export default function CalendarPage() {
         <div
           key={day}
           style={{
-            minHeight: '80px',
-            padding: '0.5rem',
+            minHeight: 'clamp(60px, 15vw, 80px)',
+            padding: 'clamp(0.25rem, 1vw, 0.5rem)',
             border: '1px solid #e5e7eb',
             backgroundColor: isToday ? '#fef3c7' : '#ffffff',
             borderRadius: '8px',
@@ -225,8 +289,8 @@ export default function CalendarPage() {
               key={event.id}
               onClick={() => setSelectedEvent(event)}
               style={{
-                fontSize: '0.75rem',
-                padding: '2px 4px',
+                fontSize: 'clamp(0.6rem, 2vw, 0.75rem)',
+                padding: 'clamp(1px, 0.5vw, 2px) clamp(2px, 1vw, 4px)',
                 borderRadius: '4px',
                 backgroundColor: typeColors[event.type],
                 color: 'white',
@@ -259,7 +323,7 @@ export default function CalendarPage() {
       background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
-      padding: '3rem 2rem'
+      padding: 'clamp(2rem, 6vw, 3rem) clamp(1rem, 4vw, 2rem)'
     }}>
       <style jsx global>{`
         @keyframes gradientShift {
@@ -282,10 +346,43 @@ export default function CalendarPage() {
       `}</style>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        {/* Birthday Notification */}
+        {todaysBirthdays.length > 0 && (
+          <div style={{
+            position: 'fixed',
+            top: '100px',
+            left: '20px',
+            zIndex: 999,
+            background: 'linear-gradient(135deg, #ec4899, #f97316)',
+            color: 'white',
+            padding: 'clamp(1rem, 3vw, 1.5rem)',
+            borderRadius: '15px',
+            boxShadow: '0 10px 25px rgba(236, 72, 153, 0.3)',
+            animation: 'bounce 2s infinite',
+            maxWidth: 'clamp(200px, 25vw, 300px)',
+            fontSize: 'clamp(0.8rem, 2.5vw, 1rem)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)' }}>🎂</span>
+              <strong>יום הולדת היום!</strong>
+            </div>
+            {todaysBirthdays.map((birthday, index) => {
+              const displayName = birthday.name.replace('יום הולדת ', '');
+              return (
+                <div key={`birthday-${index}`} style={{ 
+                  fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', 
+                  marginBottom: index < todaysBirthdays.length - 1 ? '0.25rem' : '0' 
+                }}>
+                  {displayName}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <div style={{ fontSize: '4rem', marginBottom: '2rem', animation: 'bounce 2s infinite' }}>
-            📅✨🎪
           </div>
           <h1 style={{ 
             fontSize: 'clamp(2.5rem, 6vw, 4rem)', 
@@ -310,7 +407,7 @@ export default function CalendarPage() {
           data-card
           style={{
             borderRadius: '20px',
-            padding: '2rem',
+            padding: 'clamp(1.5rem, 4vw, 2rem)',
             marginBottom: '2rem'
           }}
         >
@@ -419,7 +516,7 @@ export default function CalendarPage() {
           data-card
           style={{
             borderRadius: '20px',
-            padding: '2rem',
+            padding: 'clamp(1.5rem, 4vw, 2rem)',
             marginBottom: '2rem'
           }}
         >
@@ -447,69 +544,6 @@ export default function CalendarPage() {
           </div>
         </div>
 
-        {/* Upcoming Events List */}
-        <div 
-          data-card
-          style={{
-            borderRadius: '20px',
-            padding: '2rem'
-          }}
-        >
-          <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem', textAlign: 'center' }}>
-            🎪 האירועים הקרובים
-          </h3>
-          <div style={{ display: 'grid', gap: '1.5rem' }}>
-            {events.map(event => (
-              <div
-                key={event.id}
-                onClick={() => setSelectedEvent(event)}
-                style={{
-                  background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
-                  border: `2px solid ${typeColors[event.type]}`,
-                  borderRadius: '15px',
-                  padding: '1.5rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                      <span style={{ fontSize: '1.5rem' }}>{typeIcons[event.type]}</span>
-                      <h4 style={{ fontSize: '1.3rem', fontWeight: 'bold', color: typeColors[event.type], margin: 0 }}>
-                        {event.title}
-                      </h4>
-                    </div>
-                    <p style={{ fontSize: '1rem', color: '#666', margin: '0 0 0.5rem 0' }}>
-                      {event.description}
-                    </p>
-                  </div>
-                  <div style={{ 
-                    background: typeColors[event.type],
-                    color: 'white',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '20px',
-                    fontSize: '0.9rem',
-                    fontWeight: 'bold'
-                  }}>
-                    {event.price}
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', fontSize: '0.9rem', color: '#666' }}>
-                  <div>📅 {new Date(event.date).toLocaleDateString('he-IL')}</div>
-                  <div>⏰ {event.time}</div>
-                  <div>📍 {event.location}</div>
-                  <div>👶 גילאי {event.ageGroup}</div>
-                  <div style={{ color: event.spotsLeft < 10 ? '#dc2626' : '#10b981' }}>
-                    🎟️ נשארו {event.spotsLeft} מקומות
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* Event Modal */}

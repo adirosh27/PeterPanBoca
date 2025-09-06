@@ -161,7 +161,7 @@ export default function SiteHeader() {
       <nav style={{ 
         maxWidth: '1200px', 
         margin: '0 auto', 
-        padding: '1rem 2rem' 
+        padding: isMobile ? '0.5rem 1rem' : '1rem 2rem' 
       }}>
         <div style={{ 
           display: 'flex', 
@@ -184,8 +184,8 @@ export default function SiteHeader() {
             aria-label="פיטר פן - Home"
           >
             <div style={{ 
-              width: '60px', 
-              height: '60px', 
+              width: isMobile ? '45px' : '60px', 
+              height: isMobile ? '45px' : '60px', 
               position: 'relative',
               animation: 'float 3s ease-in-out infinite',
               borderRadius: '50%',
@@ -201,7 +201,7 @@ export default function SiteHeader() {
               />
             </div>
             <span style={{ 
-              fontSize: '1.5rem', 
+              fontSize: isMobile ? '1.2rem' : '1.5rem', 
               fontWeight: 'bold',
               color: theme.linkColor,
               fontFamily: 'Pirata One, cursive'
@@ -326,7 +326,7 @@ export default function SiteHeader() {
               onFocus={(e) => e.currentTarget.style.outline = `2px solid ${theme.activeColor}`}
               onBlur={(e) => e.currentTarget.style.outline = 'none'}
             >
-              🎭 דמויות
+              🎭 חברים
             </Link>
             <Link 
               href="/calendar" 
@@ -579,7 +579,7 @@ export default function SiteHeader() {
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isActive('/characters') ? 'rgba(255, 255, 255, 0.1)' : 'transparent'}
             >
-              🎭 דמויות
+              🎭 חברים
             </Link>
             <Link 
               href="/calendar" 
