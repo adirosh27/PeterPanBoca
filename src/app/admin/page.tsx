@@ -46,6 +46,16 @@ export default function AdminPage() {
     }
   };
 
+  // Group registrations by event
+  const groupedRegistrations = registrations.reduce((groups, registration) => {
+    const eventName = registration.eventName || 'Unknown Event';
+    if (!groups[eventName]) {
+      groups[eventName] = [];
+    }
+    groups[eventName].push(registration);
+    return groups;
+  }, {} as Record<string, Registration[]>);
+
   const downloadExcel = () => {
     window.open('/api/download', '_blank');
   };
@@ -156,94 +166,123 @@ export default function AdminPage() {
           </div>
         )}
 
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          borderRadius: '20px',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
-          backdropFilter: 'blur(20px)',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
-          overflow: 'hidden',
-          position: 'relative'
-        }}>
-          {registrations.length === 0 ? (
-            <div style={{ 
-              padding: '3rem', 
-              textAlign: 'center',
-              color: '#64748b'
-            }}>
-              <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📊</div>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#1f2937' }}>
-                Registration Data Location
-              </h3>
-              <p style={{ marginBottom: '1rem', fontWeight: 'bold', color: '#10b981' }}>
-                ✅ Registration system is working perfectly!
-              </p>
-              <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                <strong>📝 To view registrations:</strong> Go to your Vercel dashboard → peter-pan-boca project → latest deployment → Function Logs
-              </p>
-              <p style={{ fontSize: '0.8rem', color: '#6b7280' }}>
-                Look for entries containing "logging registration data"
-              </p>
-            </div>
-          ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ 
-                width: '100%', 
-                borderCollapse: 'collapse'
+        {registrations.length === 0 ? (
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: '20px',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+            backdropFilter: 'blur(20px)',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            padding: '3rem',
+            textAlign: 'center',
+            color: '#64748b'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📊</div>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#1f2937' }}>
+              No Registrations Yet
+            </h3>
+            <p style={{ marginBottom: '1rem', fontWeight: 'bold', color: '#10b981' }}>
+              ✅ Registration system is working perfectly!
+            </p>
+            <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>
+              Registrations will appear here once people start signing up for your events.
+            </p>
+          </div>
+        ) : (
+          Object.entries(groupedRegistrations).map(([eventName, eventRegistrations]) => {
+            const totalAttendees = eventRegistrations.reduce((sum, reg) => sum + reg.adults + reg.children, 0);
+            const totalRevenue = eventRegistrations.reduce((sum, reg) => {
+              const cost = parseFloat(reg.totalCost.replace(/[^0-9.-]+/g, "")) || 0;
+              return sum + cost;
+            }, 0);
+
+            return (
+              <div key={eventName} style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '20px',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                backdropFilter: 'blur(20px)',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                overflow: 'hidden',
+                position: 'relative',
+                marginBottom: '2rem'
               }}>
-                <thead style={{ backgroundColor: '#f8fafc' }}>
-                  <tr>
-                    <th style={tableHeaderStyle}>Name</th>
-                    <th style={tableHeaderStyle}>Email</th>
-                    <th style={tableHeaderStyle}>Phone</th>
-                    <th style={tableHeaderStyle}>Event</th>
-                    <th style={tableHeaderStyle}>Date</th>
-                    <th style={tableHeaderStyle}>Guests</th>
-                    <th style={tableHeaderStyle}>Total Cost</th>
-                    <th style={tableHeaderStyle}>Registered</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {registrations.map((reg) => (
-                    <tr key={reg.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                      <td style={tableCellStyle}>
-                        {reg.firstName} {reg.lastName}
-                      </td>
-                      <td style={tableCellStyle}>{reg.email}</td>
-                      <td style={tableCellStyle}>{reg.phone}</td>
-                      <td style={tableCellStyle}>
-                        <div style={{ fontSize: '0.875rem' }}>
-                          <div>{reg.eventName}</div>
-                          <div style={{ color: '#64748b' }}>{reg.eventDate}</div>
-                        </div>
-                      </td>
-                      <td style={tableCellStyle}>{reg.eventDate}</td>
-                      <td style={tableCellStyle}>
-                        <div style={{ fontSize: '0.875rem' }}>
-                          <div>👥 {reg.adults} adults</div>
-                          {reg.children > 0 && (
-                            <div>👶 {reg.children} children</div>
-                          )}
-                          {reg.childrenAges && reg.childrenAges !== 'N/A' && (
-                            <div style={{ color: '#64748b' }}>Ages: {reg.childrenAges}</div>
-                          )}
-                        </div>
-                      </td>
-                      <td style={tableCellStyle}>
-                        <strong>{reg.totalCost}</strong>
-                      </td>
-                      <td style={tableCellStyle}>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                          {new Date(reg.registrationDate).toLocaleString()}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                <div style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #fbbf24 50%, #34d399 100%)',
+                  color: 'white',
+                  padding: '1.5rem',
+                  textAlign: 'center'
+                }}>
+                  <h2 style={{ 
+                    margin: '0 0 0.5rem 0', 
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold'
+                  }}>
+                    🎭 {eventName}
+                  </h2>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', fontSize: '0.9rem' }}>
+                    <span><strong>{eventRegistrations.length}</strong> registrations</span>
+                    <span><strong>{totalAttendees}</strong> total attendees</span>
+                    <span><strong>₪{totalRevenue.toFixed(0)}</strong> revenue</span>
+                  </div>
+                </div>
+
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ 
+                    width: '100%', 
+                    borderCollapse: 'collapse'
+                  }}>
+                    <thead style={{ backgroundColor: '#f8fafc' }}>
+                      <tr>
+                        <th style={tableHeaderStyle}>Name</th>
+                        <th style={tableHeaderStyle}>Email</th>
+                        <th style={tableHeaderStyle}>Phone</th>
+                        <th style={tableHeaderStyle}>Guests</th>
+                        <th style={tableHeaderStyle}>Total Cost</th>
+                        <th style={tableHeaderStyle}>Registered</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {eventRegistrations.map((reg) => (
+                        <tr key={reg.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                          <td style={tableCellStyle}>
+                            {reg.firstName} {reg.lastName}
+                          </td>
+                          <td style={tableCellStyle}>{reg.email}</td>
+                          <td style={tableCellStyle}>{reg.phone}</td>
+                          <td style={tableCellStyle}>
+                            <div style={{ fontSize: '0.875rem' }}>
+                              <div>👥 {reg.adults} adults</div>
+                              {reg.children > 0 && (
+                                <div>👶 {reg.children} children</div>
+                              )}
+                              {reg.childrenAges && reg.childrenAges !== 'N/A' && (
+                                <div style={{ color: '#64748b' }}>Ages: {reg.childrenAges}</div>
+                              )}
+                              {reg.specialRequests && reg.specialRequests !== 'N/A' && (
+                                <div style={{ color: '#64748b', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                                  💬 {reg.specialRequests}
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td style={tableCellStyle}>
+                            <strong>{reg.totalCost}</strong>
+                          </td>
+                          <td style={tableCellStyle}>
+                            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                              {new Date(reg.serverTimestamp || reg.registrationDate).toLocaleString()}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })
+        )}
 
         <div style={{
           marginTop: '2rem',
