@@ -26,7 +26,6 @@ const birthdays = [
   { name: 'Oren Benvenisti', month: 8, day: 30 },
   { name: 'Eyal Bishri', month: 12, day: 10 },
   { name: 'Ron Dickson', month: 11, day: 1 },
-  { name: 'Yossi Chaham', month: 10, day: 29 },
   { name: 'Ofer Gilady', month: 1, day: 21 },
   { name: 'Adir Hazan', month: 10, day: 27 },
   { name: 'Nadav Houri', month: 5, day: 13 },
