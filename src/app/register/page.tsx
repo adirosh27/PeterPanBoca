@@ -568,7 +568,12 @@ export default function RegisterPage() {
                 marginBottom: '1rem',
                 color: '#15803d'
               }}>
-                Choose Your Peter Pan Adventure *              </label>                            {EVENTS.map((event) => (                <div key={event.id} style={{marginBottom: "10px"}}>                  <label>                    <input                      type="radio"                      name="event"                      value={event.id}                      checked={formData.event === event.id}                      onChange={handleInputChange}                    />                    {event.name} - {event.date} - ${event.price}                  </label>                </div>              ))}                            {errors.event &&
+                Choose Your Peter Pan Adventure *
+              </label>
+              
+              <div>                {EVENTS.map((event) => (                  <div key={event.id} style={{marginBottom: "15px", padding: "10px", border: "1px solid #ccc", borderRadius: "5px"}}>                    <label>                      <input                        type="radio"                        name="event"                        value={event.id}                        checked={formData.event === event.id}                        onChange={handleInputChange}                        style={{marginRight: "10px"}}                      />                      <strong>{event.name}</strong><br/>                      📅 {event.date} • 💰 ${event.price} per person                    </label>                  </div>                ))}              </div>
+              
+              {errors.event && (
                 <p style={{ color: '#dc2626', fontSize: '0.9rem', marginTop: '0.5rem' }}>
                   {errors.event}
                 </p>
