@@ -562,13 +562,15 @@ export default function RegisterPage() {
                   <label
                     key={event.id}
                     style={{
-                      display: 'block',
-                      padding: '1.5rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '1rem',
                       border: formData.event === event.id ? '3px solid #15803d' : '2px solid #facc15',
                       borderRadius: '15px',
                       cursor: 'pointer',
                       backgroundColor: formData.event === event.id ? '#f0fdf4' : 'transparent',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      gap: '1rem'
                     }}
                     onMouseEnter={(e) => {
                       if (formData.event !== event.id) {
@@ -581,27 +583,24 @@ export default function RegisterPage() {
                       }
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                      <input
-                        type="radio"
-                        name="event"
-                        value={event.id}
-                        checked={formData.event === event.id}
-                        onChange={handleInputChange}
-                        style={{ 
-                          marginTop: '0.2rem',
-                          transform: 'scale(1.2)',
-                          accentColor: '#15803d',
-                          flexShrink: 0
-                        }}
-                      />
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
-                          {event.name}
-                        </div>
-                        <div style={{ color: '#666', fontSize: '0.9rem' }}>
-                          📅 {event.date} • 💰 ${event.price} per person
-                        </div>
+                    <input
+                      type="radio"
+                      name="event"
+                      value={event.id}
+                      checked={formData.event === event.id}
+                      onChange={handleInputChange}
+                      style={{ 
+                        transform: 'scale(1.2)',
+                        accentColor: '#15803d',
+                        flexShrink: 0
+                      }}
+                    />
+                    <div>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>
+                        {event.name}
+                      </div>
+                      <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                        📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>
                   </label>
