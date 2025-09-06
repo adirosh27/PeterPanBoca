@@ -189,8 +189,11 @@ export default function RegisterPage() {
       background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
-      padding: '2rem 1rem',
-      fontFamily: 'system-ui, sans-serif'
+      padding: 'clamp(1rem, 4vw, 2rem) clamp(0.5rem, 2vw, 1rem)',
+      fontFamily: 'system-ui, sans-serif',
+      overflowX: 'hidden',
+      width: '100%',
+      boxSizing: 'border-box'
     }}>
       <style jsx global>{`
         @keyframes gradientShift {
@@ -309,16 +312,19 @@ export default function RegisterPage() {
           to { transform: rotate(360deg); }
         }
       `}</style>
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 1rem' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0', width: '100%', boxSizing: 'border-box' }}>
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 3rem)', width: '100%', boxSizing: 'border-box' }}>
           <div style={{ 
-            fontSize: 'clamp(2.5rem, 8vw, 4rem)', 
+            fontSize: 'clamp(2rem, 6vw, 4rem)', 
             marginBottom: '1rem',
-            animation: 'bounce 2s infinite'
+            animation: 'bounce 2s infinite',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            maxWidth: '100%'
           }}>🎪✨🧚‍♀️✨</div>
           <h1 style={{ 
-            fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
+            fontSize: 'clamp(1.5rem, 5vw, 4rem)', 
             fontWeight: 'bold', 
             marginBottom: '1rem',
             background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee, #a78bfa)',
@@ -327,22 +333,30 @@ export default function RegisterPage() {
             WebkitTextFillColor: 'transparent',
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite',
-            textShadow: '0 4px 8px rgba(0,0,0,0.2)'
+            textShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            maxWidth: '100%',
+            lineHeight: '1.2'
           }}>
             ✨ Peter Pan Boca Events ✨
           </h1>
           <p style={{ 
-            fontSize: 'clamp(1rem, 3vw, 1.3rem)', 
+            fontSize: 'clamp(0.9rem, 3vw, 1.3rem)', 
             maxWidth: '600px', 
             margin: '0 auto',
             lineHeight: '1.7',
             color: 'rgba(255, 255, 255, 0.95)',
             background: 'rgba(255, 255, 255, 0.1)',
-            padding: 'clamp(1rem, 4vw, 1.5rem)',
+            padding: 'clamp(0.8rem, 4vw, 1.5rem)',
             borderRadius: '20px',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             🌟 Join us for magical Peter Pan adventures! 🌟<br/>
             Fill out the form below to register for your chosen event and embark on an unforgettable journey!
