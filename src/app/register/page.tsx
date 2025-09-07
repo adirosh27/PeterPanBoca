@@ -16,8 +16,7 @@ interface FormData {
 }
 
 const EVENTS = [
-  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00', price: 45 },
-  { id: 'sukkot-celebration', name: 'חגיגת סוכות עם פיטר פן', date: 'October 18, 2025 at 19:30', price: 55 }
+  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00' }
 ];
 
 export default function RegisterPage() {
@@ -84,7 +83,6 @@ export default function RegisterPage() {
     try {
       // Get the selected event details
       const selectedEvent = EVENTS.find(event => event.id === formData.event);
-      const totalCost = selectedEvent ? (formData.adults + formData.children) * selectedEvent.price : 0;
       
       // Prepare data for submission
       const registrationData = {
@@ -94,13 +92,11 @@ export default function RegisterPage() {
         phone: formData.phone,
         eventName: selectedEvent?.name || '',
         eventDate: selectedEvent?.date || '',
-        eventPrice: `$${selectedEvent?.price || 0} per person`,
         adults: formData.adults,
         children: formData.children,
         childrenAges: formData.childrenAges || 'N/A',
         specialRequests: formData.specialRequests || 'None',
         paymentMethod: formData.paymentMethod,
-        totalCost: `$${totalCost}`,
         registrationDate: new Date().toLocaleString()
       };
 
@@ -185,7 +181,6 @@ export default function RegisterPage() {
   }
 
   const selectedEvent = EVENTS.find(event => event.id === formData.event);
-  const totalCost = selectedEvent ? (formData.adults + formData.children) * selectedEvent.price : 0;
 
   return (
     <div style={{ 
@@ -616,7 +611,7 @@ export default function RegisterPage() {
                         {event.name}
                       </div>
                       <div style={{ color: '#666', fontSize: '0.9rem' }}>
-                        📅 {event.date} • 💰 ${event.price} per person
+                        📅 {event.date}
                       </div>
                     </div>
                   </label>
@@ -644,7 +639,7 @@ export default function RegisterPage() {
                   ✨ Selected Event: {selectedEvent.name}
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>
-                  📅 {selectedEvent.date} • 💰 ${selectedEvent.price} per person
+                  📅 {selectedEvent.date}
                 </p>
               </div>
             )}
@@ -804,7 +799,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Payment Summary & Method */}
+          {/* Payment Method Selection */}
           {selectedEvent && (
             <div 
               data-card
@@ -829,48 +824,8 @@ export default function RegisterPage() {
                 paddingBottom: '0.75rem',
                 textAlign: 'center'
               }}>
-                💰 Payment & Summary
+                💰 Payment Method
               </h2>
-
-              {/* Cost Summary */}
-              <div style={{ 
-                background: 'linear-gradient(135deg, rgba(255, 235, 59, 0.2), rgba(76, 175, 80, 0.2), rgba(156, 39, 176, 0.2))', 
-                padding: '2rem', 
-                borderRadius: '20px', 
-                border: '3px solid transparent',
-                backgroundClip: 'padding-box',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255, 255, 255, 0.3)',
-                position: 'relative',
-                marginBottom: '2rem'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
-                  <span>{selectedEvent.name}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span>Date:</span>
-                  <span>{selectedEvent.date}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span>Price per person:</span>
-                  <span>${selectedEvent.price}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span>Adults ({formData.adults}):</span>
-                  <span>${formData.adults * selectedEvent.price}</span>
-                </div>
-                {formData.children > 0 && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <span>Children ({formData.children}):</span>
-                    <span>${formData.children * selectedEvent.price}</span>
-                  </div>
-                )}
-                <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
-                  <span>Total Cost:</span>
-                  <span>${totalCost}</span>
-                </div>
-              </div>
 
               {/* Payment Method Selection */}
               <div style={{ marginBottom: '2rem' }}>

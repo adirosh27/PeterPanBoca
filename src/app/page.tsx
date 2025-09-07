@@ -268,27 +268,6 @@ export default function HomePage() {
               {themeContent.heroSubtitle}
             </p>
           )}
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '4rem' }}>
-            <Link 
-              href="/galleries" 
-              data-button
-              style={{ 
-                padding: '1rem 2rem', 
-                borderRadius: '10px', 
-                textDecoration: 'none',
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                display: 'inline-block',
-                transition: 'all 0.3s',
-                transform: 'scale(1)',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              {themeContent.buttonText}
-            </Link>
-          </div>
 
           {/* Video Section within Hero */}
 
