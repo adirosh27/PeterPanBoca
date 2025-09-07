@@ -128,7 +128,7 @@ export default function GalleriesPage() {
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite'
           }}>
-            📸 גלריית הזכרונות הקסומה
+            📸 מאירועים
           </h1>
           <p style={{ fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
             מסע בזמן דרך השנים - צפו בכל האירועים המיוחדים שלנו מאורגנים לפי שנים
