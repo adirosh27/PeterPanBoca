@@ -12,7 +12,9 @@
       "Bash(npm uninstall:*)",
       "Bash(curl:*)",
       "Bash(find:*)",
-      "Bash(git filter-branch:*)"
+      "Bash(git filter-branch:*)",
+      "Bash(git reflog:*)",
+      "Bash(git gc:*)"
     ],
     "deny": [],
     "ask": []
