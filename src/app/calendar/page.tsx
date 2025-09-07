@@ -42,6 +42,8 @@ const birthdays = [
   { name: 'Roei Wagner', month: 7, day: 21 },
   { name: 'Shay Zaidenberg', month: 12, day: 24 },
   { name: 'Shalom Sapir', month: 12, day: 24 },
+  { name: 'Dudi Amsalem', month: 6, day: 29 },
+  { name: 'Shalom Moldavski', month: 9, day: 17 },
 ];
 
 // Generate birthday events for multiple years
@@ -210,13 +212,17 @@ export default function CalendarPage() {
   // Get today's birthdays - memoized to avoid recalculation
   const todaysBirthdays = React.useMemo(() => {
     const today = new Date();
-    const todayString = today.toISOString().split('T')[0];
-    const birthdaysToday = holidays.filter(holiday => 
-      holiday.date === todayString && 
-      holiday.name && 
-      holiday.name.includes('יום הולדת')
+    const todayMonth = today.getMonth() + 1;
+    const todayDay = today.getDate();
+    const birthdaysToday = birthdays.filter(birthday => 
+      birthday.month === todayMonth && birthday.day === todayDay
     );
-    return birthdaysToday;
+    return birthdaysToday.map(birthday => ({
+      date: today.toISOString().split('T')[0],
+      name: `יום הולדת ${birthday.name}`,
+      emoji: '🎂',
+      color: '#ec4899'
+    }));
   }, []);
 
   const months = [
@@ -231,7 +237,23 @@ export default function CalendarPage() {
 
   const getHolidaysForDate = (date: Date) => {
     const dateString = date.toISOString().split('T')[0];
-    return holidays.filter(holiday => holiday.date === dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    
+    // Get birthdays for this date
+    const birthdaysToday = birthdays.filter(birthday => 
+      birthday.month === month && birthday.day === day
+    ).map(birthday => ({
+      date: dateString,
+      name: `יום הולדת ${birthday.name}`,
+      emoji: '🎂',
+      color: '#ec4899'
+    }));
+    
+    // Get regular holidays
+    const regularHolidays = holidays.filter(holiday => holiday.date === dateString);
+    
+    return [...regularHolidays, ...birthdaysToday];
   };
 
   const getDaysInMonth = (month: number, year: number) => {
