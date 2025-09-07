@@ -5,6 +5,114 @@ import Link from 'next/link';
 import { getFeaturedEvents, getYears } from '@/lib/data';
 import { useEffect, useState } from 'react';
 
+// Upcoming events data
+const UPCOMING_EVENTS = [
+  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: '2025-09-13T20:00:00' },
+  { id: 'sukkot-celebration', name: 'חגיגת סוכות עם פיטר פן', date: '2025-10-18T19:30:00' }
+];
+
+// Countdown Timer Component
+function CountdownTimer({ targetDate, eventName }: { targetDate: string, eventName: string }) {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+  const [isExpired, setIsExpired] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const target = new Date(targetDate).getTime();
+      const difference = target - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((difference % (1000 * 60)) / 1000)
+        });
+      } else {
+        setIsExpired(true);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  if (isExpired) {
+    return null; // Don't show expired events
+  }
+
+  return (
+    <div 
+      data-card
+      style={{
+        borderRadius: '20px',
+        padding: '2rem',
+        textAlign: 'center',
+        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(251, 191, 36, 0.1))',
+        border: '2px solid rgba(16, 185, 129, 0.2)',
+        marginBottom: '2rem'
+      }}
+    >
+      <h3 style={{ 
+        fontSize: '1.5rem', 
+        fontWeight: 'bold', 
+        marginBottom: '1rem',
+        color: '#10b981'
+      }}>
+        🎭 האירוע הקרוב: {eventName}
+      </h3>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(4, 1fr)', 
+        gap: '1rem', 
+        maxWidth: '400px', 
+        margin: '0 auto' 
+      }}>
+        {[
+          { label: 'ימים', value: timeLeft.days },
+          { label: 'שעות', value: timeLeft.hours },
+          { label: 'דקות', value: timeLeft.minutes },
+          { label: 'שניות', value: timeLeft.seconds }
+        ].map((item, index) => (
+          <div key={index} style={{
+            background: 'linear-gradient(135deg, #10b981, #fbbf24)',
+            color: 'white',
+            padding: '1rem',
+            borderRadius: '10px',
+            fontWeight: 'bold'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{item.value}</div>
+            <div style={{ fontSize: '0.9rem' }}>{item.label}</div>
+          </div>
+        ))}
+      </div>
+      <Link 
+        href="/register"
+        style={{
+          display: 'inline-block',
+          marginTop: '1.5rem',
+          padding: '0.75rem 1.5rem',
+          background: 'linear-gradient(135deg, #10b981, #fbbf24)',
+          color: 'white',
+          borderRadius: '25px',
+          textDecoration: 'none',
+          fontWeight: 'bold',
+          transition: 'transform 0.3s ease'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      >
+        🎪 הרשמה לאירוע
+      </Link>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [themeContent, setThemeContent] = useState({
     heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון",
@@ -248,7 +356,26 @@ export default function HomePage() {
         </div>
       </section>
 
-
+      {/* Countdown Timer Section */}
+      <section style={{ padding: 'clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem)' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          {(() => {
+            // Find the next upcoming event
+            const now = new Date();
+            const nextEvent = UPCOMING_EVENTS.find(event => new Date(event.date) > now);
+            
+            if (nextEvent) {
+              return (
+                <CountdownTimer 
+                  targetDate={nextEvent.date} 
+                  eventName={nextEvent.name} 
+                />
+              );
+            }
+            return null;
+          })()}
+        </div>
+      </section>
 
       {/* Call to Action */}
       <section style={{ padding: 'clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem)' }}>

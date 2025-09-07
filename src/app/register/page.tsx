@@ -12,11 +12,12 @@ interface FormData {
   children: number;
   childrenAges: string;
   specialRequests: string;
+  paymentMethod: string;
 }
 
 const EVENTS = [
-  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00' },
-  { id: 'sukkot-celebration', name: 'חגיגת סוכות עם פיטר פן', date: 'October 18, 2025 at 19:30' }
+  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00', price: 45 },
+  { id: 'sukkot-celebration', name: 'חגיגת סוכות עם פיטר פן', date: 'October 18, 2025 at 19:30', price: 55 }
 ];
 
 export default function RegisterPage() {
@@ -29,7 +30,8 @@ export default function RegisterPage() {
     adults: 1,
     children: 0,
     childrenAges: '',
-    specialRequests: ''
+    specialRequests: '',
+    paymentMethod: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,6 +68,7 @@ export default function RegisterPage() {
     if (formData.children > 0 && !formData.childrenAges.trim()) {
       newErrors.childrenAges = 'Please specify children ages';
     }
+    if (!formData.paymentMethod) newErrors.paymentMethod = 'Please select a payment method';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -81,6 +84,7 @@ export default function RegisterPage() {
     try {
       // Get the selected event details
       const selectedEvent = EVENTS.find(event => event.id === formData.event);
+      const totalCost = selectedEvent ? (formData.adults + formData.children) * selectedEvent.price : 0;
       
       // Prepare data for submission
       const registrationData = {
@@ -90,10 +94,13 @@ export default function RegisterPage() {
         phone: formData.phone,
         eventName: selectedEvent?.name || '',
         eventDate: selectedEvent?.date || '',
+        eventPrice: `$${selectedEvent?.price || 0} per person`,
         adults: formData.adults,
         children: formData.children,
         childrenAges: formData.childrenAges || 'N/A',
         specialRequests: formData.specialRequests || 'None',
+        paymentMethod: formData.paymentMethod,
+        totalCost: `$${totalCost}`,
         registrationDate: new Date().toLocaleString()
       };
 
@@ -125,7 +132,8 @@ export default function RegisterPage() {
               adults: 1,
               children: 0,
               childrenAges: '',
-              specialRequests: ''
+              specialRequests: '',
+              paymentMethod: ''
             });
           }, 4000);
         } else {
@@ -177,6 +185,7 @@ export default function RegisterPage() {
   }
 
   const selectedEvent = EVENTS.find(event => event.id === formData.event);
+  const totalCost = selectedEvent ? (formData.adults + formData.children) * selectedEvent.price : 0;
 
   return (
     <div style={{ 
@@ -607,7 +616,7 @@ export default function RegisterPage() {
                         {event.name}
                       </div>
                       <div style={{ color: '#666', fontSize: '0.9rem' }}>
-                        📅 {event.date}
+                        📅 {event.date} • 💰 ${event.price} per person
                       </div>
                     </div>
                   </label>
@@ -635,7 +644,7 @@ export default function RegisterPage() {
                   ✨ Selected Event: {selectedEvent.name}
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>
-                  📅 {selectedEvent.date}
+                  📅 {selectedEvent.date} • 💰 ${selectedEvent.price} per person
                 </p>
               </div>
             )}
@@ -795,6 +804,164 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          {/* Payment Summary & Method */}
+          {selectedEvent && (
+            <div 
+              data-card
+              style={{
+                padding: 'clamp(1.5rem, 5vw, 2.5rem)',
+                borderRadius: '20px',
+                marginBottom: '2rem'
+              }}
+            >
+              <h2 style={{ 
+                fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', 
+                fontWeight: 'bold', 
+                marginBottom: '2rem',
+                background: 'linear-gradient(45deg, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundSize: '200% 200%',
+                animation: 'textShimmer 2s ease-in-out infinite',
+                borderBottom: '3px solid transparent',
+                borderImage: 'linear-gradient(90deg, #ffeaa7, #fd79a8, #ff6b6b, #4ecdc4, #96ceb4) 1',
+                paddingBottom: '0.75rem',
+                textAlign: 'center'
+              }}>
+                💰 Payment & Summary
+              </h2>
+
+              {/* Cost Summary */}
+              <div style={{ 
+                background: 'linear-gradient(135deg, rgba(255, 235, 59, 0.2), rgba(76, 175, 80, 0.2), rgba(156, 39, 176, 0.2))', 
+                padding: '2rem', 
+                borderRadius: '20px', 
+                border: '3px solid transparent',
+                backgroundClip: 'padding-box',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255, 255, 255, 0.3)',
+                position: 'relative',
+                marginBottom: '2rem'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>Event:</span>
+                  <span>{selectedEvent.name}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Date:</span>
+                  <span>{selectedEvent.date}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Price per person:</span>
+                  <span>${selectedEvent.price}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span>Adults ({formData.adults}):</span>
+                  <span>${formData.adults * selectedEvent.price}</span>
+                </div>
+                {formData.children > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <span>Children ({formData.children}):</span>
+                    <span>${formData.children * selectedEvent.price}</span>
+                  </div>
+                )}
+                <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #15803d' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: '#15803d' }}>
+                  <span>Total Cost:</span>
+                  <span>${totalCost}</span>
+                </div>
+              </div>
+
+              {/* Payment Method Selection */}
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontWeight: 'bold', 
+                  marginBottom: '1rem',
+                  color: '#15803d'
+                }}>
+                  Choose Payment Method *
+                </label>
+                
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  {[
+                    { id: 'paypal', name: 'PayPal', icon: '💳', description: 'Pay securely with PayPal' },
+                    { id: 'venmo', name: 'Venmo', icon: '📱', description: 'Pay with Venmo (@PeterPanBoca)' },
+                    { id: 'zelle', name: 'Zelle', icon: '🏦', description: 'Pay with Zelle' },
+                    { id: 'check', name: 'Check', icon: '🏧', description: 'Pay by check (mail to address provided)' }
+                  ].map((method) => (
+                    <label
+                      key={method.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '1rem',
+                        border: formData.paymentMethod === method.id ? '3px solid #15803d' : '2px solid #facc15',
+                        borderRadius: '15px',
+                        cursor: 'pointer',
+                        backgroundColor: formData.paymentMethod === method.id ? '#f0fdf4' : 'transparent',
+                        transition: 'all 0.3s ease',
+                        gap: '1rem'
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value={method.id}
+                        checked={formData.paymentMethod === method.id}
+                        onChange={handleInputChange}
+                        style={{ display: 'none' }}
+                      />
+                      <div style={{ fontSize: '1.5rem' }}>{method.icon}</div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>
+                          {method.name}
+                        </div>
+                        <div style={{ color: '#666', fontSize: '0.9rem' }}>
+                          {method.description}
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Payment Instructions */}
+              {formData.paymentMethod && (
+                <div style={{ 
+                  marginTop: '1.5rem', 
+                  padding: '1rem', 
+                  backgroundColor: '#f0fdf4', 
+                  borderRadius: '10px', 
+                  border: '2px solid #15803d' 
+                }}>
+                  <h4 style={{ color: '#15803d', marginBottom: '0.5rem' }}>
+                    Payment Instructions:
+                  </h4>
+                  {formData.paymentMethod === 'paypal' && (
+                    <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                      After registration, you'll receive a PayPal invoice via email. Payment is required within 7 days to secure your spot.
+                    </p>
+                  )}
+                  {formData.paymentMethod === 'venmo' && (
+                    <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                      Send payment to <strong>@PeterPanBoca</strong> with your name in the note. Include registration confirmation number when available.
+                    </p>
+                  )}
+                  {formData.paymentMethod === 'zelle' && (
+                    <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                      Zelle payment details will be provided via email after registration. Payment required within 7 days.
+                    </p>
+                  )}
+                  {formData.paymentMethod === 'check' && (
+                    <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                      Mail check to the address provided in your confirmation email. Make payable to "Peter Pan Boca". Payment required within 7 days.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Submit */}
           <div 
