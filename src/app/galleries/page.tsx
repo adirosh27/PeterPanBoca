@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 // Define the gallery structure based on the actual folder structure
 const galleryData = {
@@ -36,11 +37,46 @@ const galleryData = {
   ]
 };
 
+interface PhotoData {
+  name: string;
+  url: string;
+}
+
 export default function GalleriesPage() {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<PhotoData[]>([]);
+  const [loadingPhotos, setLoadingPhotos] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   const years = Object.keys(galleryData).map(Number).sort((a, b) => b - a); // Sort years descending
+
+  useEffect(() => {
+    if (selectedEvent && selectedYear) {
+      fetchPhotos();
+    }
+  }, [selectedEvent, selectedYear]);
+
+  const fetchPhotos = async () => {
+    if (!selectedEvent || !selectedYear) return;
+    
+    setLoadingPhotos(true);
+    try {
+      const response = await fetch(`/api/photos?year=${selectedYear}&event=${encodeURIComponent(selectedEvent)}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setPhotos(data.images || []);
+      } else {
+        setPhotos([]);
+      }
+    } catch (error) {
+      console.error('Error fetching photos:', error);
+      setPhotos([]);
+    } finally {
+      setLoadingPhotos(false);
+    }
+  };
 
   return (
     <div style={{ 
@@ -285,8 +321,9 @@ export default function GalleriesPage() {
 
         {/* Event Photos Gallery */}
         {selectedEvent && (
-          <div style={{ textAlign: 'center' }}>
+          <div>
             <div style={{ 
+              textAlign: 'center',
               marginBottom: '3rem',
               display: 'flex',
               alignItems: 'center',
@@ -295,7 +332,11 @@ export default function GalleriesPage() {
               flexWrap: 'wrap'
             }}>
               <button
-                onClick={() => setSelectedEvent(null)}
+                onClick={() => {
+                  setSelectedEvent(null);
+                  setPhotos([]);
+                  setSelectedPhoto(null);
+                }}
                 style={{
                   background: 'rgba(255, 255, 255, 0.9)',
                   border: '2px solid #10b981',
@@ -319,39 +360,153 @@ export default function GalleriesPage() {
               </h2>
             </div>
 
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: '20px',
-              padding: '2rem',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
-              backdropFilter: 'blur(20px)',
-              border: '2px solid rgba(255, 255, 255, 0.3)'
-            }}>
-              <div style={{ 
-                fontSize: '3rem', 
-                marginBottom: '2rem'
-              }}>
-                🎭✨
-              </div>
-              <p style={{ 
-                fontSize: '1.2rem',
-                color: '#6b7280',
-                marginBottom: '2rem'
-              }}>
-                התמונות נטענות... בקרוב תוכלו לצפות בכל התמונות מהאירוע!
-              </p>
+            {loadingPhotos ? (
               <div style={{
-                background: 'linear-gradient(135deg, #10b981, #fbbf24)',
-                color: 'white',
-                padding: '1rem 2rem',
-                borderRadius: '25px',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                display: 'inline-block'
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '20px',
+                padding: '3rem',
+                textAlign: 'center',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                backdropFilter: 'blur(20px)',
+                border: '2px solid rgba(255, 255, 255, 0.3)'
               }}>
-                🔄 בפיתוח...
+                <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>📸</div>
+                <p style={{ fontSize: '1.2rem', color: '#6b7280' }}>טוען תמונות...</p>
               </div>
-            </div>
+            ) : photos.length === 0 ? (
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '20px',
+                padding: '3rem',
+                textAlign: 'center',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                backdropFilter: 'blur(20px)',
+                border: '2px solid rgba(255, 255, 255, 0.3)'
+              }}>
+                <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>📷</div>
+                <p style={{ fontSize: '1.2rem', color: '#6b7280' }}>
+                  לא נמצאו תמונות לאירוע זה
+                </p>
+              </div>
+            ) : (
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '20px',
+                padding: '2rem',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                backdropFilter: 'blur(20px)',
+                border: '2px solid rgba(255, 255, 255, 0.3)'
+              }}>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                  gap: '1rem',
+                  marginBottom: '2rem'
+                }}>
+                  {photos.map((photo, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedPhoto(photo.url)}
+                      style={{
+                        position: 'relative',
+                        aspectRatio: '1',
+                        borderRadius: '15px',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.3)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+                      }}
+                    >
+                      <Image
+                        src={photo.url}
+                        alt={photo.name}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div style={{
+                  textAlign: 'center',
+                  color: '#6b7280',
+                  fontSize: '1rem',
+                  fontWeight: 'bold'
+                }}>
+                  📸 {photos.length} תמונות
+                </div>
+              </div>
+            )}
+
+            {/* Photo Modal */}
+            {selectedPhoto && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1000,
+                  padding: '2rem'
+                }}
+                onClick={() => setSelectedPhoto(null)}
+              >
+                <div style={{
+                  position: 'relative',
+                  maxWidth: '90vw',
+                  maxHeight: '90vh'
+                }}>
+                  <Image
+                    src={selectedPhoto}
+                    alt="Full size photo"
+                    width={1200}
+                    height={800}
+                    style={{
+                      objectFit: 'contain',
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      borderRadius: '10px'
+                    }}
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPhoto(null);
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: '1rem',
+                      right: '1rem',
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '40px',
+                      height: '40px',
+                      fontSize: '1.5rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
