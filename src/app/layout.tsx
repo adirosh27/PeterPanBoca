@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import PasswordGate from '@/components/PasswordGate';
 
 export const metadata: Metadata = {
   title: {
@@ -59,11 +60,13 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Pirata+One&family=Fredoka+One:wght@400&family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <SiteHeader />
-        <main style={{ flexGrow: 1 }}>
-          {children}
-        </main>
-        <SiteFooter />
+        <PasswordGate>
+          <SiteHeader />
+          <main style={{ flexGrow: 1 }}>
+            {children}
+          </main>
+          <SiteFooter />
+        </PasswordGate>
       </body>
     </html>
   );
