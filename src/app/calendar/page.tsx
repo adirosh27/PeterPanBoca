@@ -46,22 +46,6 @@ const birthdays = [
   { name: 'Shalom Moldavski', month: 9, day: 17 },
 ];
 
-// Generate birthday events for multiple years
-const generateBirthdays = (startYear: number, endYear: number): Holiday[] => {
-  const birthdayEvents: Holiday[] = [];
-  for (let year = startYear; year <= endYear; year++) {
-    birthdays.forEach(birthday => {
-      const date = `${year}-${birthday.month.toString().padStart(2, '0')}-${birthday.day.toString().padStart(2, '0')}`;
-      birthdayEvents.push({
-        date,
-        name: `יום הולדת ${birthday.name}`,
-        emoji: '🎂',
-        color: '#ec4899'
-      });
-    });
-  }
-  return birthdayEvents;
-};
 
 const holidays: Holiday[] = [
   // 2024-2025 Jewish Holidays
@@ -110,9 +94,7 @@ const holidays: Holiday[] = [
   { date: '2025-12-19', name: 'חנוכה - יום 5', emoji: '🕯️', color: '#0ea5e9' },
   { date: '2025-12-20', name: 'חנוכה - יום 6', emoji: '🕯️', color: '#0ea5e9' },
   { date: '2025-12-21', name: 'חנוכה - יום 7', emoji: '🕯️', color: '#0ea5e9' },
-  { date: '2025-12-22', name: 'חנוכה - יום 8', emoji: '🕯️', color: '#0ea5e9' },
-  // Add birthdays for multiple years (2024-2030)
-  ...generateBirthdays(2024, 2030)
+  { date: '2025-12-22', name: 'חנוכה - יום 8', emoji: '🕯️', color: '#0ea5e9' }
 ];
 
 const events: Event[] = [
