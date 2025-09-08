@@ -79,11 +79,15 @@ export async function POST(request: NextRequest) {
 // GET endpoint to retrieve registrations (for admin use)
 export async function GET() {
   try {
+    console.log('GET /api/register - starting');
+    
     // Initialize database
     await initDatabase();
     
     // Get all registrations using the database utility
     const registrations = await getAllRegistrations();
+    
+    console.log('Retrieved registrations:', registrations.length);
     
     // Sort by timestamp (newest first)
     registrations.sort((a, b) => 
@@ -104,12 +108,15 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error in GET /api/register:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
+    
     return NextResponse.json(
       { 
         success: false, 
-        message: 'Error retrieving registrations',
+        message: `Error retrieving registrations: ${error instanceof Error ? error.message : 'Unknown error'}`,
         registrations: [],
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
+        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : String(error)) : undefined
       },
       { status: 500 }
     );

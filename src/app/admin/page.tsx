@@ -32,6 +32,11 @@ export default function AdminPage() {
   const fetchRegistrations = async () => {
     try {
       const response = await fetch('/api/register');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       if (data.success) {
@@ -40,7 +45,8 @@ export default function AdminPage() {
         setError(data.message || 'Failed to load registrations');
       }
     } catch (err) {
-      setError('Error loading registrations');
+      console.error('Admin page fetch error:', err);
+      setError(`Error loading registrations: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
