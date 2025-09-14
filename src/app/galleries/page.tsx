@@ -6,10 +6,11 @@ import Image from 'next/image';
 // Define the gallery structure based on the actual folder structure
 const galleryData = {
   2025: [
-    { name: 'Karting - April 26th, 2025', folder: 'Karting - April 26th, 2025' },
-    { name: 'Orlando - January 2025', folder: 'Orlando - January 2025' },
+    { name: 'הרמת כוסית לראש השנה - ספטמבר 2025', folder: 'הרמת כוסית לראש השנה - ספטמבר 2025' },
     { name: 'חיפוש המטמון - אוגוסט 2025', folder: 'חיפוש המטמון - אוגוסט 2025' },
-    { name: 'שייט - מרץ 2025', folder: 'שייט - מרץ 2025' }
+    { name: 'Karting - April 26th, 2025', folder: 'Karting - April 26th, 2025' },
+    { name: 'שייט - מרץ 2025', folder: 'שייט - מרץ 2025' },
+    { name: 'Orlando - January 2025', folder: 'Orlando - January 2025' }
   ],
   2024: [
     { name: 'טרקטורונים - מרץ 2024', folder: 'טרקטורונים - מרץ 2024' },
