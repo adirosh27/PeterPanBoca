@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "keep-db-active": "node keep-db-active.js",
+    "keep-db-active:continuous": "node keep-db-active.js --continuous"
   },
   "keywords": [],
   "author": "",
