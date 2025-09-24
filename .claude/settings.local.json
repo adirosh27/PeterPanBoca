@@ -16,7 +16,8 @@
       "Bash(git reflog:*)",
       "Bash(git gc:*)",
       "Bash(git remote get-url:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npm run keep-db-active:continuous:*)"
     ],
     "deny": [],
     "ask": []
