@@ -19,6 +19,15 @@ interface Poll {
   isActive: boolean;
 }
 
+interface Vote {
+  pollId: string;
+  voterId: string;
+  voterName: string;
+  voterEmail: string;
+  optionId: string;
+  votedAt: string;
+}
+
 export default function VotePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,13 +38,15 @@ export default function VotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [existingVotes, setExistingVotes] = useState<Vote[]>([]);
 
-  // Store votes for each member: { memberName: optionId }
-  const [memberVotes, setMemberVotes] = useState<Record<string, string>>({});
+  const [selectedMember, setSelectedMember] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
 
   useEffect(() => {
     if (pollId) {
       fetchPoll();
+      fetchVotes();
     } else {
       fetchActivePoll();
     }
@@ -62,8 +73,11 @@ export default function VotePage() {
       const response = await fetch('/api/polls?active=true');
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && data.poll) {
         setPoll(data.poll);
+        if (data.poll?.id) {
+          fetchVotes(data.poll.id);
+        }
       }
     } catch (err) {
       setError('Error loading poll');
@@ -72,54 +86,64 @@ export default function VotePage() {
     }
   };
 
-  const handleMemberVote = (memberName: string, optionId: string) => {
-    setMemberVotes(prev => ({
-      ...prev,
-      [memberName]: optionId
-    }));
+  const fetchVotes = async (targetPollId?: string) => {
+    try {
+      const id = targetPollId || pollId;
+      if (!id) return;
+
+      const response = await fetch(`/api/polls/results?pollId=${id}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setExistingVotes(data.votes || []);
+      }
+    } catch (err) {
+      console.error('Error loading votes:', err);
+    }
   };
 
-  const handleSubmitAll = async () => {
+  const handleSubmit = async () => {
+    if (!selectedMember || !selectedOption) {
+      setError('אנא בחר את שמך ואת תשובתך');
+      return;
+    }
+
+    // Check if this member already voted
+    const alreadyVoted = existingVotes.some(v => v.voterName === selectedMember);
+    if (alreadyVoted) {
+      setError('כבר הצבעת בסקר זה');
+      return;
+    }
+
     setSubmitting(true);
     setError('');
 
     try {
-      // Submit votes for all members who have a selection
-      const votesToSubmit = Object.entries(memberVotes).filter(([_, optionId]) => optionId);
+      const response = await fetch('/api/polls/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pollId: poll?.id,
+          voterName: selectedMember,
+          voterEmail: `${selectedMember}@peterpan.com`,
+          optionId: selectedOption
+        }),
+      });
 
-      if (votesToSubmit.length === 0) {
-        setError('אנא סמן לפחות חבר אחד');
-        setSubmitting(false);
-        return;
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess(true);
+        setTimeout(() => {
+          router.push('/polls/results?pollId=' + poll?.id);
+        }, 2000);
+      } else {
+        setError(data.message || 'Failed to submit vote');
       }
-
-      // Submit each vote
-      for (const [memberName, optionId] of votesToSubmit) {
-        const response = await fetch('/api/polls/vote', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            pollId: poll?.id,
-            voterName: memberName,
-            voterEmail: `${memberName}@peterpan.com`, // Generate unique email
-            optionId
-          }),
-        });
-
-        const data = await response.json();
-        if (!data.success) {
-          console.log(`Failed to submit vote for ${memberName}:`, data.message);
-        }
-      }
-
-      setSuccess(true);
-      setTimeout(() => {
-        router.push('/polls/results?pollId=' + poll?.id);
-      }, 2000);
     } catch (err) {
-      setError('Error submitting votes: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      setError('Error submitting vote: ' + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setSubmitting(false);
     }
@@ -214,6 +238,15 @@ export default function VotePage() {
     );
   }
 
+  // Calculate voting progress
+  const totalMembers = teamMembers.length;
+  const votedMembers = existingVotes.length;
+  const progressPercentage = (votedMembers / totalMembers * 100).toFixed(0);
+
+  // Get list of members who already voted
+  const votedMemberNames = new Set(existingVotes.map(v => v.voterName));
+  const availableMembers = teamMembers.filter(m => !votedMemberNames.has(m.name));
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -231,19 +264,77 @@ export default function VotePage() {
         }
       `}</style>
 
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <Link
-          href="/"
-          style={{
-            display: 'inline-block',
-            marginBottom: '1rem',
-            color: '#10b981',
-            textDecoration: 'none',
-            fontWeight: 'bold'
-          }}
-        >
-          ← חזרה לדף הבית
-        </Link>
+      <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
+          <Link
+            href="/"
+            style={{
+              display: 'inline-block',
+              color: '#10b981',
+              textDecoration: 'none',
+              fontWeight: 'bold'
+            }}
+          >
+            ← חזרה לדף הבית
+          </Link>
+          <Link
+            href={`/polls/results?pollId=${poll.id}`}
+            style={{
+              display: 'inline-block',
+              color: '#10b981',
+              textDecoration: 'none',
+              fontWeight: 'bold'
+            }}
+          >
+            📊 צפה בתוצאות
+          </Link>
+        </div>
+
+        {/* Progress Bar */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          padding: '1.5rem',
+          marginBottom: '1.5rem',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.75rem'
+          }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: 0 }}>
+              התקדמות הצבעה
+            </h3>
+            <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#10b981' }}>
+              {votedMembers} / {totalMembers}
+            </div>
+          </div>
+          <div style={{
+            width: '100%',
+            height: '30px',
+            backgroundColor: '#e5e7eb',
+            borderRadius: '15px',
+            overflow: 'hidden',
+            position: 'relative'
+          }}>
+            <div style={{
+              width: `${progressPercentage}%`,
+              height: '100%',
+              background: 'linear-gradient(90deg, #10b981, #34d399)',
+              transition: 'width 0.5s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '0.9rem'
+            }}>
+              {progressPercentage}%
+            </div>
+          </div>
+        </div>
 
         <div style={{
           backgroundColor: 'white',
@@ -300,133 +391,123 @@ export default function VotePage() {
               marginBottom: '1rem',
               textAlign: 'center'
             }}>
-              ✅ ההצבעות נשמרו בהצלחה! מעביר לתוצאות...
+              ✅ ההצבעה נשמרה בהצלחה! מעביר לתוצאות...
             </div>
           )}
 
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{
+              display: 'block',
+              fontWeight: 'bold',
+              marginBottom: '0.75rem',
+              fontSize: '1.1rem'
+            }}>
+              בחר את שמך:
+            </label>
+            <select
+              value={selectedMember}
+              onChange={(e) => setSelectedMember(e.target.value)}
+              disabled={submitting || success}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                fontSize: '1rem',
+                border: '2px solid #e5e7eb',
+                borderRadius: '8px',
+                backgroundColor: submitting || success ? '#f3f4f6' : 'white',
+                cursor: submitting || success ? 'not-allowed' : 'pointer'
+              }}
+            >
+              <option value="">-- בחר שם --</option>
+              {availableMembers.map((member) => (
+                <option key={member.name} value={member.name}>
+                  {member.icon} {member.name}
+                </option>
+              ))}
+            </select>
+            {availableMembers.length === 0 && (
+              <p style={{ color: '#10b981', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+                ✅ כל החברים כבר הצביעו!
+              </p>
+            )}
+          </div>
+
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{
-              fontSize: '1.2rem',
+            <label style={{
+              display: 'block',
               fontWeight: 'bold',
               marginBottom: '1rem',
-              textAlign: 'center'
+              fontSize: '1.1rem'
             }}>
-              סמן את התשובה של כל חבר:
-            </h3>
-
+              התשובה שלך:
+            </label>
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.75rem'
+              gap: '1rem'
             }}>
-              {teamMembers.map((member) => (
-                <div
-                  key={member.name}
+              {poll.options.map((option) => (
+                <label
+                  key={option.id}
                   style={{
-                    backgroundColor: '#f9fafb',
-                    border: '2px solid #e5e7eb',
-                    borderRadius: '12px',
-                    padding: '1rem',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '1rem',
-                    flexWrap: 'wrap'
+                    padding: '1rem',
+                    border: selectedOption === option.id
+                      ? '3px solid #10b981'
+                      : '2px solid #e5e7eb',
+                    borderRadius: '10px',
+                    cursor: submitting || success ? 'not-allowed' : 'pointer',
+                    backgroundColor: selectedOption === option.id ? '#f0fdf4' : 'white',
+                    transition: 'all 0.2s'
                   }}
                 >
-                  <div style={{
-                    flex: '1',
-                    minWidth: '200px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem'
+                  <input
+                    type="radio"
+                    name="option"
+                    value={option.id}
+                    checked={selectedOption === option.id}
+                    onChange={(e) => setSelectedOption(e.target.value)}
+                    disabled={submitting || success}
+                    style={{
+                      marginLeft: '1rem',
+                      width: '20px',
+                      height: '20px',
+                      cursor: submitting || success ? 'not-allowed' : 'pointer'
+                    }}
+                  />
+                  <span style={{
+                    fontSize: '1.1rem',
+                    fontWeight: selectedOption === option.id ? 'bold' : 'normal'
                   }}>
-                    <div style={{
-                      fontSize: '1.5rem',
-                      backgroundColor: `${member.color}20`,
-                      borderRadius: '50%',
-                      width: '40px',
-                      height: '40px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      {member.icon}
-                    </div>
-                    <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
-                      {member.name}
-                    </div>
-                  </div>
-
-                  <div style={{
-                    display: 'flex',
-                    gap: '1rem',
-                    flexWrap: 'wrap'
-                  }}>
-                    {poll.options.map((option) => (
-                      <label
-                        key={option.id}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem',
-                          padding: '0.5rem 1rem',
-                          border: memberVotes[member.name] === option.id
-                            ? '2px solid #10b981'
-                            : '2px solid #d1d5db',
-                          borderRadius: '8px',
-                          cursor: submitting || success ? 'not-allowed' : 'pointer',
-                          backgroundColor: memberVotes[member.name] === option.id
-                            ? '#f0fdf4'
-                            : 'white',
-                          transition: 'all 0.2s',
-                          fontWeight: memberVotes[member.name] === option.id ? 'bold' : 'normal'
-                        }}
-                      >
-                        <input
-                          type="radio"
-                          name={`vote-${member.name}`}
-                          value={option.id}
-                          checked={memberVotes[member.name] === option.id}
-                          onChange={() => handleMemberVote(member.name, option.id)}
-                          disabled={submitting || success}
-                          style={{
-                            width: '18px',
-                            height: '18px',
-                            cursor: submitting || success ? 'not-allowed' : 'pointer'
-                          }}
-                        />
-                        <span>
-                          {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                    {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                  </span>
+                </label>
               ))}
             </div>
           </div>
 
           <button
-            onClick={handleSubmitAll}
-            disabled={submitting || success || Object.keys(memberVotes).length === 0}
+            onClick={handleSubmit}
+            disabled={submitting || success || !selectedMember || !selectedOption}
             style={{
               width: '100%',
               padding: '1rem',
               fontSize: '1.2rem',
               fontWeight: 'bold',
               color: 'white',
-              background: submitting || success || Object.keys(memberVotes).length === 0
+              background: submitting || success || !selectedMember || !selectedOption
                 ? '#9ca3af'
                 : 'linear-gradient(135deg, #10b981, #fbbf24)',
               border: 'none',
               borderRadius: '10px',
-              cursor: submitting || success || Object.keys(memberVotes).length === 0
+              cursor: submitting || success || !selectedMember || !selectedOption
                 ? 'not-allowed'
                 : 'pointer',
               transition: 'transform 0.2s'
             }}
             onMouseEnter={(e) => {
-              if (!submitting && !success && Object.keys(memberVotes).length > 0) {
+              if (!submitting && !success && selectedMember && selectedOption) {
                 e.currentTarget.style.transform = 'scale(1.02)';
               }
             }}
@@ -434,7 +515,7 @@ export default function VotePage() {
               e.currentTarget.style.transform = 'scale(1)';
             }}
           >
-            {submitting ? '⏳ שולח...' : success ? '✅ נשמר!' : `🗳️ שלח ${Object.keys(memberVotes).length} הצבעות`}
+            {submitting ? '⏳ שולח...' : success ? '✅ נשמר!' : '🗳️ הצבע'}
           </button>
         </div>
       </div>
