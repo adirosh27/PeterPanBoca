@@ -338,6 +338,20 @@ export default function ResultsPage() {
             lineHeight: '1.6'
           }}>
             {poll.question}
+            <div style={{
+              marginTop: '1rem',
+              fontSize: '0.9rem',
+              color: '#6b7280',
+              fontStyle: 'italic'
+            }}>
+              נוצר: {new Date(poll.createdAt).toLocaleString('he-IL', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </div>
           </div>
 
           <div style={{
