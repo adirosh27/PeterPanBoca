@@ -155,21 +155,36 @@ export default function VotePage() {
         }}>
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📊</div>
           <h2 style={{ marginBottom: '1rem' }}>אין סקר פעיל כרגע</h2>
-          <Link
-            href="/"
-            style={{
-              display: 'inline-block',
-              marginTop: '1rem',
-              padding: '0.75rem 1.5rem',
-              background: 'linear-gradient(135deg, #10b981, #fbbf24)',
-              color: 'white',
-              borderRadius: '10px',
-              textDecoration: 'none',
-              fontWeight: 'bold'
-            }}
-          >
-            חזרה לדף הבית
-          </Link>
+          <div style={{ display: 'flex', gap: '1rem', flexDirection: 'column', alignItems: 'center' }}>
+            <Link
+              href="/polls/create"
+              style={{
+                display: 'inline-block',
+                padding: '0.75rem 1.5rem',
+                background: 'linear-gradient(135deg, #10b981, #fbbf24)',
+                color: 'white',
+                borderRadius: '10px',
+                textDecoration: 'none',
+                fontWeight: 'bold'
+              }}
+            >
+              ➕ צור סקר חדש
+            </Link>
+            <Link
+              href="/"
+              style={{
+                display: 'inline-block',
+                padding: '0.75rem 1.5rem',
+                background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                color: 'white',
+                borderRadius: '10px',
+                textDecoration: 'none',
+                fontWeight: 'bold'
+              }}
+            >
+              חזרה לדף הבית
+            </Link>
+          </div>
         </div>
       </div>
     );
