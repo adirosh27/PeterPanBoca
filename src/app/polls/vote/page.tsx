@@ -374,6 +374,25 @@ export default function VotePage() {
             textAlign: 'center'
           }}>
             {poll.question}
+            {poll.eventDate && (
+              <div style={{
+                marginTop: '1rem',
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: '#10b981',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}>
+                📅 {new Date(poll.eventDate).toLocaleDateString('he-IL', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </div>
+            )}
           </div>
 
           {error && (

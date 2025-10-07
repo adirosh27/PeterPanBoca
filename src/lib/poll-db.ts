@@ -10,6 +10,7 @@ export interface PollOption {
 export interface Poll {
   id: string;
   question: string;
+  eventDate?: string | null;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
@@ -72,7 +73,7 @@ export async function getActivePoll(): Promise<Poll | null> {
 }
 
 // Create a new poll
-export async function createPoll(question: string, options: string[]): Promise<Poll | null> {
+export async function createPoll(question: string, options: string[], eventDate?: string | null): Promise<Poll | null> {
   try {
     if (!redis) {
       console.log('Redis not available, cannot create poll');
@@ -88,6 +89,7 @@ export async function createPoll(question: string, options: string[]): Promise<P
     const newPoll: Poll = {
       id: Date.now().toString(),
       question,
+      eventDate: eventDate || null,
       options: options.map((text, index) => ({
         id: `option-${index}`,
         text,

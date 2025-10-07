@@ -7,6 +7,7 @@ import Link from 'next/link';
 export default function CreatePollPage() {
   const router = useRouter();
   const [question, setQuestion] = useState('');
+  const [eventDate, setEventDate] = useState('');
   const [options, setOptions] = useState(['מגיע', 'לא מסתדר לי']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -50,6 +51,7 @@ export default function CreatePollPage() {
         },
         body: JSON.stringify({
           question,
+          eventDate: eventDate || null,
           options: validOptions
         }),
       });
@@ -172,6 +174,31 @@ export default function CreatePollPage() {
                   borderRadius: '8px',
                   fontFamily: 'system-ui',
                   resize: 'vertical'
+                }}
+                disabled={loading || success}
+              />
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '0.5rem',
+                fontSize: '1.1rem'
+              }}>
+                תאריך אירוע (אופציונלי):
+              </label>
+              <input
+                type="date"
+                value={eventDate}
+                onChange={(e) => setEventDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  fontSize: '1rem',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '8px',
+                  fontFamily: 'system-ui'
                 }}
                 disabled={loading || success}
               />
