@@ -7,8 +7,7 @@ import { useEffect, useState } from 'react';
 
 // Upcoming events data
 const UPCOMING_EVENTS = [
-  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: '2025-09-13T20:00:00' },
-  { id: 'sukkot-celebration', name: 'חגיגת סוכות עם פיטר פן', date: '2025-10-18T19:30:00' }
+  { id: 'top-golf-event', name: 'Top Golf', date: '2025-10-18T19:00:00' }
 ];
 
 // Countdown Timer Component
