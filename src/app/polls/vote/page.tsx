@@ -386,12 +386,16 @@ export default function VotePage() {
                 justifyContent: 'center',
                 gap: '0.5rem'
               }}>
-                📅 {new Date(poll.eventDate).toLocaleDateString('he-IL', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
+                📅 {(() => {
+                  const [year, month, day] = poll.eventDate.split('-');
+                  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                  return date.toLocaleDateString('he-IL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  });
+                })()}
               </div>
             )}
           </div>
