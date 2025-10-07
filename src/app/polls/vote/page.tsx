@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { teamMembers } from '@/lib/members';
 
@@ -29,19 +29,14 @@ interface Vote {
 }
 
 export default function VotePage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const pollId = searchParams.get('pollId');
 
   const [poll, setPoll] = useState<Poll | null>(null);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const [existingVotes, setExistingVotes] = useState<Vote[]>([]);
-
-  const [selectedMember, setSelectedMember] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     if (pollId) {
@@ -50,7 +45,7 @@ export default function VotePage() {
     } else {
       fetchActivePoll();
     }
-  }, [pollId]);
+  }, [pollId, refreshTrigger]);
 
   const fetchPoll = async () => {
     try {
@@ -102,22 +97,7 @@ export default function VotePage() {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!selectedMember || !selectedOption) {
-      setError('אנא בחר את שמך ואת תשובתך');
-      return;
-    }
-
-    // Check if this member already voted
-    const alreadyVoted = existingVotes.some(v => v.voterName === selectedMember);
-    if (alreadyVoted) {
-      setError('כבר הצבעת בסקר זה');
-      return;
-    }
-
-    setSubmitting(true);
-    setError('');
-
+  const handleVote = async (memberName: string, optionId: string) => {
     try {
       const response = await fetch('/api/polls/vote', {
         method: 'POST',
@@ -126,26 +106,22 @@ export default function VotePage() {
         },
         body: JSON.stringify({
           pollId: poll?.id,
-          voterName: selectedMember,
-          voterEmail: `${selectedMember}@peterpan.com`,
-          optionId: selectedOption
+          voterName: memberName,
+          voterEmail: `${memberName}@peterpan.com`,
+          optionId
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        setSuccess(true);
-        setTimeout(() => {
-          router.push('/polls/results?pollId=' + poll?.id);
-        }, 2000);
+        // Refresh votes to show updated list
+        setRefreshTrigger(prev => prev + 1);
       } else {
         setError(data.message || 'Failed to submit vote');
       }
     } catch (err) {
       setError('Error submitting vote: ' + (err instanceof Error ? err.message : 'Unknown error'));
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -243,9 +219,11 @@ export default function VotePage() {
   const votedMembers = existingVotes.length;
   const progressPercentage = (votedMembers / totalMembers * 100).toFixed(0);
 
-  // Get list of members who already voted
-  const votedMemberNames = new Set(existingVotes.map(v => v.voterName));
-  const availableMembers = teamMembers.filter(m => !votedMemberNames.has(m.name));
+  // Create a map of member votes
+  const voteMap = new Map<string, Vote>();
+  existingVotes.forEach(vote => {
+    voteMap.set(vote.voterName, vote);
+  });
 
   return (
     <div style={{
@@ -264,31 +242,19 @@ export default function VotePage() {
         }
       `}</style>
 
-      <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
-          <Link
-            href="/"
-            style={{
-              display: 'inline-block',
-              color: '#10b981',
-              textDecoration: 'none',
-              fontWeight: 'bold'
-            }}
-          >
-            ← חזרה לדף הבית
-          </Link>
-          <Link
-            href={`/polls/results?pollId=${poll.id}`}
-            style={{
-              display: 'inline-block',
-              color: '#10b981',
-              textDecoration: 'none',
-              fontWeight: 'bold'
-            }}
-          >
-            📊 צפה בתוצאות
-          </Link>
-        </div>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <Link
+          href="/"
+          style={{
+            display: 'inline-block',
+            marginBottom: '1rem',
+            color: '#10b981',
+            textDecoration: 'none',
+            fontWeight: 'bold'
+          }}
+        >
+          ← חזרה לדף הבית
+        </Link>
 
         {/* Progress Bar */}
         <div style={{
@@ -363,7 +329,8 @@ export default function VotePage() {
             marginBottom: '2rem',
             whiteSpace: 'pre-wrap',
             fontSize: '1.1rem',
-            lineHeight: '1.6'
+            lineHeight: '1.6',
+            textAlign: 'center'
           }}>
             {poll.question}
           </div>
@@ -381,142 +348,123 @@ export default function VotePage() {
             </div>
           )}
 
-          {success && (
-            <div style={{
-              backgroundColor: '#f0fdf4',
-              border: '1px solid #bbf7d0',
-              color: '#16a34a',
-              padding: '1rem',
-              borderRadius: '8px',
-              marginBottom: '1rem',
-              textAlign: 'center'
-            }}>
-              ✅ ההצבעה נשמרה בהצלחה! מעביר לתוצאות...
-            </div>
-          )}
-
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{
-              display: 'block',
-              fontWeight: 'bold',
-              marginBottom: '0.75rem',
-              fontSize: '1.1rem'
-            }}>
-              בחר את שמך:
-            </label>
-            <select
-              value={selectedMember}
-              onChange={(e) => setSelectedMember(e.target.value)}
-              disabled={submitting || success}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                fontSize: '1rem',
-                border: '2px solid #e5e7eb',
-                borderRadius: '8px',
-                backgroundColor: submitting || success ? '#f3f4f6' : 'white',
-                cursor: submitting || success ? 'not-allowed' : 'pointer'
-              }}
-            >
-              <option value="">-- בחר שם --</option>
-              {availableMembers.map((member) => (
-                <option key={member.name} value={member.name}>
-                  {member.icon} {member.name}
-                </option>
-              ))}
-            </select>
-            {availableMembers.length === 0 && (
-              <p style={{ color: '#10b981', marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                ✅ כל החברים כבר הצביעו!
-              </p>
-            )}
+          <div style={{
+            marginBottom: '1.5rem',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: '#6b7280'
+          }}>
+            לחץ על התשובה שלך ליד שמך:
           </div>
 
-          <div style={{ marginBottom: '2rem' }}>
-            <label style={{
-              display: 'block',
-              fontWeight: 'bold',
-              marginBottom: '1rem',
-              fontSize: '1.1rem'
-            }}>
-              התשובה שלך:
-            </label>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem'
-            }}>
-              {poll.options.map((option) => (
-                <label
-                  key={option.id}
+          {/* Members List */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}>
+            {teamMembers.map((member) => {
+              const memberVote = voteMap.get(member.name);
+              const hasVoted = !!memberVote;
+
+              return (
+                <div
+                  key={member.name}
                   style={{
+                    backgroundColor: hasVoted ? '#f0fdf4' : '#f9fafb',
+                    border: hasVoted ? '2px solid #10b981' : '2px solid #e5e7eb',
+                    borderRadius: '12px',
+                    padding: '1rem',
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '1rem',
-                    border: selectedOption === option.id
-                      ? '3px solid #10b981'
-                      : '2px solid #e5e7eb',
-                    borderRadius: '10px',
-                    cursor: submitting || success ? 'not-allowed' : 'pointer',
-                    backgroundColor: selectedOption === option.id ? '#f0fdf4' : 'white',
-                    transition: 'all 0.2s'
+                    gap: '1rem',
+                    flexWrap: 'wrap',
+                    transition: 'all 0.3s ease'
                   }}
                 >
-                  <input
-                    type="radio"
-                    name="option"
-                    value={option.id}
-                    checked={selectedOption === option.id}
-                    onChange={(e) => setSelectedOption(e.target.value)}
-                    disabled={submitting || success}
-                    style={{
-                      marginLeft: '1rem',
-                      width: '20px',
-                      height: '20px',
-                      cursor: submitting || success ? 'not-allowed' : 'pointer'
-                    }}
-                  />
-                  <span style={{
-                    fontSize: '1.1rem',
-                    fontWeight: selectedOption === option.id ? 'bold' : 'normal'
+                  <div style={{
+                    flex: '1',
+                    minWidth: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem'
                   }}>
-                    {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
+                    <div style={{
+                      fontSize: '1.5rem',
+                      backgroundColor: `${member.color}20`,
+                      borderRadius: '50%',
+                      width: '40px',
+                      height: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      {member.icon}
+                    </div>
+                    <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                      {member.name}
+                    </div>
+                  </div>
 
-          <button
-            onClick={handleSubmit}
-            disabled={submitting || success || !selectedMember || !selectedOption}
-            style={{
-              width: '100%',
-              padding: '1rem',
-              fontSize: '1.2rem',
-              fontWeight: 'bold',
-              color: 'white',
-              background: submitting || success || !selectedMember || !selectedOption
-                ? '#9ca3af'
-                : 'linear-gradient(135deg, #10b981, #fbbf24)',
-              border: 'none',
-              borderRadius: '10px',
-              cursor: submitting || success || !selectedMember || !selectedOption
-                ? 'not-allowed'
-                : 'pointer',
-              transition: 'transform 0.2s'
-            }}
-            onMouseEnter={(e) => {
-              if (!submitting && !success && selectedMember && selectedOption) {
-                e.currentTarget.style.transform = 'scale(1.02)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            {submitting ? '⏳ שולח...' : success ? '✅ נשמר!' : '🗳️ הצבע'}
-          </button>
+                  <div style={{
+                    display: 'flex',
+                    gap: '0.75rem',
+                    flexWrap: 'wrap'
+                  }}>
+                    {hasVoted ? (
+                      <div style={{
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '8px',
+                        backgroundColor: '#10b981',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}>
+                        {poll.options.find(o => o.id === memberVote.optionId)?.text === 'מגיע' ? '✅' : '❌'}
+                        {poll.options.find(o => o.id === memberVote.optionId)?.text}
+                      </div>
+                    ) : (
+                      poll.options.map((option) => (
+                        <button
+                          key={option.id}
+                          onClick={() => handleVote(member.name, option.id)}
+                          style={{
+                            padding: '0.75rem 1.5rem',
+                            border: '2px solid #e5e7eb',
+                            borderRadius: '8px',
+                            backgroundColor: 'white',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            fontSize: '1rem',
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#f0fdf4';
+                            e.currentTarget.style.borderColor = '#10b981';
+                            e.currentTarget.style.transform = 'scale(1.05)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'white';
+                            e.currentTarget.style.borderColor = '#e5e7eb';
+                            e.currentTarget.style.transform = 'scale(1)';
+                          }}
+                        >
+                          {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
