@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { teamMembers } from '@/lib/members';
 
 interface PollOption {
   id: string;
@@ -29,9 +30,8 @@ export default function VotePage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const [voterName, setVoterName] = useState('');
-  const [voterEmail, setVoterEmail] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
+  // Store votes for each member: { memberName: optionId }
+  const [memberVotes, setMemberVotes] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (pollId) {
@@ -72,37 +72,54 @@ export default function VotePage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleMemberVote = (memberName: string, optionId: string) => {
+    setMemberVotes(prev => ({
+      ...prev,
+      [memberName]: optionId
+    }));
+  };
+
+  const handleSubmitAll = async () => {
     setSubmitting(true);
     setError('');
 
     try {
-      const response = await fetch('/api/polls/vote', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          pollId: poll?.id,
-          voterName,
-          voterEmail,
-          optionId: selectedOption
-        }),
-      });
+      // Submit votes for all members who have a selection
+      const votesToSubmit = Object.entries(memberVotes).filter(([_, optionId]) => optionId);
 
-      const data = await response.json();
-
-      if (data.success) {
-        setSuccess(true);
-        setTimeout(() => {
-          router.push('/polls/results?pollId=' + poll?.id);
-        }, 2000);
-      } else {
-        setError(data.message || 'Failed to submit vote');
+      if (votesToSubmit.length === 0) {
+        setError('אנא סמן לפחות חבר אחד');
+        setSubmitting(false);
+        return;
       }
+
+      // Submit each vote
+      for (const [memberName, optionId] of votesToSubmit) {
+        const response = await fetch('/api/polls/vote', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pollId: poll?.id,
+            voterName: memberName,
+            voterEmail: `${memberName}@peterpan.com`, // Generate unique email
+            optionId
+          }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+          console.log(`Failed to submit vote for ${memberName}:`, data.message);
+        }
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        router.push('/polls/results?pollId=' + poll?.id);
+      }, 2000);
     } catch (err) {
-      setError('Error submitting vote: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      setError('Error submitting votes: ' + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setSubmitting(false);
     }
@@ -120,6 +137,13 @@ export default function VotePage() {
         justifyContent: 'center',
         fontFamily: 'system-ui'
       }}>
+        <style jsx global>{`
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
         <div style={{
           backgroundColor: 'white',
           padding: '2rem',
@@ -207,7 +231,7 @@ export default function VotePage() {
         }
       `}</style>
 
-      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
         <Link
           href="/"
           style={{
@@ -276,143 +300,142 @@ export default function VotePage() {
               marginBottom: '1rem',
               textAlign: 'center'
             }}>
-              ✅ ההצבעה נשמרה בהצלחה! מעביר לתוצאות...
+              ✅ ההצבעות נשמרו בהצלחה! מעביר לתוצאות...
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{
-                display: 'block',
-                fontWeight: 'bold',
-                marginBottom: '0.5rem'
-              }}>
-                שם מלא:
-              </label>
-              <input
-                type="text"
-                value={voterName}
-                onChange={(e) => setVoterName(e.target.value)}
-                required
-                placeholder="הכנס את שמך המלא"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  fontSize: '1rem',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '8px'
-                }}
-                disabled={submitting || success}
-              />
-            </div>
+          <div style={{ marginBottom: '2rem' }}>
+            <h3 style={{
+              fontSize: '1.2rem',
+              fontWeight: 'bold',
+              marginBottom: '1rem',
+              textAlign: 'center'
+            }}>
+              סמן את התשובה של כל חבר:
+            </h3>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{
-                display: 'block',
-                fontWeight: 'bold',
-                marginBottom: '0.5rem'
-              }}>
-                אימייל:
-              </label>
-              <input
-                type="email"
-                value={voterEmail}
-                onChange={(e) => setVoterEmail(e.target.value)}
-                required
-                placeholder="הכנס את כתובת האימייל שלך"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  fontSize: '1rem',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '8px'
-                }}
-                disabled={submitting || success}
-              />
-            </div>
-
-            <div style={{ marginBottom: '2rem' }}>
-              <label style={{
-                display: 'block',
-                fontWeight: 'bold',
-                marginBottom: '1rem',
-                fontSize: '1.1rem'
-              }}>
-                הצבע:
-              </label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {poll.options.map((option) => (
-                  <label
-                    key={option.id}
-                    style={{
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem'
+            }}>
+              {teamMembers.map((member) => (
+                <div
+                  key={member.name}
+                  style={{
+                    backgroundColor: '#f9fafb',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  <div style={{
+                    flex: '1',
+                    minWidth: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem'
+                  }}>
+                    <div style={{
+                      fontSize: '1.5rem',
+                      backgroundColor: `${member.color}20`,
+                      borderRadius: '50%',
+                      width: '40px',
+                      height: '40px',
                       display: 'flex',
                       alignItems: 'center',
-                      padding: '1rem',
-                      border: selectedOption === option.id
-                        ? '3px solid #10b981'
-                        : '2px solid #e5e7eb',
-                      borderRadius: '10px',
-                      cursor: submitting || success ? 'not-allowed' : 'pointer',
-                      backgroundColor: selectedOption === option.id ? '#f0fdf4' : 'white',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="option"
-                      value={option.id}
-                      checked={selectedOption === option.id}
-                      onChange={(e) => setSelectedOption(e.target.value)}
-                      disabled={submitting || success}
-                      style={{
-                        marginLeft: '1rem',
-                        width: '20px',
-                        height: '20px',
-                        cursor: submitting || success ? 'not-allowed' : 'pointer'
-                      }}
-                    />
-                    <span style={{
-                      fontSize: '1.1rem',
-                      fontWeight: selectedOption === option.id ? 'bold' : 'normal'
+                      justifyContent: 'center'
                     }}>
-                      {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
+                      {member.icon}
+                    </div>
+                    <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                      {member.name}
+                    </div>
+                  </div>
 
-            <button
-              type="submit"
-              disabled={submitting || success || !selectedOption || !voterName || !voterEmail}
-              style={{
-                width: '100%',
-                padding: '1rem',
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                color: 'white',
-                background: submitting || success || !selectedOption || !voterName || !voterEmail
-                  ? '#9ca3af'
-                  : 'linear-gradient(135deg, #10b981, #fbbf24)',
-                border: 'none',
-                borderRadius: '10px',
-                cursor: submitting || success || !selectedOption || !voterName || !voterEmail
-                  ? 'not-allowed'
-                  : 'pointer',
-                transition: 'transform 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                if (!submitting && !success && selectedOption && voterName && voterEmail) {
-                  e.currentTarget.style.transform = 'scale(1.02)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              {submitting ? '⏳ שולח...' : success ? '✅ נשמר!' : '🗳️ הצבע'}
-            </button>
-          </form>
+                  <div style={{
+                    display: 'flex',
+                    gap: '1rem',
+                    flexWrap: 'wrap'
+                  }}>
+                    {poll.options.map((option) => (
+                      <label
+                        key={option.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.5rem 1rem',
+                          border: memberVotes[member.name] === option.id
+                            ? '2px solid #10b981'
+                            : '2px solid #d1d5db',
+                          borderRadius: '8px',
+                          cursor: submitting || success ? 'not-allowed' : 'pointer',
+                          backgroundColor: memberVotes[member.name] === option.id
+                            ? '#f0fdf4'
+                            : 'white',
+                          transition: 'all 0.2s',
+                          fontWeight: memberVotes[member.name] === option.id ? 'bold' : 'normal'
+                        }}
+                      >
+                        <input
+                          type="radio"
+                          name={`vote-${member.name}`}
+                          value={option.id}
+                          checked={memberVotes[member.name] === option.id}
+                          onChange={() => handleMemberVote(member.name, option.id)}
+                          disabled={submitting || success}
+                          style={{
+                            width: '18px',
+                            height: '18px',
+                            cursor: submitting || success ? 'not-allowed' : 'pointer'
+                          }}
+                        />
+                        <span>
+                          {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={handleSubmitAll}
+            disabled={submitting || success || Object.keys(memberVotes).length === 0}
+            style={{
+              width: '100%',
+              padding: '1rem',
+              fontSize: '1.2rem',
+              fontWeight: 'bold',
+              color: 'white',
+              background: submitting || success || Object.keys(memberVotes).length === 0
+                ? '#9ca3af'
+                : 'linear-gradient(135deg, #10b981, #fbbf24)',
+              border: 'none',
+              borderRadius: '10px',
+              cursor: submitting || success || Object.keys(memberVotes).length === 0
+                ? 'not-allowed'
+                : 'pointer',
+              transition: 'transform 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              if (!submitting && !success && Object.keys(memberVotes).length > 0) {
+                e.currentTarget.style.transform = 'scale(1.02)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            {submitting ? '⏳ שולח...' : success ? '✅ נשמר!' : `🗳️ שלח ${Object.keys(memberVotes).length} הצבעות`}
+          </button>
         </div>
       </div>
     </div>
