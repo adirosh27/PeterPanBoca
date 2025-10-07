@@ -359,7 +359,7 @@ export default function SiteHeader() {
               🎪 Register
             </Link>
             <Link
-              href="/polls/results"
+              href="/polls/create"
               style={{
                 fontWeight: '600',
                 fontSize: '1.1rem',
@@ -549,7 +549,7 @@ export default function SiteHeader() {
               🎪 Register
             </Link>
             <Link
-              href="/polls/results"
+              href="/polls/create"
               style={{
                 fontWeight: '600',
                 fontSize: '1.2rem',
