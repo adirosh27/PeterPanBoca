@@ -37,6 +37,7 @@ export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [allPolls, setAllPolls] = useState<Poll[]>([]);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAllPolls();
@@ -88,6 +89,38 @@ export default function ResultsPage() {
       setError('Error loading results');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeletePoll = async (pollIdToDelete: string) => {
+    if (!confirm('האם אתה בטוח שברצונך למחוק את הסקר הזה? פעולה זו לא ניתנת לביטול.')) {
+      return;
+    }
+
+    setDeleting(pollIdToDelete);
+
+    try {
+      const response = await fetch(`/api/polls/delete?pollId=${pollIdToDelete}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh polls list
+        await fetchAllPolls();
+
+        // If we deleted the currently viewed poll, redirect to create page
+        if (pollIdToDelete === pollId) {
+          window.location.href = '/polls/create';
+        }
+      } else {
+        setError(data.message || 'Failed to delete poll');
+      }
+    } catch (err) {
+      setError('Error deleting poll');
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -222,7 +255,7 @@ export default function ResultsPage() {
         </div>
 
         {/* Poll selector if multiple polls exist */}
-        {allPolls.length > 1 && (
+        {allPolls.length > 0 && (
           <div style={{
             backgroundColor: 'white',
             borderRadius: '12px',
@@ -230,7 +263,27 @@ export default function ResultsPage() {
             marginBottom: '1rem',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
           }}>
-            <label style={{ fontWeight: 'bold', marginLeft: '0.5rem' }}>בחר סקר:</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <label style={{ fontWeight: 'bold' }}>בחר סקר:</label>
+              {poll && (
+                <button
+                  onClick={() => handleDeletePoll(poll.id)}
+                  disabled={deleting === poll.id}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: deleting === poll.id ? '#9ca3af' : '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: deleting === poll.id ? 'not-allowed' : 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  {deleting === poll.id ? '🗑️ מוחק...' : '🗑️ מחק סקר זה'}
+                </button>
+              )}
+            </div>
             <select
               value={poll.id}
               onChange={(e) => {
@@ -241,8 +294,7 @@ export default function ResultsPage() {
                 fontSize: '1rem',
                 border: '2px solid #e5e7eb',
                 borderRadius: '8px',
-                width: '100%',
-                marginTop: '0.5rem'
+                width: '100%'
               }}
             >
               {allPolls.map((p) => (
