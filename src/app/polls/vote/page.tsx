@@ -355,7 +355,7 @@ export default function VotePage() {
             textAlign: 'center',
             color: '#6b7280'
           }}>
-            לחץ על התשובה שלך ליד שמך:
+            הצבע פה
           </div>
 
           {/* Members List */}
