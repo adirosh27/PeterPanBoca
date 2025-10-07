@@ -7,14 +7,40 @@ import Link from 'next/link';
 export default function CreatePollPage() {
   const router = useRouter();
   const [question, setQuestion] = useState('');
+  const [options, setOptions] = useState(['מגיע', 'לא מסתדר לי']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const handleAddOption = () => {
+    setOptions([...options, '']);
+  };
+
+  const handleRemoveOption = (index: number) => {
+    if (options.length > 2) {
+      setOptions(options.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleOptionChange = (index: number, value: string) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
+    setOptions(newOptions);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    // Filter out empty options
+    const validOptions = options.filter(opt => opt.trim() !== '');
+
+    if (validOptions.length < 2) {
+      setError('חייב להיות לפחות 2 אפשרויות הצבעה');
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch('/api/polls', {
@@ -24,7 +50,7 @@ export default function CreatePollPage() {
         },
         body: JSON.stringify({
           question,
-          options: ['מגיע', 'לא מסתדר לי']
+          options: validOptions
         }),
       });
 
@@ -158,28 +184,78 @@ export default function CreatePollPage() {
               padding: '1rem',
               marginBottom: '1.5rem'
             }}>
-              <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>אפשרויות הצבעה:</p>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <div style={{
-                  flex: 1,
-                  backgroundColor: 'white',
-                  padding: '0.75rem',
-                  borderRadius: '8px',
-                  textAlign: 'center',
-                  border: '2px solid #10b981'
-                }}>
-                  ✅ מגיע
-                </div>
-                <div style={{
-                  flex: 1,
-                  backgroundColor: 'white',
-                  padding: '0.75rem',
-                  borderRadius: '8px',
-                  textAlign: 'center',
-                  border: '2px solid #ef4444'
-                }}>
-                  ❌ לא מסתדר לי
-                </div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1rem'
+              }}>
+                <p style={{ fontWeight: 'bold', margin: 0 }}>אפשרויות הצבעה:</p>
+                <button
+                  type="button"
+                  onClick={handleAddOption}
+                  disabled={loading || success}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: '#10b981',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: loading || success ? 'not-allowed' : 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  ➕ הוסף אפשרות
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {options.map((option, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      gap: '0.5rem',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <input
+                      type="text"
+                      value={option}
+                      onChange={(e) => handleOptionChange(index, e.target.value)}
+                      placeholder={`אפשרות ${index + 1}`}
+                      disabled={loading || success}
+                      style={{
+                        flex: 1,
+                        padding: '0.75rem',
+                        fontSize: '1rem',
+                        border: '2px solid #e5e7eb',
+                        borderRadius: '8px',
+                        backgroundColor: loading || success ? '#f3f4f6' : 'white'
+                      }}
+                    />
+                    {options.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveOption(index)}
+                        disabled={loading || success}
+                        style={{
+                          padding: '0.75rem',
+                          backgroundColor: '#ef4444',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          cursor: loading || success ? 'not-allowed' : 'pointer',
+                          fontWeight: 'bold',
+                          fontSize: '1rem'
+                        }}
+                      >
+                        🗑️
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
 
