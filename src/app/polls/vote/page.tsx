@@ -300,6 +300,47 @@ export default function VotePage() {
               {progressPercentage}%
             </div>
           </div>
+
+          {/* Vote Totals */}
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            marginTop: '1rem',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+          }}>
+            {poll?.options.map((option) => {
+              const optionVotes = existingVotes.filter(v => v.optionId === option.id).length;
+              return (
+                <div
+                  key={option.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    backgroundColor: option.text === 'מגיע' ? '#f0fdf4' : '#fef2f2',
+                    border: option.text === 'מגיע' ? '2px solid #10b981' : '2px solid #ef4444',
+                    borderRadius: '8px'
+                  }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>
+                    {option.text === 'מגיע' ? '✅' : '❌'}
+                  </span>
+                  <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+                    {option.text}:
+                  </span>
+                  <span style={{
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    color: option.text === 'מגיע' ? '#10b981' : '#ef4444'
+                  }}>
+                    {optionVotes}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <div style={{
