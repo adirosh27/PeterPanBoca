@@ -13,6 +13,7 @@ interface PollOption {
 interface Poll {
   id: string;
   question: string;
+  eventDate?: string | null;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
