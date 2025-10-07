@@ -16,7 +16,7 @@ interface FormData {
 }
 
 const EVENTS = [
-  { id: 'rosh-hashana-toast', name: 'הרמת כוסית לראש השנה', date: 'September 13, 2025 at 20:00' }
+  { id: 'top-golf-event', name: 'Top Golf', date: 'October 19, 2025 at 19:30' }
 ];
 
 export default function RegisterPage() {
