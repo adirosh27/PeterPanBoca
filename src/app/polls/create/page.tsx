@@ -74,7 +74,7 @@ export default function CreatePollPage() {
   };
 
   return (
-    <div style={{
+    <div dir="rtl" style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
@@ -101,7 +101,7 @@ export default function CreatePollPage() {
             fontWeight: 'bold'
           }}
         >
-          ← חזרה לתוצאות
+          חזרה לתוצאות ←
         </Link>
 
         <div style={{
@@ -173,7 +173,9 @@ export default function CreatePollPage() {
                   border: '2px solid #e5e7eb',
                   borderRadius: '8px',
                   fontFamily: 'system-ui',
-                  resize: 'vertical'
+                  resize: 'vertical',
+                  textAlign: 'right',
+                  direction: 'rtl'
                 }}
                 disabled={loading || success}
               />
@@ -259,7 +261,9 @@ export default function CreatePollPage() {
                         fontSize: '1rem',
                         border: '2px solid #e5e7eb',
                         borderRadius: '8px',
-                        backgroundColor: loading || success ? '#f3f4f6' : 'white'
+                        backgroundColor: loading || success ? '#f3f4f6' : 'white',
+                        textAlign: 'right',
+                        direction: 'rtl'
                       }}
                     />
                     {options.length > 2 && (
