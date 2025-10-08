@@ -260,29 +260,29 @@ export default function VotePage() {
         {/* Progress Bar */}
         <div style={{
           backgroundColor: 'white',
-          borderRadius: '12px',
-          padding: '1.5rem',
-          marginBottom: '1.5rem',
+          borderRadius: '10px',
+          padding: '1rem',
+          marginBottom: '1rem',
           boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
         }}>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '0.75rem'
+            marginBottom: '0.5rem'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: 0 }}>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 'bold', margin: 0 }}>
               התקדמות הצבעה
             </h3>
-            <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#10b981' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#10b981' }}>
               {votedMembers} / {totalMembers}
             </div>
           </div>
           <div style={{
             width: '100%',
-            height: '30px',
+            height: '24px',
             backgroundColor: '#e5e7eb',
-            borderRadius: '15px',
+            borderRadius: '12px',
             overflow: 'hidden',
             position: 'relative'
           }}>
@@ -296,7 +296,7 @@ export default function VotePage() {
               justifyContent: 'center',
               color: 'white',
               fontWeight: 'bold',
-              fontSize: '0.9rem'
+              fontSize: '0.8rem'
             }}>
               {progressPercentage}%
             </div>
@@ -305,8 +305,8 @@ export default function VotePage() {
           {/* Vote Totals */}
           <div style={{
             display: 'flex',
-            gap: '1rem',
-            marginTop: '1rem',
+            gap: '0.5rem',
+            marginTop: '0.75rem',
             justifyContent: 'center',
             flexWrap: 'wrap'
           }}>
@@ -318,21 +318,21 @@ export default function VotePage() {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.5rem 1rem',
+                    gap: '0.35rem',
+                    padding: '0.4rem 0.75rem',
                     backgroundColor: option.text === 'מגיע' ? '#f0fdf4' : '#fef2f2',
                     border: option.text === 'מגיע' ? '2px solid #10b981' : '2px solid #ef4444',
-                    borderRadius: '8px'
+                    borderRadius: '6px'
                   }}
                 >
-                  <span style={{ fontSize: '1.2rem' }}>
+                  <span style={{ fontSize: '1rem' }}>
                     {option.text === 'מגיע' ? '✅' : '❌'}
                   </span>
-                  <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+                  <span style={{ fontWeight: 'bold', fontSize: '0.85rem' }}>
                     {option.text}:
                   </span>
                   <span style={{
-                    fontSize: '1.2rem',
+                    fontSize: '1rem',
                     fontWeight: 'bold',
                     color: option.text === 'מגיע' ? '#10b981' : '#ef4444'
                   }}>
@@ -351,10 +351,10 @@ export default function VotePage() {
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
         }}>
           <h1 style={{
-            fontSize: '2rem',
+            fontSize: '1.5rem',
             fontWeight: 'bold',
             textAlign: 'center',
-            marginBottom: '2rem',
+            marginBottom: '1.5rem',
             background: 'linear-gradient(45deg, #10b981, #fbbf24)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
@@ -367,18 +367,18 @@ export default function VotePage() {
             backgroundColor: '#f0f9ff',
             border: '2px solid #bfdbfe',
             borderRadius: '12px',
-            padding: '1.5rem',
-            marginBottom: '2rem',
+            padding: '1rem',
+            marginBottom: '1.5rem',
             whiteSpace: 'pre-wrap',
-            fontSize: '1.1rem',
-            lineHeight: '1.6',
+            fontSize: '0.95rem',
+            lineHeight: '1.5',
             textAlign: 'center'
           }}>
             {poll.question}
             {poll.eventDate && (
               <div style={{
-                marginTop: '1rem',
-                fontSize: '1.2rem',
+                marginTop: '0.75rem',
+                fontSize: '1rem',
                 fontWeight: 'bold',
                 color: '#10b981',
                 display: 'flex',
@@ -414,8 +414,8 @@ export default function VotePage() {
           )}
 
           <div style={{
-            marginBottom: '1.5rem',
-            fontSize: '1.1rem',
+            marginBottom: '1rem',
+            fontSize: '0.95rem',
             fontWeight: 'bold',
             textAlign: 'center',
             color: '#6b7280'
@@ -439,55 +439,55 @@ export default function VotePage() {
                   style={{
                     backgroundColor: hasVoted ? '#f0fdf4' : '#f9fafb',
                     border: hasVoted ? '2px solid #10b981' : '2px solid #e5e7eb',
-                    borderRadius: '12px',
-                    padding: '1rem',
+                    borderRadius: '10px',
+                    padding: '0.75rem',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '1rem',
+                    gap: '0.75rem',
                     flexWrap: 'wrap',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{
                     flex: '1',
-                    minWidth: '200px',
+                    minWidth: '150px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.75rem'
+                    gap: '0.5rem'
                   }}>
                     <div style={{
-                      fontSize: '1.5rem',
+                      fontSize: '1.2rem',
                       backgroundColor: `${member.color}20`,
                       borderRadius: '50%',
-                      width: '40px',
-                      height: '40px',
+                      width: '32px',
+                      height: '32px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
                       {member.icon}
                     </div>
-                    <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
                       {member.name}
                     </div>
                   </div>
 
                   <div style={{
                     display: 'flex',
-                    gap: '0.75rem',
+                    gap: '0.5rem',
                     flexWrap: 'wrap'
                   }}>
                     {hasVoted ? (
                       <div style={{
-                        padding: '0.75rem 1.5rem',
-                        borderRadius: '8px',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '6px',
                         backgroundColor: '#10b981',
                         color: 'white',
                         fontWeight: 'bold',
-                        fontSize: '1rem',
+                        fontSize: '0.85rem',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem'
+                        gap: '0.35rem'
                       }}>
                         {poll.options.find(o => o.id === memberVote.optionId)?.text === 'מגיע' ? '✅' : '❌'}
                         {poll.options.find(o => o.id === memberVote.optionId)?.text}
@@ -498,17 +498,17 @@ export default function VotePage() {
                           key={option.id}
                           onClick={() => handleVote(member.name, option.id)}
                           style={{
-                            padding: '0.75rem 1.5rem',
+                            padding: '0.5rem 1rem',
                             border: '2px solid #e5e7eb',
-                            borderRadius: '8px',
+                            borderRadius: '6px',
                             backgroundColor: 'white',
                             cursor: 'pointer',
                             fontWeight: '500',
-                            fontSize: '1rem',
+                            fontSize: '0.85rem',
                             transition: 'all 0.2s',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '0.5rem'
+                            gap: '0.35rem'
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.backgroundColor = '#f0fdf4';
