@@ -120,7 +120,7 @@ export default function CreatePollPage() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            📊 יצירת סקר חדש
+            יצירת סקר חדש
           </h1>
 
           {error && (
