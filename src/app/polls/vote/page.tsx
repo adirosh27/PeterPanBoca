@@ -29,6 +29,7 @@ interface Vote {
   optionId: string;
   votedAt: string;
   wasChanged?: boolean;
+  comment?: string;
 }
 
 export default function VotePage() {
