@@ -575,117 +575,62 @@ export default function VotePage() {
             📊 הצבעה
           </h1>
 
+          {/* Question Box */}
           <div style={{
-            position: 'relative',
-            overflow: 'hidden',
-            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(251, 191, 36, 0.08) 100%)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.4)',
-            borderRadius: '24px',
-            padding: '3rem',
-            marginBottom: '2rem',
-            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
-            textAlign: 'right',
-            direction: 'rtl'
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            padding: '2rem',
+            marginBottom: '1.5rem',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+            border: '1px solid rgba(229, 231, 235, 0.8)'
           }}>
-            {/* Decorative corner accent */}
             <div style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              width: '100px',
-              height: '100px',
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, transparent 70%)',
-              borderRadius: '0 24px 0 100%',
-              pointerEvents: 'none'
-            }} />
-
-            {/* Question Text */}
-            <div style={{
-              position: 'relative',
-              whiteSpace: 'pre-wrap',
-              fontSize: '1.75rem',
-              fontWeight: '800',
-              lineHeight: '1.4',
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              lineHeight: '1.5',
               color: '#111827',
-              letterSpacing: '-0.02em',
-              marginBottom: poll.eventDate ? '2rem' : '0',
-              fontFamily: 'system-ui, -apple-system, sans-serif'
+              textAlign: 'center',
+              whiteSpace: 'pre-wrap'
             }}>
               {poll.question}
             </div>
+          </div>
 
-            {/* Event Date - Full Width Card */}
-            {poll.eventDate && (
+          {/* Event Date Box */}
+          {poll.eventDate && (
+            <div style={{
+              background: 'linear-gradient(135deg, #10b981, #059669)',
+              borderRadius: '16px',
+              padding: '1.5rem',
+              marginBottom: '1.5rem',
+              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)',
+              textAlign: 'center'
+            }}>
               <div style={{
-                position: 'relative',
-                background: 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)',
-                borderRadius: '20px',
-                padding: '1.75rem 2rem',
-                boxShadow: '0 6px 20px rgba(16, 185, 129, 0.3)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1.5rem'
+                fontSize: '3rem',
+                marginBottom: '0.5rem'
               }}>
-                {/* Calendar Icon Box */}
-                <div style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                  borderRadius: '16px',
-                  width: '70px',
-                  height: '70px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '2.5rem',
-                  flexShrink: 0,
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-                }}>
-                  📅
-                </div>
-
-                {/* Date Info */}
-                <div style={{
-                  flex: 1,
-                  textAlign: 'right',
-                  color: 'white'
-                }}>
-                  <div style={{
-                    fontSize: '0.875rem',
-                    fontWeight: '600',
-                    opacity: 0.95,
-                    marginBottom: '0.5rem',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    fontFamily: 'system-ui, -apple-system, sans-serif'
-                  }}>
-                    📍 תאריך האירוע
-                  </div>
-                  <div style={{
-                    fontSize: '1.5rem',
-                    fontWeight: '900',
-                    lineHeight: '1.2',
-                    letterSpacing: '-0.02em',
-                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.15)',
-                    fontFamily: 'system-ui, -apple-system, sans-serif'
-                  }}>
-                    {(() => {
-                      const [year, month, day] = poll.eventDate.split('-');
-                      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                      return date.toLocaleDateString('he-IL', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      });
-                    })()}
-                  </div>
-                </div>
+                📅
               </div>
-            )}
+              <div style={{
+                color: 'white',
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                lineHeight: '1.4'
+              }}>
+                {(() => {
+                  const [year, month, day] = poll.eventDate.split('-');
+                  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                  return date.toLocaleDateString('he-IL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  });
+                })()}
+              </div>
+            </div>
+          )}
             {poll.deadline && (
               <>
                 <div style={{
