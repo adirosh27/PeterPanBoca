@@ -576,43 +576,109 @@ export default function VotePage() {
           </h1>
 
           <div style={{
-            backgroundColor: 'rgba(240, 249, 255, 0.6)',
+            position: 'relative',
+            overflow: 'hidden',
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(251, 191, 36, 0.15) 100%)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
-            border: '2px solid rgba(191, 219, 254, 0.4)',
-            borderRadius: '16px',
-            padding: '2rem',
+            border: '2px solid rgba(16, 185, 129, 0.3)',
+            borderRadius: '20px',
+            padding: '2.5rem',
             marginBottom: '2rem',
-            whiteSpace: 'pre-wrap',
-            fontSize: '1.25rem',
-            fontWeight: '700',
-            lineHeight: '1.6',
-            textAlign: 'center',
-            color: '#1f2937',
-            letterSpacing: '-0.01em'
+            boxShadow: '0 8px 24px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5)'
           }}>
-            {poll.question}
+            {/* Decorative background elements */}
+            <div style={{
+              position: 'absolute',
+              top: '-50px',
+              right: '-50px',
+              width: '150px',
+              height: '150px',
+              background: 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)',
+              borderRadius: '50%',
+              pointerEvents: 'none'
+            }} />
+            <div style={{
+              position: 'absolute',
+              bottom: '-30px',
+              left: '-30px',
+              width: '120px',
+              height: '120px',
+              background: 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)',
+              borderRadius: '50%',
+              pointerEvents: 'none'
+            }} />
+
+            {/* Question Text */}
+            <div style={{
+              position: 'relative',
+              whiteSpace: 'pre-wrap',
+              fontSize: '1.35rem',
+              fontWeight: '700',
+              lineHeight: '1.6',
+              textAlign: 'center',
+              color: '#1f2937',
+              letterSpacing: '-0.01em',
+              marginBottom: poll.eventDate ? '1.5rem' : '0'
+            }}>
+              {poll.question}
+            </div>
+
+            {/* Event Date - Premium Card */}
             {poll.eventDate && (
               <div style={{
-                marginTop: '0.75rem',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                color: '#10b981',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem'
+                position: 'relative',
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                borderRadius: '16px',
+                padding: '1.25rem 1.75rem',
+                boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                display: 'inline-block',
+                width: 'auto',
+                margin: '0 auto'
               }}>
-                📅 {(() => {
-                  const [year, month, day] = poll.eventDate.split('-');
-                  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                  return date.toLocaleDateString('he-IL', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  });
-                })()}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  color: 'white'
+                }}>
+                  <div style={{
+                    fontSize: '2.5rem',
+                    lineHeight: 1,
+                    filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))'
+                  }}>
+                    📅
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      opacity: 0.9,
+                      marginBottom: '0.25rem',
+                      letterSpacing: '0.05em',
+                      textTransform: 'uppercase'
+                    }}>
+                      תאריך האירוע
+                    </div>
+                    <div style={{
+                      fontSize: '1.1rem',
+                      fontWeight: '800',
+                      lineHeight: '1.3',
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
+                    }}>
+                      {(() => {
+                        const [year, month, day] = poll.eventDate.split('-');
+                        const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                        return date.toLocaleDateString('he-IL', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        });
+                      })()}
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
             {poll.deadline && (
