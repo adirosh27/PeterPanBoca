@@ -48,6 +48,7 @@ export default function VotePage() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [deadlineExpired, setDeadlineExpired] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [recentActivity, setRecentActivity] = useState<{voterName: string, timestamp: number}[]>([]);
 
   useEffect(() => {
     if (pollId) {
@@ -57,6 +58,27 @@ export default function VotePage() {
       fetchActivePoll();
     }
   }, [pollId, refreshTrigger]);
+
+  // Poll for new votes every 5 seconds
+  useEffect(() => {
+    const pollInterval = setInterval(() => {
+      if (pollId || poll?.id) {
+        fetchVotes(pollId || poll?.id);
+      }
+    }, 5000);
+
+    return () => clearInterval(pollInterval);
+  }, [pollId, poll?.id]);
+
+  // Auto-dismiss old activity notifications
+  useEffect(() => {
+    const cleanupInterval = setInterval(() => {
+      const now = Date.now();
+      setRecentActivity(prev => prev.filter(activity => now - activity.timestamp < 5000));
+    }, 1000);
+
+    return () => clearInterval(cleanupInterval);
+  }, []);
 
   // Countdown timer effect
   useEffect(() => {
@@ -129,7 +151,24 @@ export default function VotePage() {
       const data = await response.json();
 
       if (data.success) {
-        setExistingVotes(data.votes || []);
+        const newVotes = data.votes || [];
+
+        // Detect new votes for activity notifications
+        if (existingVotes.length > 0) {
+          const oldVoteEmails = new Set(existingVotes.map(v => v.voterEmail));
+          const newlyVotedPeople = newVotes.filter((v: Vote) => !oldVoteEmails.has(v.voterEmail));
+
+          if (newlyVotedPeople.length > 0) {
+            const now = Date.now();
+            const newActivities = newlyVotedPeople.map((v: Vote) => ({
+              voterName: v.voterName,
+              timestamp: now
+            }));
+            setRecentActivity(prev => [...newActivities, ...prev].slice(0, 5)); // Keep last 5
+          }
+        }
+
+        setExistingVotes(newVotes);
       }
     } catch (err) {
       console.error('Error loading votes:', err);
@@ -319,6 +358,16 @@ export default function VotePage() {
             transform: translateY(0);
           }
         }
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
         @media (min-width: 640px) {
           .responsive-container {
             padding: 2rem !important;
@@ -438,6 +487,47 @@ export default function VotePage() {
               );
             })}
           </div>
+        </div>
+
+        {/* Live Activity Notifications */}
+        <div style={{
+          position: 'fixed',
+          top: '2rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
+          pointerEvents: 'none'
+        }}>
+          {recentActivity.map((activity, index) => {
+            const age = Date.now() - activity.timestamp;
+            const opacity = Math.max(0, 1 - age / 5000);
+
+            return (
+              <div
+                key={activity.timestamp}
+                style={{
+                  backgroundColor: 'rgba(16, 185, 129, 0.95)',
+                  color: 'white',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '25px',
+                  fontSize: '0.9rem',
+                  fontWeight: 'bold',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)',
+                  opacity,
+                  transform: `translateY(${index * 60}px)`,
+                  transition: 'all 0.3s ease',
+                  animation: 'slideIn 0.3s ease',
+                  textAlign: 'center',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                🎉 {activity.voterName} הצביע עכשיו!
+              </div>
+            );
+          })}
         </div>
 
         <div style={{
