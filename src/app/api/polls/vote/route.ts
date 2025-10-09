@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { submitVote, hasUserVoted } from '@/lib/poll-db';
+import { submitVote } from '@/lib/poll-db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,18 +10,6 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           message: 'Missing required fields'
-        },
-        { status: 400 }
-      );
-    }
-
-    // Check if user already voted
-    const alreadyVoted = await hasUserVoted(pollId, voterEmail);
-    if (alreadyVoted) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'You have already voted on this poll'
         },
         { status: 400 }
       );

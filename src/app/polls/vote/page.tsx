@@ -477,33 +477,20 @@ export default function VotePage() {
                     gap: '0.5rem',
                     flexWrap: 'wrap'
                   }}>
-                    {hasVoted ? (
-                      <div style={{
-                        padding: '0.5rem 1rem',
-                        borderRadius: '6px',
-                        backgroundColor: '#10b981',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        fontSize: '0.85rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.35rem'
-                      }}>
-                        {poll.options.find(o => o.id === memberVote.optionId)?.text === 'מגיע' ? '✅' : '❌'}
-                        {poll.options.find(o => o.id === memberVote.optionId)?.text}
-                      </div>
-                    ) : (
-                      poll.options.map((option) => (
+                    {poll.options.map((option) => {
+                      const isSelected = hasVoted && memberVote.optionId === option.id;
+                      return (
                         <button
                           key={option.id}
                           onClick={() => handleVote(member.name, option.id)}
                           style={{
                             padding: '0.5rem 1rem',
-                            border: '2px solid #e5e7eb',
+                            border: isSelected ? '2px solid #10b981' : '2px solid #e5e7eb',
                             borderRadius: '6px',
-                            backgroundColor: 'white',
+                            backgroundColor: isSelected ? '#10b981' : 'white',
+                            color: isSelected ? 'white' : 'black',
                             cursor: 'pointer',
-                            fontWeight: '500',
+                            fontWeight: isSelected ? 'bold' : '500',
                             fontSize: '0.85rem',
                             transition: 'all 0.2s',
                             display: 'flex',
@@ -511,20 +498,24 @@ export default function VotePage() {
                             gap: '0.35rem'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#f0fdf4';
-                            e.currentTarget.style.borderColor = '#10b981';
+                            if (!isSelected) {
+                              e.currentTarget.style.backgroundColor = '#f0fdf4';
+                              e.currentTarget.style.borderColor = '#10b981';
+                            }
                             e.currentTarget.style.transform = 'scale(1.05)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'white';
-                            e.currentTarget.style.borderColor = '#e5e7eb';
+                            if (!isSelected) {
+                              e.currentTarget.style.backgroundColor = 'white';
+                              e.currentTarget.style.borderColor = '#e5e7eb';
+                            }
                             e.currentTarget.style.transform = 'scale(1)';
                           }}
                         >
                           {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
                         </button>
-                      ))
-                    )}
+                      );
+                    })}
                   </div>
                 </div>
               );

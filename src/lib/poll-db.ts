@@ -162,42 +162,78 @@ export async function submitVote(
       return false;
     }
 
-    // Check if user already voted
-    const alreadyVoted = await hasUserVoted(pollId, voterEmail);
-    if (alreadyVoted) {
-      console.log('User already voted on this poll');
-      return false;
-    }
-
-    // Get all votes and add new vote
+    // Get all votes
     const allVotes = await getAllVotes();
-    const newVote: Vote = {
-      pollId,
-      voterId: Date.now().toString(),
-      voterName,
-      voterEmail,
-      optionId,
-      votedAt: new Date().toISOString()
-    };
 
-    allVotes.push(newVote);
-    await redis.set(VOTES_KEY, allVotes);
+    // Check if user already voted
+    const existingVoteIndex = allVotes.findIndex(
+      v => v.pollId === pollId && v.voterEmail === voterEmail
+    );
 
-    // Update poll vote count
-    const polls = await getAllPolls();
-    const pollIndex = polls.findIndex(p => p.id === pollId);
+    if (existingVoteIndex !== -1) {
+      // User is changing their vote
+      const oldOptionId = allVotes[existingVoteIndex].optionId;
 
-    if (pollIndex !== -1) {
-      const poll = polls[pollIndex];
-      const optionIndex = poll.options.findIndex(o => o.id === optionId);
+      // Update the vote
+      allVotes[existingVoteIndex] = {
+        ...allVotes[existingVoteIndex],
+        optionId,
+        votedAt: new Date().toISOString()
+      };
 
-      if (optionIndex !== -1) {
-        poll.options[optionIndex].votes += 1;
+      await redis.set(VOTES_KEY, allVotes);
+
+      // Update poll vote counts (decrease old, increase new)
+      const polls = await getAllPolls();
+      const pollIndex = polls.findIndex(p => p.id === pollId);
+
+      if (pollIndex !== -1) {
+        const poll = polls[pollIndex];
+
+        // Decrease old option count
+        const oldOptionIndex = poll.options.findIndex(o => o.id === oldOptionId);
+        if (oldOptionIndex !== -1 && poll.options[oldOptionIndex].votes > 0) {
+          poll.options[oldOptionIndex].votes -= 1;
+        }
+
+        // Increase new option count
+        const newOptionIndex = poll.options.findIndex(o => o.id === optionId);
+        if (newOptionIndex !== -1) {
+          poll.options[newOptionIndex].votes += 1;
+        }
+
         await redis.set(POLLS_KEY, polls);
+      }
+    } else {
+      // New vote
+      const newVote: Vote = {
+        pollId,
+        voterId: Date.now().toString(),
+        voterName,
+        voterEmail,
+        optionId,
+        votedAt: new Date().toISOString()
+      };
+
+      allVotes.push(newVote);
+      await redis.set(VOTES_KEY, allVotes);
+
+      // Update poll vote count
+      const polls = await getAllPolls();
+      const pollIndex = polls.findIndex(p => p.id === pollId);
+
+      if (pollIndex !== -1) {
+        const poll = polls[pollIndex];
+        const optionIndex = poll.options.findIndex(o => o.id === optionId);
+
+        if (optionIndex !== -1) {
+          poll.options[optionIndex].votes += 1;
+          await redis.set(POLLS_KEY, polls);
+        }
       }
     }
 
-    console.log('Vote submitted:', newVote);
+    console.log('Vote submitted successfully');
     return true;
   } catch (error) {
     console.error('Error submitting vote:', error);
