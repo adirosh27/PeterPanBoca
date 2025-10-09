@@ -477,11 +477,13 @@ export default function VotePage() {
                           color: '#6b7280',
                           marginTop: '0.15rem'
                         }}>
-                          🕐 {new Date(memberVote.votedAt).toLocaleString('he-IL', {
-                            month: 'numeric',
-                            day: 'numeric',
+                          Voted: {new Date(memberVote.votedAt).toLocaleString('he-IL', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
                             hour: '2-digit',
-                            minute: '2-digit'
+                            minute: '2-digit',
+                            hour12: false
                           })}
                         </div>
                       )}
