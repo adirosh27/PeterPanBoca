@@ -578,34 +578,26 @@ export default function VotePage() {
           <div style={{
             position: 'relative',
             overflow: 'hidden',
-            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(251, 191, 36, 0.15) 100%)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            border: '2px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '20px',
-            padding: '2.5rem',
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(251, 191, 36, 0.08) 100%)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.4)',
+            borderRadius: '24px',
+            padding: '3rem',
             marginBottom: '2rem',
-            boxShadow: '0 8px 24px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5)'
+            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
+            textAlign: 'right',
+            direction: 'rtl'
           }}>
-            {/* Decorative background elements */}
+            {/* Decorative corner accent */}
             <div style={{
               position: 'absolute',
-              top: '-50px',
-              right: '-50px',
-              width: '150px',
-              height: '150px',
-              background: 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)',
-              borderRadius: '50%',
-              pointerEvents: 'none'
-            }} />
-            <div style={{
-              position: 'absolute',
-              bottom: '-30px',
-              left: '-30px',
-              width: '120px',
-              height: '120px',
-              background: 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)',
-              borderRadius: '50%',
+              top: 0,
+              right: 0,
+              width: '100px',
+              height: '100px',
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, transparent 70%)',
+              borderRadius: '0 24px 0 100%',
               pointerEvents: 'none'
             }} />
 
@@ -613,70 +605,83 @@ export default function VotePage() {
             <div style={{
               position: 'relative',
               whiteSpace: 'pre-wrap',
-              fontSize: '1.35rem',
-              fontWeight: '700',
-              lineHeight: '1.6',
-              textAlign: 'center',
-              color: '#1f2937',
-              letterSpacing: '-0.01em',
-              marginBottom: poll.eventDate ? '1.5rem' : '0'
+              fontSize: '1.75rem',
+              fontWeight: '800',
+              lineHeight: '1.4',
+              color: '#111827',
+              letterSpacing: '-0.02em',
+              marginBottom: poll.eventDate ? '2rem' : '0',
+              fontFamily: 'system-ui, -apple-system, sans-serif'
             }}>
               {poll.question}
             </div>
 
-            {/* Event Date - Premium Card */}
+            {/* Event Date - Full Width Card */}
             {poll.eventDate && (
               <div style={{
                 position: 'relative',
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                borderRadius: '16px',
-                padding: '1.25rem 1.75rem',
-                boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-                display: 'inline-block',
-                width: 'auto',
-                margin: '0 auto'
+                background: 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)',
+                borderRadius: '20px',
+                padding: '1.75rem 2rem',
+                boxShadow: '0 6px 20px rgba(16, 185, 129, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.5rem'
               }}>
+                {/* Calendar Icon Box */}
                 <div style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                  borderRadius: '16px',
+                  width: '70px',
+                  height: '70px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '1rem',
+                  justifyContent: 'center',
+                  fontSize: '2.5rem',
+                  flexShrink: 0,
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                }}>
+                  📅
+                </div>
+
+                {/* Date Info */}
+                <div style={{
+                  flex: 1,
+                  textAlign: 'right',
                   color: 'white'
                 }}>
                   <div style={{
-                    fontSize: '2.5rem',
-                    lineHeight: 1,
-                    filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))'
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    opacity: 0.95,
+                    marginBottom: '0.5rem',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    fontFamily: 'system-ui, -apple-system, sans-serif'
                   }}>
-                    📅
+                    📍 תאריך האירוע
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{
-                      fontSize: '0.75rem',
-                      fontWeight: '600',
-                      opacity: 0.9,
-                      marginBottom: '0.25rem',
-                      letterSpacing: '0.05em',
-                      textTransform: 'uppercase'
-                    }}>
-                      תאריך האירוע
-                    </div>
-                    <div style={{
-                      fontSize: '1.1rem',
-                      fontWeight: '800',
-                      lineHeight: '1.3',
-                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
-                    }}>
-                      {(() => {
-                        const [year, month, day] = poll.eventDate.split('-');
-                        const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                        return date.toLocaleDateString('he-IL', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        });
-                      })()}
-                    </div>
+                  <div style={{
+                    fontSize: '1.5rem',
+                    fontWeight: '900',
+                    lineHeight: '1.2',
+                    letterSpacing: '-0.02em',
+                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.15)',
+                    fontFamily: 'system-ui, -apple-system, sans-serif'
+                  }}>
+                    {(() => {
+                      const [year, month, day] = poll.eventDate.split('-');
+                      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                      return date.toLocaleDateString('he-IL', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      });
+                    })()}
                   </div>
                 </div>
               </div>
