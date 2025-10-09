@@ -377,9 +377,20 @@ export default function ResultsPage() {
 
           {/* Results by option */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {poll.options.map((option) => {
+            {poll.options.map((option, optionIndex) => {
               const optionVotes = votesByOption[option.id] || [];
               const percentage = totalVotes > 0 ? (optionVotes.length / totalVotes * 100).toFixed(1) : '0';
+
+              // Color scheme for each option (matching vote page)
+              const optionColors = [
+                { main: '#10b981', light: '#34d399', shadow: 'rgba(16, 185, 129, 0.4)' }, // Green
+                { main: '#3b82f6', light: '#60a5fa', shadow: 'rgba(59, 130, 246, 0.4)' }, // Blue
+                { main: '#f59e0b', light: '#fbbf24', shadow: 'rgba(245, 158, 11, 0.4)' }, // Amber
+                { main: '#8b5cf6', light: '#a78bfa', shadow: 'rgba(139, 92, 246, 0.4)' }, // Purple
+                { main: '#ec4899', light: '#f472b6', shadow: 'rgba(236, 72, 153, 0.4)' }, // Pink
+                { main: '#06b6d4', light: '#22d3ee', shadow: 'rgba(6, 182, 212, 0.4)' }, // Cyan
+              ];
+              const color = optionColors[optionIndex % optionColors.length];
 
               return (
                 <div
@@ -407,7 +418,7 @@ export default function ResultsPage() {
                     <div style={{
                       fontSize: '1.5rem',
                       fontWeight: 'bold',
-                      color: '#10b981'
+                      color: color.main
                     }}>
                       {optionVotes.length} ({percentage}%)
                     </div>
@@ -426,13 +437,11 @@ export default function ResultsPage() {
                     <div style={{
                       width: animateBars ? `${percentage}%` : '0%',
                       height: '100%',
-                      background: option.text === 'מגיע'
-                        ? 'linear-gradient(90deg, #10b981, #34d399, #10b981)'
-                        : 'linear-gradient(90deg, #ef4444, #f87171, #ef4444)',
+                      background: `linear-gradient(90deg, ${color.main}, ${color.light}, ${color.main})`,
                       backgroundSize: '200% 100%',
                       animation: 'shimmer 2s infinite',
                       transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)',
-                      boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)'
+                      boxShadow: `0 2px 8px ${color.shadow}`
                     }} />
                   </div>
 

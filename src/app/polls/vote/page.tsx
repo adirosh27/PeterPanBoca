@@ -654,9 +654,21 @@ export default function VotePage() {
                     {poll.allowMultipleAnswers ? (
                       // Multiple selection mode - checkboxes
                       <>
-                        {poll.options.map((option) => {
+                        {poll.options.map((option, optionIndex) => {
                           const currentSelections = selectedOptions[member.name] || (memberVote?.optionIds || []);
                           const isChecked = currentSelections.includes(option.id);
+
+                          // Color scheme for each option
+                          const optionColors = [
+                            { main: '#10b981', dark: '#059669', light: '#d1fae5', shadow: 'rgba(16, 185, 129, 0.3)', hover: 'rgba(16, 185, 129, 0.2)' }, // Green
+                            { main: '#3b82f6', dark: '#2563eb', light: '#dbeafe', shadow: 'rgba(59, 130, 246, 0.3)', hover: 'rgba(59, 130, 246, 0.2)' }, // Blue
+                            { main: '#f59e0b', dark: '#d97706', light: '#fef3c7', shadow: 'rgba(245, 158, 11, 0.3)', hover: 'rgba(245, 158, 11, 0.2)' }, // Amber
+                            { main: '#8b5cf6', dark: '#7c3aed', light: '#ede9fe', shadow: 'rgba(139, 92, 246, 0.3)', hover: 'rgba(139, 92, 246, 0.2)' }, // Purple
+                            { main: '#ec4899', dark: '#db2777', light: '#fce7f3', shadow: 'rgba(236, 72, 153, 0.3)', hover: 'rgba(236, 72, 153, 0.2)' }, // Pink
+                            { main: '#06b6d4', dark: '#0891b2', light: '#cffafe', shadow: 'rgba(6, 182, 212, 0.3)', hover: 'rgba(6, 182, 212, 0.2)' }, // Cyan
+                          ];
+                          const color = optionColors[optionIndex % optionColors.length];
+
                           return (
                             <button
                               key={option.id}
@@ -664,9 +676,9 @@ export default function VotePage() {
                               style={{
                                 minHeight: '44px',
                                 padding: '0.6rem 1rem',
-                                border: isChecked ? '2px solid #10b981' : '2px solid #e5e7eb',
+                                border: isChecked ? `2px solid ${color.main}` : '2px solid #e5e7eb',
                                 borderRadius: '6px',
-                                backgroundColor: isChecked ? '#10b981' : 'white',
+                                backgroundColor: isChecked ? color.main : 'white',
                                 color: isChecked ? 'white' : 'black',
                                 cursor: 'pointer',
                                 fontWeight: isChecked ? 'bold' : '500',
@@ -676,16 +688,16 @@ export default function VotePage() {
                                 alignItems: 'center',
                                 gap: '0.5rem',
                                 boxShadow: isChecked
-                                  ? 'inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(16, 185, 129, 0.3)'
+                                  ? `inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px ${color.shadow}`
                                   : '0 2px 4px rgba(0, 0, 0, 0.1)',
                                 transform: isChecked ? 'translateY(2px)' : 'translateY(0)',
                                 background: isChecked
-                                  ? 'linear-gradient(145deg, #10b981, #059669)'
+                                  ? `linear-gradient(145deg, ${color.main}, ${color.dark})`
                                   : 'linear-gradient(145deg, #ffffff, #f9fafb)'
                               }}
                               onMouseEnter={(e) => {
                                 if (!isChecked) {
-                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(16, 185, 129, 0.2)';
+                                  e.currentTarget.style.boxShadow = `0 4px 8px ${color.hover}`;
                                   e.currentTarget.style.transform = 'translateY(-2px)';
                                 }
                               }}
@@ -701,7 +713,7 @@ export default function VotePage() {
                                 height: '18px',
                                 borderRadius: '4px',
                                 border: isChecked ? '2px solid white' : '2px solid #9ca3af',
-                                backgroundColor: isChecked ? '#10b981' : 'white',
+                                backgroundColor: isChecked ? color.main : 'white',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',

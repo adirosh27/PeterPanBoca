@@ -184,7 +184,7 @@ export async function submitVote(
 
     if (existingVoteIndex !== -1) {
       // User is changing their vote
-      const oldOptionId = allVotes[existingVoteIndex].optionId;
+      const oldOptionIds = allVotes[existingVoteIndex].optionIds || [allVotes[existingVoteIndex].optionId];
 
       // Update the vote
       allVotes[existingVoteIndex] = {
@@ -198,24 +198,28 @@ export async function submitVote(
 
       await redis.set(VOTES_KEY, allVotes);
 
-      // Update poll vote counts (decrease old, increase new)
+      // Update poll vote counts (decrease old options, increase new options)
       const polls = await getAllPolls();
       const pollIndex = polls.findIndex(p => p.id === pollId);
 
       if (pollIndex !== -1) {
         const poll = polls[pollIndex];
 
-        // Decrease old option count
-        const oldOptionIndex = poll.options.findIndex(o => o.id === oldOptionId);
-        if (oldOptionIndex !== -1 && poll.options[oldOptionIndex].votes > 0) {
-          poll.options[oldOptionIndex].votes -= 1;
-        }
+        // Decrease old option counts
+        oldOptionIds.forEach(oldId => {
+          const oldOptionIndex = poll.options.findIndex(o => o.id === oldId);
+          if (oldOptionIndex !== -1 && poll.options[oldOptionIndex].votes > 0) {
+            poll.options[oldOptionIndex].votes -= 1;
+          }
+        });
 
-        // Increase new option count
-        const newOptionIndex = poll.options.findIndex(o => o.id === optionId);
-        if (newOptionIndex !== -1) {
-          poll.options[newOptionIndex].votes += 1;
-        }
+        // Increase new option counts
+        optionIds.forEach(newId => {
+          const newOptionIndex = poll.options.findIndex(o => o.id === newId);
+          if (newOptionIndex !== -1) {
+            poll.options[newOptionIndex].votes += 1;
+          }
+        });
 
         await redis.set(POLLS_KEY, polls);
       }
@@ -235,18 +239,22 @@ export async function submitVote(
       allVotes.push(newVote);
       await redis.set(VOTES_KEY, allVotes);
 
-      // Update poll vote count
+      // Update poll vote counts for all selected options
       const polls = await getAllPolls();
       const pollIndex = polls.findIndex(p => p.id === pollId);
 
       if (pollIndex !== -1) {
         const poll = polls[pollIndex];
-        const optionIndex = poll.options.findIndex(o => o.id === optionId);
 
-        if (optionIndex !== -1) {
-          poll.options[optionIndex].votes += 1;
-          await redis.set(POLLS_KEY, polls);
-        }
+        // Increase count for each selected option
+        optionIds.forEach(selectedId => {
+          const optionIndex = poll.options.findIndex(o => o.id === selectedId);
+          if (optionIndex !== -1) {
+            poll.options[optionIndex].votes += 1;
+          }
+        });
+
+        await redis.set(POLLS_KEY, polls);
       }
     }
 
