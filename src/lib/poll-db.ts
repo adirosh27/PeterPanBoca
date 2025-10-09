@@ -11,6 +11,7 @@ export interface Poll {
   id: string;
   question: string;
   eventDate?: string | null;
+  deadline?: string | null;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
@@ -24,6 +25,7 @@ export interface Vote {
   optionId: string;
   votedAt: string;
   wasChanged?: boolean;
+  comment?: string;
 }
 
 const POLLS_KEY = 'peter-pan-polls';
@@ -74,7 +76,7 @@ export async function getActivePoll(): Promise<Poll | null> {
 }
 
 // Create a new poll
-export async function createPoll(question: string, options: string[], eventDate?: string | null): Promise<Poll | null> {
+export async function createPoll(question: string, options: string[], eventDate?: string | null, deadline?: string | null): Promise<Poll | null> {
   try {
     if (!redis) {
       console.log('Redis not available, cannot create poll');
@@ -91,6 +93,7 @@ export async function createPoll(question: string, options: string[], eventDate?
       id: Date.now().toString(),
       question,
       eventDate: eventDate || null,
+      deadline: deadline || null,
       options: options.map((text, index) => ({
         id: `option-${index}`,
         text,
@@ -155,7 +158,8 @@ export async function submitVote(
   pollId: string,
   voterName: string,
   voterEmail: string,
-  optionId: string
+  optionId: string,
+  comment?: string
 ): Promise<boolean> {
   try {
     if (!redis) {
@@ -180,7 +184,8 @@ export async function submitVote(
         ...allVotes[existingVoteIndex],
         optionId,
         votedAt: new Date().toISOString(),
-        wasChanged: true
+        wasChanged: true,
+        comment: comment || allVotes[existingVoteIndex].comment
       };
 
       await redis.set(VOTES_KEY, allVotes);
@@ -214,7 +219,8 @@ export async function submitVote(
         voterName,
         voterEmail,
         optionId,
-        votedAt: new Date().toISOString()
+        votedAt: new Date().toISOString(),
+        comment: comment || undefined
       };
 
       allVotes.push(newVote);

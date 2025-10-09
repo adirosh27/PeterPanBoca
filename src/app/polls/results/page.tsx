@@ -14,6 +14,7 @@ interface Poll {
   id: string;
   question: string;
   eventDate?: string | null;
+  deadline?: string | null;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
@@ -456,6 +457,17 @@ export default function ResultsPage() {
                               <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
                                 {vote.voterEmail}
                               </div>
+                              {vote.comment && (
+                                <div style={{
+                                  fontSize: '0.85rem',
+                                  color: '#4b5563',
+                                  marginTop: '0.25rem',
+                                  fontStyle: 'italic',
+                                  direction: 'rtl'
+                                }}>
+                                  💬 {vote.comment}
+                                </div>
+                              )}
                             </div>
                             <div style={{
                               fontSize: '0.8rem',

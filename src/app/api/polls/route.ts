@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 // POST - Create a new poll
 export async function POST(request: NextRequest) {
   try {
-    const { question, options, eventDate } = await request.json();
+    const { question, options, eventDate, deadline } = await request.json();
 
     if (!question || !options || !Array.isArray(options) || options.length < 2) {
       return NextResponse.json(
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const poll = await createPoll(question, options, eventDate);
+    const poll = await createPoll(question, options, eventDate, deadline);
 
     if (!poll) {
       throw new Error('Failed to create poll');

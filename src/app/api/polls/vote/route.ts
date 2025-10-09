@@ -3,7 +3,7 @@ import { submitVote } from '@/lib/poll-db';
 
 export async function POST(request: NextRequest) {
   try {
-    const { pollId, voterName, voterEmail, optionId } = await request.json();
+    const { pollId, voterName, voterEmail, optionId, comment } = await request.json();
 
     if (!pollId || !voterName || !voterEmail || !optionId) {
       return NextResponse.json(
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const success = await submitVote(pollId, voterName, voterEmail, optionId);
+    const success = await submitVote(pollId, voterName, voterEmail, optionId, comment);
 
     if (!success) {
       throw new Error('Failed to submit vote');

@@ -15,6 +15,7 @@ interface Poll {
   id: string;
   question: string;
   eventDate?: string | null;
+  deadline?: string | null;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
@@ -39,6 +40,7 @@ export default function VotePage() {
   const [error, setError] = useState('');
   const [existingVotes, setExistingVotes] = useState<Vote[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [memberComments, setMemberComments] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (pollId) {
@@ -101,6 +103,7 @@ export default function VotePage() {
 
   const handleVote = async (memberName: string, optionId: string) => {
     try {
+      const comment = memberComments[memberName] || undefined;
       const response = await fetch('/api/polls/vote', {
         method: 'POST',
         headers: {
@@ -110,7 +113,8 @@ export default function VotePage() {
           pollId: poll?.id,
           voterName: memberName,
           voterEmail: `${memberName}@peterpan.com`,
-          optionId
+          optionId,
+          comment
         }),
       });
 
@@ -399,6 +403,27 @@ export default function VotePage() {
                 })()}
               </div>
             )}
+            {poll.deadline && (
+              <div style={{
+                marginTop: '0.75rem',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                color: '#ef4444',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}>
+                ⏰ מועד אחרון: {new Date(poll.deadline).toLocaleString('he-IL', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false
+                })}
+              </div>
+            )}
           </div>
 
           {error && (
@@ -534,6 +559,28 @@ export default function VotePage() {
                         </button>
                       );
                     })}
+                  </div>
+
+                  {/* Comment input */}
+                  <div style={{ width: '100%', marginTop: '0.5rem' }}>
+                    <input
+                      type="text"
+                      placeholder="הוסף הערה (אופציונלי)"
+                      value={memberComments[member.name] || (hasVoted && memberVote?.comment) || ''}
+                      onChange={(e) => setMemberComments(prev => ({
+                        ...prev,
+                        [member.name]: e.target.value
+                      }))}
+                      style={{
+                        width: '100%',
+                        padding: '0.5rem',
+                        fontSize: '0.85rem',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '6px',
+                        textAlign: 'right',
+                        direction: 'rtl'
+                      }}
+                    />
                   </div>
                 </div>
               );

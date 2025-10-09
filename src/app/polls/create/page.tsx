@@ -8,6 +8,7 @@ export default function CreatePollPage() {
   const router = useRouter();
   const [question, setQuestion] = useState('');
   const [eventDate, setEventDate] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [options, setOptions] = useState(['מגיע', 'לא מסתדר לי']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -52,6 +53,7 @@ export default function CreatePollPage() {
         body: JSON.stringify({
           question,
           eventDate: eventDate || null,
+          deadline: deadline || null,
           options: validOptions
         }),
       });
@@ -194,6 +196,31 @@ export default function CreatePollPage() {
                 type="date"
                 value={eventDate}
                 onChange={(e) => setEventDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  fontSize: '1rem',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '8px',
+                  fontFamily: 'system-ui'
+                }}
+                disabled={loading || success}
+              />
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '0.5rem',
+                fontSize: '1.1rem'
+              }}>
+                מועד אחרון להצבעה (אופציונלי):
+              </label>
+              <input
+                type="datetime-local"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '0.75rem',
