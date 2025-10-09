@@ -193,7 +193,7 @@ export async function submitVote(
         optionIds: optionIds,
         votedAt: new Date().toISOString(),
         wasChanged: true,
-        comment: comment || allVotes[existingVoteIndex].comment
+        comment: comment !== undefined ? comment : allVotes[existingVoteIndex].comment
       };
 
       await redis.set(VOTES_KEY, allVotes);

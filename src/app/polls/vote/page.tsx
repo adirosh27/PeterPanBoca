@@ -177,7 +177,10 @@ export default function VotePage() {
 
   const handleVote = async (memberName: string, optionId?: string) => {
     try {
-      const comment = memberComments[memberName] || undefined;
+      // Get comment - allow empty string to clear comment
+      const comment = memberComments[memberName] !== undefined
+        ? (memberComments[memberName] || undefined)
+        : undefined;
 
       // For multiple answers, use selectedOptions, otherwise use single optionId
       let voteOptionId: string | string[];
@@ -950,7 +953,11 @@ export default function VotePage() {
                     <input
                       type="text"
                       placeholder="הוסף הערה (אופציונלי)"
-                      value={memberComments[member.name] || (hasVoted && memberVote?.comment) || ''}
+                      value={
+                        memberComments[member.name] !== undefined
+                          ? memberComments[member.name]
+                          : (hasVoted && memberVote?.comment) || ''
+                      }
                       onChange={(e) => setMemberComments(prev => ({
                         ...prev,
                         [member.name]: e.target.value
