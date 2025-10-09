@@ -42,6 +42,8 @@ export default function VotePage() {
   const [existingVotes, setExistingVotes] = useState<Vote[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [memberComments, setMemberComments] = useState<Record<string, string>>({});
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [deadlineExpired, setDeadlineExpired] = useState(false);
 
   useEffect(() => {
     if (pollId) {
@@ -51,6 +53,32 @@ export default function VotePage() {
       fetchActivePoll();
     }
   }, [pollId, refreshTrigger]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (!poll?.deadline) return;
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const deadline = new Date(poll.deadline).getTime();
+      const difference = deadline - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((difference % (1000 * 60)) / 1000)
+        });
+        setDeadlineExpired(false);
+      } else {
+        setDeadlineExpired(true);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [poll?.deadline]);
 
   const fetchPoll = async () => {
     try {
@@ -405,25 +433,82 @@ export default function VotePage() {
               </div>
             )}
             {poll.deadline && (
-              <div style={{
-                marginTop: '0.75rem',
-                fontSize: '0.9rem',
-                fontWeight: 'bold',
-                color: '#ef4444',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem'
-              }}>
-                ⏰ מועד אחרון: {new Date(poll.deadline).toLocaleString('he-IL', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false
-                })}
-              </div>
+              <>
+                <div style={{
+                  marginTop: '0.75rem',
+                  fontSize: '0.9rem',
+                  fontWeight: 'bold',
+                  color: '#ef4444',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem'
+                }}>
+                  ⏰ מועד אחרון: {new Date(poll.deadline).toLocaleString('he-IL', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                  })}
+                </div>
+
+                {/* Countdown Timer */}
+                {!deadlineExpired ? (
+                  <div style={{
+                    marginTop: '0.75rem',
+                    display: 'flex',
+                    gap: '0.5rem',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                    {[
+                      { label: 'ימים', value: timeLeft.days },
+                      { label: 'שעות', value: timeLeft.hours },
+                      { label: 'דקות', value: timeLeft.minutes },
+                      { label: 'שניות', value: timeLeft.seconds }
+                    ].map((item, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          backgroundColor: '#fee2e2',
+                          border: '2px solid #ef4444',
+                          borderRadius: '8px',
+                          padding: '0.5rem',
+                          minWidth: '60px',
+                          textAlign: 'center'
+                        }}
+                      >
+                        <div style={{
+                          fontSize: '1.2rem',
+                          fontWeight: 'bold',
+                          color: '#ef4444'
+                        }}>
+                          {item.value}
+                        </div>
+                        <div style={{
+                          fontSize: '0.7rem',
+                          color: '#991b1b',
+                          marginTop: '0.15rem'
+                        }}>
+                          {item.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{
+                    marginTop: '0.75rem',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    color: '#dc2626',
+                    textAlign: 'center'
+                  }}>
+                    ⚠️ המועד להצבעה עבר
+                  </div>
+                )}
+              </>
             )}
           </div>
 
