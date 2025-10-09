@@ -629,7 +629,26 @@ export default function VotePage() {
                                 transition: 'all 0.2s',
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '0.35rem'
+                                gap: '0.35rem',
+                                boxShadow: isChecked
+                                  ? 'inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(16, 185, 129, 0.3)'
+                                  : '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                transform: isChecked ? 'translateY(2px)' : 'translateY(0)',
+                                background: isChecked
+                                  ? 'linear-gradient(145deg, #10b981, #059669)'
+                                  : 'linear-gradient(145deg, #ffffff, #f9fafb)'
+                              }}
+                              onMouseEnter={(e) => {
+                                if (!isChecked) {
+                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(16, 185, 129, 0.2)';
+                                  e.currentTarget.style.transform = 'translateY(-2px)';
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (!isChecked) {
+                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                  e.currentTarget.style.transform = 'translateY(0)';
+                                }
                               }}
                             >
                               {isChecked ? '☑' : '☐'} {option.text}
@@ -646,7 +665,26 @@ export default function VotePage() {
                             color: 'white',
                             cursor: 'pointer',
                             fontWeight: 'bold',
-                            fontSize: '0.85rem'
+                            fontSize: '0.85rem',
+                            background: 'linear-gradient(145deg, #10b981, #059669)',
+                            boxShadow: '0 4px 6px rgba(16, 185, 129, 0.4)',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.boxShadow = '0 6px 10px rgba(16, 185, 129, 0.5)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.boxShadow = '0 4px 6px rgba(16, 185, 129, 0.4)';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
+                          onMouseDown={(e) => {
+                            e.currentTarget.style.transform = 'translateY(1px)';
+                            e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.2)';
+                          }}
+                          onMouseUp={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 6px 10px rgba(16, 185, 129, 0.5)';
                           }}
                         >
                           💾 שמור
@@ -672,21 +710,30 @@ export default function VotePage() {
                               transition: 'all 0.2s',
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '0.35rem'
+                              gap: '0.35rem',
+                              boxShadow: isSelected
+                                ? 'inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(16, 185, 129, 0.3)'
+                                : '0 2px 4px rgba(0, 0, 0, 0.1)',
+                              transform: isSelected ? 'translateY(2px)' : 'translateY(0)',
+                              background: isSelected
+                                ? 'linear-gradient(145deg, #10b981, #059669)'
+                                : 'linear-gradient(145deg, #ffffff, #f9fafb)'
                             }}
                             onMouseEnter={(e) => {
                               if (!isSelected) {
-                                e.currentTarget.style.backgroundColor = '#f0fdf4';
+                                e.currentTarget.style.background = 'linear-gradient(145deg, #f0fdf4, #dcfce7)';
                                 e.currentTarget.style.borderColor = '#10b981';
+                                e.currentTarget.style.boxShadow = '0 4px 8px rgba(16, 185, 129, 0.2)';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
                               }
-                              e.currentTarget.style.transform = 'scale(1.05)';
                             }}
                             onMouseLeave={(e) => {
                               if (!isSelected) {
-                                e.currentTarget.style.backgroundColor = 'white';
+                                e.currentTarget.style.background = 'linear-gradient(145deg, #ffffff, #f9fafb)';
                                 e.currentTarget.style.borderColor = '#e5e7eb';
+                                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                e.currentTarget.style.transform = 'translateY(0)';
                               }
-                              e.currentTarget.style.transform = 'scale(1)';
                             }}
                           >
                             {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
