@@ -42,6 +42,7 @@ export default function ResultsPage() {
   const [error, setError] = useState('');
   const [allPolls, setAllPolls] = useState<Poll[]>([]);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [animateBars, setAnimateBars] = useState(false);
 
   useEffect(() => {
     fetchAllPolls();
@@ -79,6 +80,7 @@ export default function ResultsPage() {
 
     try {
       setLoading(true);
+      setAnimateBars(false);
       const response = await fetch(`/api/polls/results?pollId=${id}`);
       const data = await response.json();
 
@@ -86,6 +88,8 @@ export default function ResultsPage() {
         setPoll(data.poll);
         setVotes(data.votes || []);
         setVotesByOption(data.votesByOption || {});
+        // Trigger animation after a short delay
+        setTimeout(() => setAnimateBars(true), 100);
       } else {
         setError(data.message || 'Failed to load results');
       }
@@ -218,6 +222,10 @@ export default function ResultsPage() {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
       `}</style>
 
@@ -408,19 +416,23 @@ export default function ResultsPage() {
                   {/* Progress bar */}
                   <div style={{
                     width: '100%',
-                    height: '20px',
+                    height: '24px',
                     backgroundColor: '#e5e7eb',
-                    borderRadius: '10px',
+                    borderRadius: '12px',
                     overflow: 'hidden',
-                    marginBottom: '1rem'
+                    marginBottom: '1rem',
+                    boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)'
                   }}>
                     <div style={{
-                      width: `${percentage}%`,
+                      width: animateBars ? `${percentage}%` : '0%',
                       height: '100%',
                       background: option.text === 'מגיע'
-                        ? 'linear-gradient(90deg, #10b981, #34d399)'
-                        : 'linear-gradient(90deg, #ef4444, #f87171)',
-                      transition: 'width 0.3s ease'
+                        ? 'linear-gradient(90deg, #10b981, #34d399, #10b981)'
+                        : 'linear-gradient(90deg, #ef4444, #f87171, #ef4444)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s infinite',
+                      transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)'
                     }} />
                   </div>
 

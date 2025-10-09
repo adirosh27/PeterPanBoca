@@ -47,6 +47,7 @@ export default function VotePage() {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({});
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [deadlineExpired, setDeadlineExpired] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
     if (pollId) {
@@ -96,6 +97,7 @@ export default function VotePage() {
       setError('Error loading poll');
     } finally {
       setLoading(false);
+      setTimeout(() => setIsDataLoaded(true), 100);
     }
   };
 
@@ -114,6 +116,7 @@ export default function VotePage() {
       setError('Error loading poll');
     } finally {
       setLoading(false);
+      setTimeout(() => setIsDataLoaded(true), 100);
     }
   };
 
@@ -297,7 +300,7 @@ export default function VotePage() {
       background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
-      padding: '2rem',
+      padding: '1rem',
       fontFamily: 'system-ui'
     }}>
       <style jsx global>{`
@@ -306,9 +309,33 @@ export default function VotePage() {
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @media (min-width: 640px) {
+          .responsive-container {
+            padding: 2rem !important;
+          }
+        }
       `}</style>
 
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <div
+        className="responsive-container"
+        style={{
+          maxWidth: '1000px',
+          margin: '0 auto',
+          opacity: isDataLoaded ? 1 : 0,
+          transform: isDataLoaded ? 'translateY(0)' : 'translateY(10px)',
+          transition: 'opacity 0.5s ease-out, transform 0.5s ease-out'
+        }}
+      >
         <Link
           href="/"
           style={{
@@ -565,22 +592,39 @@ export default function VotePage() {
                     minWidth: '150px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem'
+                    gap: '0.5rem',
+                    flexWrap: 'wrap'
                   }}>
                     <div style={{
-                      fontSize: '1.2rem',
+                      fontSize: '1.5rem',
                       backgroundColor: `${member.color}20`,
                       borderRadius: '50%',
-                      width: '32px',
-                      height: '32px',
+                      width: '44px',
+                      height: '44px',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      border: `2px solid ${member.color}40`
                     }}>
                       {member.icon}
                     </div>
-                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
-                      {member.name}
+                    <div>
+                      <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                        {member.name}
+                      </div>
+                      <div style={{
+                        display: 'inline-block',
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold',
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '12px',
+                        marginTop: '0.25rem',
+                        backgroundColor: hasVoted ? '#d1fae5' : '#fef3c7',
+                        color: hasVoted ? '#065f46' : '#92400e',
+                        border: hasVoted ? '1px solid #10b981' : '1px solid #f59e0b'
+                      }}>
+                        {hasVoted ? '✅ הצביע' : '⏳ ממתין'}
+                      </div>
                     </div>
                   </div>
 
@@ -618,18 +662,19 @@ export default function VotePage() {
                               key={option.id}
                               onClick={() => toggleOption(member.name, option.id)}
                               style={{
-                                padding: '0.5rem 1rem',
+                                minHeight: '44px',
+                                padding: '0.6rem 1rem',
                                 border: isChecked ? '2px solid #10b981' : '2px solid #e5e7eb',
                                 borderRadius: '6px',
                                 backgroundColor: isChecked ? '#10b981' : 'white',
                                 color: isChecked ? 'white' : 'black',
                                 cursor: 'pointer',
                                 fontWeight: isChecked ? 'bold' : '500',
-                                fontSize: '0.85rem',
+                                fontSize: '0.9rem',
                                 transition: 'all 0.2s',
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '0.35rem',
+                                gap: '0.5rem',
                                 boxShadow: isChecked
                                   ? 'inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(16, 185, 129, 0.3)'
                                   : '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -651,21 +696,40 @@ export default function VotePage() {
                                 }
                               }}
                             >
-                              {isChecked ? '☑' : '☐'} {option.text}
+                              <div style={{
+                                width: '18px',
+                                height: '18px',
+                                borderRadius: '4px',
+                                border: isChecked ? '2px solid white' : '2px solid #9ca3af',
+                                backgroundColor: isChecked ? '#10b981' : 'white',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                                transition: 'all 0.2s'
+                              }}>
+                                {isChecked && (
+                                  <svg width="12" height="10" viewBox="0 0 12 10" fill="none" style={{ display: 'block' }}>
+                                    <path d="M1 5L4.5 8.5L11 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                )}
+                              </div>
+                              {option.text}
                             </button>
                           );
                         })}
                         <button
                           onClick={() => handleVote(member.name)}
                           style={{
-                            padding: '0.5rem 1rem',
+                            minHeight: '44px',
+                            padding: '0.6rem 1.2rem',
                             border: '2px solid #10b981',
                             borderRadius: '6px',
                             backgroundColor: '#10b981',
                             color: 'white',
                             cursor: 'pointer',
                             fontWeight: 'bold',
-                            fontSize: '0.85rem',
+                            fontSize: '0.9rem',
                             background: 'linear-gradient(145deg, #10b981, #059669)',
                             boxShadow: '0 4px 6px rgba(16, 185, 129, 0.4)',
                             transition: 'all 0.2s'
@@ -699,18 +763,19 @@ export default function VotePage() {
                             key={option.id}
                             onClick={() => handleVote(member.name, option.id)}
                             style={{
-                              padding: '0.5rem 1rem',
+                              minHeight: '44px',
+                              padding: '0.6rem 1rem',
                               border: isSelected ? '2px solid #10b981' : '2px solid #e5e7eb',
                               borderRadius: '6px',
                               backgroundColor: isSelected ? '#10b981' : 'white',
                               color: isSelected ? 'white' : 'black',
                               cursor: 'pointer',
                               fontWeight: isSelected ? 'bold' : '500',
-                              fontSize: '0.85rem',
+                              fontSize: '0.9rem',
                               transition: 'all 0.2s',
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '0.35rem',
+                              gap: '0.5rem',
                               boxShadow: isSelected
                                 ? 'inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(16, 185, 129, 0.3)'
                                 : '0 2px 4px rgba(0, 0, 0, 0.1)',
