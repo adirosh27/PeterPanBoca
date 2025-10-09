@@ -506,7 +506,7 @@ export default function VotePage() {
                   justifyContent: 'center',
                   gap: '0.5rem'
                 }}>
-                  ⏰ מועד אחרון: {new Date(poll.deadline).toLocaleString('he-IL', {
+                  ⏰ מועד אחרון להצבעה: {new Date(poll.deadline).toLocaleString('he-IL', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
