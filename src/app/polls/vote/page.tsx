@@ -16,6 +16,7 @@ interface Poll {
   question: string;
   eventDate?: string | null;
   deadline?: string | null;
+  allowMultipleAnswers?: boolean;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
@@ -27,6 +28,7 @@ interface Vote {
   voterName: string;
   voterEmail: string;
   optionId: string;
+  optionIds?: string[];
   votedAt: string;
   wasChanged?: boolean;
   comment?: string;
@@ -42,6 +44,7 @@ export default function VotePage() {
   const [existingVotes, setExistingVotes] = useState<Vote[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [memberComments, setMemberComments] = useState<Record<string, string>>({});
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({});
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [deadlineExpired, setDeadlineExpired] = useState(false);
 
@@ -130,9 +133,23 @@ export default function VotePage() {
     }
   };
 
-  const handleVote = async (memberName: string, optionId: string) => {
+  const handleVote = async (memberName: string, optionId?: string) => {
     try {
       const comment = memberComments[memberName] || undefined;
+
+      // For multiple answers, use selectedOptions, otherwise use single optionId
+      let voteOptionId: string | string[];
+      if (poll?.allowMultipleAnswers) {
+        voteOptionId = selectedOptions[memberName] || [];
+        if (voteOptionId.length === 0) {
+          setError('אנא בחר לפחות אפשרות אחת');
+          return;
+        }
+      } else {
+        if (!optionId) return;
+        voteOptionId = optionId;
+      }
+
       const response = await fetch('/api/polls/vote', {
         method: 'POST',
         headers: {
@@ -142,7 +159,7 @@ export default function VotePage() {
           pollId: poll?.id,
           voterName: memberName,
           voterEmail: `${memberName}@peterpan.com`,
-          optionId,
+          optionId: voteOptionId,
           comment
         }),
       });
@@ -152,12 +169,26 @@ export default function VotePage() {
       if (data.success) {
         // Refresh votes to show updated list
         setRefreshTrigger(prev => prev + 1);
+        setError('');
       } else {
         setError(data.message || 'Failed to submit vote');
       }
     } catch (err) {
       setError('Error submitting vote: ' + (err instanceof Error ? err.message : 'Unknown error'));
     }
+  };
+
+  const toggleOption = (memberName: string, optionId: string) => {
+    setSelectedOptions(prev => {
+      const current = prev[memberName] || [];
+      const isSelected = current.includes(optionId);
+
+      if (isSelected) {
+        return { ...prev, [memberName]: current.filter(id => id !== optionId) };
+      } else {
+        return { ...prev, [memberName]: [...current, optionId] };
+      }
+    });
   };
 
   if (loading) {

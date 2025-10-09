@@ -12,6 +12,7 @@ export interface Poll {
   question: string;
   eventDate?: string | null;
   deadline?: string | null;
+  allowMultipleAnswers?: boolean;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
@@ -23,6 +24,7 @@ export interface Vote {
   voterName: string;
   voterEmail: string;
   optionId: string;
+  optionIds?: string[]; // For multiple answer support
   votedAt: string;
   wasChanged?: boolean;
   comment?: string;
@@ -76,7 +78,7 @@ export async function getActivePoll(): Promise<Poll | null> {
 }
 
 // Create a new poll
-export async function createPoll(question: string, options: string[], eventDate?: string | null, deadline?: string | null): Promise<Poll | null> {
+export async function createPoll(question: string, options: string[], eventDate?: string | null, deadline?: string | null, allowMultipleAnswers?: boolean): Promise<Poll | null> {
   try {
     if (!redis) {
       console.log('Redis not available, cannot create poll');
@@ -94,6 +96,7 @@ export async function createPoll(question: string, options: string[], eventDate?
       question,
       eventDate: eventDate || null,
       deadline: deadline || null,
+      allowMultipleAnswers: allowMultipleAnswers || false,
       options: options.map((text, index) => ({
         id: `option-${index}`,
         text,
@@ -158,7 +161,7 @@ export async function submitVote(
   pollId: string,
   voterName: string,
   voterEmail: string,
-  optionId: string,
+  optionId: string | string[],
   comment?: string
 ): Promise<boolean> {
   try {
@@ -175,6 +178,10 @@ export async function submitVote(
       v => v.pollId === pollId && v.voterEmail === voterEmail
     );
 
+    // Convert optionId to array format if it's a single value
+    const optionIds = Array.isArray(optionId) ? optionId : [optionId];
+    const primaryOptionId = optionIds[0];
+
     if (existingVoteIndex !== -1) {
       // User is changing their vote
       const oldOptionId = allVotes[existingVoteIndex].optionId;
@@ -182,7 +189,8 @@ export async function submitVote(
       // Update the vote
       allVotes[existingVoteIndex] = {
         ...allVotes[existingVoteIndex],
-        optionId,
+        optionId: primaryOptionId,
+        optionIds: optionIds,
         votedAt: new Date().toISOString(),
         wasChanged: true,
         comment: comment || allVotes[existingVoteIndex].comment
@@ -218,7 +226,8 @@ export async function submitVote(
         voterId: Date.now().toString(),
         voterName,
         voterEmail,
-        optionId,
+        optionId: primaryOptionId,
+        optionIds: optionIds,
         votedAt: new Date().toISOString(),
         comment: comment || undefined
       };

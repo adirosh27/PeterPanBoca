@@ -9,6 +9,7 @@ export default function CreatePollPage() {
   const [question, setQuestion] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [deadline, setDeadline] = useState('');
+  const [allowMultipleAnswers, setAllowMultipleAnswers] = useState(false);
   const [options, setOptions] = useState(['מגיע', 'לא מסתדר לי']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -54,6 +55,7 @@ export default function CreatePollPage() {
           question,
           eventDate: eventDate || null,
           deadline: deadline || null,
+          allowMultipleAnswers,
           options: validOptions
         }),
       });
@@ -231,6 +233,29 @@ export default function CreatePollPage() {
                 }}
                 disabled={loading || success}
               />
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '1rem'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={allowMultipleAnswers}
+                  onChange={(e) => setAllowMultipleAnswers(e.target.checked)}
+                  disabled={loading || success}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    cursor: loading || success ? 'not-allowed' : 'pointer'
+                  }}
+                />
+                <span style={{ fontWeight: 'bold' }}>אפשר מספר תשובות (חבר יכול לבחור יותר מאפשרות אחת)</span>
+              </label>
             </div>
 
             <div style={{
