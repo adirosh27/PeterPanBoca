@@ -467,28 +467,27 @@ export default function VotePage() {
                     }}>
                       {member.icon}
                     </div>
-                    <div>
-                      <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
-                        {member.name}
-                      </div>
-                      {hasVoted && memberVote && (
-                        <div style={{
-                          fontSize: '0.7rem',
-                          color: '#6b7280',
-                          marginTop: '0.15rem'
-                        }}>
-                          Voted: {new Date(memberVote.votedAt).toLocaleString('he-IL', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false
-                          })}
-                        </div>
-                      )}
+                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                      {member.name}
                     </div>
                   </div>
+
+                  {hasVoted && memberVote && (
+                    <div style={{
+                      fontSize: '0.7rem',
+                      color: '#6b7280',
+                      flex: '0 0 auto'
+                    }}>
+                      Voted: {new Date(memberVote.votedAt).toLocaleString('he-IL', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                      })}
+                    </div>
+                  )}
 
                   <div style={{
                     display: 'flex',
