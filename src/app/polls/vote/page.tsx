@@ -63,7 +63,7 @@ export default function VotePage() {
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const deadline = new Date(poll.deadline).getTime();
+      const deadline = new Date(poll.deadline!).getTime();
       const difference = deadline - now;
 
       if (difference > 0) {
