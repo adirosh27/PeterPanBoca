@@ -647,27 +647,6 @@ export default function VotePage() {
               border: '2px solid #fecaca',
               boxShadow: '0 2px 8px rgba(239, 68, 68, 0.1)'
             }}>
-              <div style={{
-                fontSize: '1rem',
-                fontWeight: '700',
-                color: '#dc2626',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.75rem',
-                marginBottom: '1rem'
-              }}>
-                <span style={{ fontSize: '1.5rem' }}>⏰</span>
-                <span>מועד אחרון להצבעה: {new Date(poll.deadline).toLocaleString('he-IL', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false
-                })}</span>
-              </div>
-
               {/* Countdown Timer */}
               {!deadlineExpired ? (
                 <div style={{
