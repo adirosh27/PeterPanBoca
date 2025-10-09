@@ -488,50 +488,19 @@ export default function VotePage() {
                 {/* Countdown Timer */}
                 {!deadlineExpired ? (
                   <div style={{
-                    marginTop: '0.75rem',
-                    display: 'flex',
-                    gap: '0.5rem',
-                    justifyContent: 'center',
-                    alignItems: 'center'
+                    marginTop: '0.5rem',
+                    fontSize: '0.85rem',
+                    fontWeight: 'bold',
+                    color: '#dc2626',
+                    textAlign: 'center',
+                    direction: 'rtl'
                   }}>
-                    {[
-                      { label: 'ימים', value: timeLeft.days },
-                      { label: 'שעות', value: timeLeft.hours },
-                      { label: 'דקות', value: timeLeft.minutes },
-                      { label: 'שניות', value: timeLeft.seconds }
-                    ].map((item, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          backgroundColor: '#fee2e2',
-                          border: '2px solid #ef4444',
-                          borderRadius: '8px',
-                          padding: '0.5rem',
-                          minWidth: '60px',
-                          textAlign: 'center'
-                        }}
-                      >
-                        <div style={{
-                          fontSize: '1.2rem',
-                          fontWeight: 'bold',
-                          color: '#ef4444'
-                        }}>
-                          {item.value}
-                        </div>
-                        <div style={{
-                          fontSize: '0.7rem',
-                          color: '#991b1b',
-                          marginTop: '0.15rem'
-                        }}>
-                          {item.label}
-                        </div>
-                      </div>
-                    ))}
+                    ⏳ נותרו: {timeLeft.days > 0 && `${timeLeft.days} ימים, `}{timeLeft.hours.toString().padStart(2, '0')}:{timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
                   </div>
                 ) : (
                   <div style={{
-                    marginTop: '0.75rem',
-                    fontSize: '1rem',
+                    marginTop: '0.5rem',
+                    fontSize: '0.85rem',
                     fontWeight: 'bold',
                     color: '#dc2626',
                     textAlign: 'center'
@@ -635,47 +604,96 @@ export default function VotePage() {
                   <div style={{
                     display: 'flex',
                     gap: '0.5rem',
-                    flexWrap: 'wrap'
+                    flexWrap: 'wrap',
+                    alignItems: 'center'
                   }}>
-                    {poll.options.map((option) => {
-                      const isSelected = hasVoted && memberVote.optionId === option.id;
-                      return (
+                    {poll.allowMultipleAnswers ? (
+                      // Multiple selection mode - checkboxes
+                      <>
+                        {poll.options.map((option) => {
+                          const currentSelections = selectedOptions[member.name] || (memberVote?.optionIds || []);
+                          const isChecked = currentSelections.includes(option.id);
+                          return (
+                            <button
+                              key={option.id}
+                              onClick={() => toggleOption(member.name, option.id)}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                border: isChecked ? '2px solid #10b981' : '2px solid #e5e7eb',
+                                borderRadius: '6px',
+                                backgroundColor: isChecked ? '#10b981' : 'white',
+                                color: isChecked ? 'white' : 'black',
+                                cursor: 'pointer',
+                                fontWeight: isChecked ? 'bold' : '500',
+                                fontSize: '0.85rem',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.35rem'
+                              }}
+                            >
+                              {isChecked ? '☑' : '☐'} {option.text}
+                            </button>
+                          );
+                        })}
                         <button
-                          key={option.id}
-                          onClick={() => handleVote(member.name, option.id)}
+                          onClick={() => handleVote(member.name)}
                           style={{
                             padding: '0.5rem 1rem',
-                            border: isSelected ? '2px solid #10b981' : '2px solid #e5e7eb',
+                            border: '2px solid #10b981',
                             borderRadius: '6px',
-                            backgroundColor: isSelected ? '#10b981' : 'white',
-                            color: isSelected ? 'white' : 'black',
+                            backgroundColor: '#10b981',
+                            color: 'white',
                             cursor: 'pointer',
-                            fontWeight: isSelected ? 'bold' : '500',
-                            fontSize: '0.85rem',
-                            transition: 'all 0.2s',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.35rem'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isSelected) {
-                              e.currentTarget.style.backgroundColor = '#f0fdf4';
-                              e.currentTarget.style.borderColor = '#10b981';
-                            }
-                            e.currentTarget.style.transform = 'scale(1.05)';
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isSelected) {
-                              e.currentTarget.style.backgroundColor = 'white';
-                              e.currentTarget.style.borderColor = '#e5e7eb';
-                            }
-                            e.currentTarget.style.transform = 'scale(1)';
+                            fontWeight: 'bold',
+                            fontSize: '0.85rem'
                           }}
                         >
-                          {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                          💾 שמור
                         </button>
-                      );
-                    })}
+                      </>
+                    ) : (
+                      // Single selection mode - radio buttons
+                      poll.options.map((option) => {
+                        const isSelected = hasVoted && memberVote.optionId === option.id;
+                        return (
+                          <button
+                            key={option.id}
+                            onClick={() => handleVote(member.name, option.id)}
+                            style={{
+                              padding: '0.5rem 1rem',
+                              border: isSelected ? '2px solid #10b981' : '2px solid #e5e7eb',
+                              borderRadius: '6px',
+                              backgroundColor: isSelected ? '#10b981' : 'white',
+                              color: isSelected ? 'white' : 'black',
+                              cursor: 'pointer',
+                              fontWeight: isSelected ? 'bold' : '500',
+                              fontSize: '0.85rem',
+                              transition: 'all 0.2s',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.35rem'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isSelected) {
+                                e.currentTarget.style.backgroundColor = '#f0fdf4';
+                                e.currentTarget.style.borderColor = '#10b981';
+                              }
+                              e.currentTarget.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isSelected) {
+                                e.currentTarget.style.backgroundColor = 'white';
+                                e.currentTarget.style.borderColor = '#e5e7eb';
+                              }
+                              e.currentTarget.style.transform = 'scale(1)';
+                            }}
+                          >
+                            {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                          </button>
+                        );
+                      })
+                    )}
                   </div>
 
                   {/* Comment input */}
