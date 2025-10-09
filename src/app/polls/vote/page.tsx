@@ -403,7 +403,11 @@ export default function VotePage() {
             flexWrap: 'wrap'
           }}>
             {poll?.options.map((option) => {
-              const optionVotes = existingVotes.filter(v => v.optionId === option.id).length;
+              // Count votes that include this option (for multiple answer support)
+              const optionVotes = existingVotes.filter(v => {
+                const selectedOptions = v.optionIds || [v.optionId];
+                return selectedOptions.includes(option.id);
+              }).length;
               return (
                 <div
                   key={option.id}

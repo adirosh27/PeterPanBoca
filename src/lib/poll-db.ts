@@ -279,10 +279,14 @@ export async function getPollResults(pollId: string): Promise<{
 
     const votesByOption: Record<string, Vote[]> = {};
     votes.forEach(vote => {
-      if (!votesByOption[vote.optionId]) {
-        votesByOption[vote.optionId] = [];
-      }
-      votesByOption[vote.optionId].push(vote);
+      // For multiple answer polls, add the vote to all selected options
+      const selectedOptions = vote.optionIds || [vote.optionId];
+      selectedOptions.forEach(optionId => {
+        if (!votesByOption[optionId]) {
+          votesByOption[optionId] = [];
+        }
+        votesByOption[optionId].push(vote);
+      });
     });
 
     return { poll, votes, votesByOption };
