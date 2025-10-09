@@ -27,6 +27,7 @@ interface Vote {
   voterEmail: string;
   optionId: string;
   votedAt: string;
+  wasChanged?: boolean;
 }
 
 export default function VotePage() {
@@ -478,7 +479,7 @@ export default function VotePage() {
                       color: '#6b7280',
                       flex: '0 0 auto'
                     }}>
-                      Voted: {new Date(memberVote.votedAt).toLocaleString('he-IL', {
+                      {memberVote.wasChanged ? 'Changed:' : 'Voted:'} {new Date(memberVote.votedAt).toLocaleString('he-IL', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',

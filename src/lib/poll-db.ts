@@ -23,6 +23,7 @@ export interface Vote {
   voterEmail: string;
   optionId: string;
   votedAt: string;
+  wasChanged?: boolean;
 }
 
 const POLLS_KEY = 'peter-pan-polls';
@@ -178,7 +179,8 @@ export async function submitVote(
       allVotes[existingVoteIndex] = {
         ...allVotes[existingVoteIndex],
         optionId,
-        votedAt: new Date().toISOString()
+        votedAt: new Date().toISOString(),
+        wasChanged: true
       };
 
       await redis.set(VOTES_KEY, allVotes);

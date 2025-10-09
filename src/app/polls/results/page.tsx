@@ -26,6 +26,7 @@ interface Vote {
   voterEmail: string;
   optionId: string;
   votedAt: string;
+  wasChanged?: boolean;
 }
 
 export default function ResultsPage() {
