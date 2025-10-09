@@ -495,7 +495,7 @@ export default function VotePage() {
                     textAlign: 'center',
                     direction: 'rtl'
                   }}>
-                    ⏳ נותרו: {timeLeft.days > 0 && `${timeLeft.days} ימים, `}{timeLeft.hours.toString().padStart(2, '0')}:{timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
+                    ⏳ נותרו להצבעה: {timeLeft.days > 0 && `${timeLeft.days} ימים, `}{timeLeft.hours.toString().padStart(2, '0')}:{timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
                   </div>
                 ) : (
                   <div style={{
