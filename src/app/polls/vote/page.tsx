@@ -636,52 +636,68 @@ export default function VotePage() {
             )}
           </div>
 
+          {/* Deadline Section */}
           {poll.deadline && (
-            <>
+            <div style={{
+              backgroundColor: '#fef2f2',
+              borderRadius: '12px',
+              padding: '1.25rem',
+              marginTop: '1.5rem',
+              marginBottom: '1.5rem',
+              border: '2px solid #fecaca',
+              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.1)'
+            }}>
               <div style={{
-                marginTop: '0.75rem',
-                fontSize: '0.9rem',
-                fontWeight: 'bold',
-                color: '#ef4444',
+                fontSize: '1rem',
+                fontWeight: '700',
+                color: '#dc2626',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem'
+                gap: '0.75rem',
+                marginBottom: '1rem'
               }}>
-                ⏰ מועד אחרון להצבעה: {new Date(poll.deadline).toLocaleString('he-IL', {
+                <span style={{ fontSize: '1.5rem' }}>⏰</span>
+                <span>מועד אחרון להצבעה: {new Date(poll.deadline).toLocaleString('he-IL', {
                   year: 'numeric',
                   month: '2-digit',
                   day: '2-digit',
                   hour: '2-digit',
                   minute: '2-digit',
                   hour12: false
-                })}
+                })}</span>
               </div>
 
               {/* Countdown Timer */}
               {!deadlineExpired ? (
                 <div style={{
-                  marginTop: '0.5rem',
-                  fontSize: '0.85rem',
-                  fontWeight: 'bold',
-                  color: '#dc2626',
+                  fontSize: '1.1rem',
+                  fontWeight: '700',
+                  color: '#991b1b',
                   textAlign: 'center',
-                  direction: 'rtl'
+                  direction: 'rtl',
+                  padding: '0.75rem',
+                  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                  borderRadius: '8px'
                 }}>
-                  ⏳ נותרו להצבעה: {timeLeft.days > 0 && `${timeLeft.days} ימים, `}{timeLeft.hours.toString().padStart(2, '0')}:{timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
+                  <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>⏳</span>
+                  נותרו להצבעה: {timeLeft.days > 0 && `${timeLeft.days} ימים, `}{timeLeft.hours.toString().padStart(2, '0')}:{timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
                 </div>
               ) : (
                 <div style={{
-                  marginTop: '0.5rem',
-                  fontSize: '0.85rem',
-                  fontWeight: 'bold',
-                  color: '#dc2626',
-                  textAlign: 'center'
+                  fontSize: '1.1rem',
+                  fontWeight: '700',
+                  color: '#991b1b',
+                  textAlign: 'center',
+                  padding: '0.75rem',
+                  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                  borderRadius: '8px'
                 }}>
-                  ⚠️ המועד להצבעה עבר
+                  <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>⚠️</span>
+                  המועד להצבעה עבר
                 </div>
               )}
-            </>
+            </div>
           )}
 
           {error && (
@@ -697,14 +713,28 @@ export default function VotePage() {
             </div>
           )}
 
+          {/* Vote Here Header */}
           <div style={{
-            marginBottom: '1rem',
-            fontSize: '0.95rem',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            color: '#6b7280'
+            marginTop: poll.deadline ? '0' : '2rem',
+            marginBottom: '1.5rem',
+            padding: '1rem',
+            backgroundColor: '#f0fdf4',
+            borderRadius: '12px',
+            border: '2px solid #10b981'
           }}>
-            הצבע פה
+            <div style={{
+              fontSize: '1.2rem',
+              fontWeight: '700',
+              textAlign: 'center',
+              color: '#059669',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem'
+            }}>
+              <span style={{ fontSize: '1.5rem' }}>👇</span>
+              <span>הצבע פה</span>
+            </div>
           </div>
 
           {/* Members List */}
