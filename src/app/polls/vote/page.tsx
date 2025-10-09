@@ -679,7 +679,6 @@ export default function VotePage() {
               )}
             </>
           )}
-          </div>
 
           {error && (
             <div style={{
