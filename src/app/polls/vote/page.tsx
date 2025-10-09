@@ -631,53 +631,54 @@ export default function VotePage() {
               </div>
             </div>
           )}
-            {poll.deadline && (
-              <>
-                <div style={{
-                  marginTop: '0.75rem',
-                  fontSize: '0.9rem',
-                  fontWeight: 'bold',
-                  color: '#ef4444',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem'
-                }}>
-                  ⏰ מועד אחרון להצבעה: {new Date(poll.deadline).toLocaleString('he-IL', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                  })}
-                </div>
 
-                {/* Countdown Timer */}
-                {!deadlineExpired ? (
-                  <div style={{
-                    marginTop: '0.5rem',
-                    fontSize: '0.85rem',
-                    fontWeight: 'bold',
-                    color: '#dc2626',
-                    textAlign: 'center',
-                    direction: 'rtl'
-                  }}>
-                    ⏳ נותרו להצבעה: {timeLeft.days > 0 && `${timeLeft.days} ימים, `}{timeLeft.hours.toString().padStart(2, '0')}:{timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
-                  </div>
-                ) : (
-                  <div style={{
-                    marginTop: '0.5rem',
-                    fontSize: '0.85rem',
-                    fontWeight: 'bold',
-                    color: '#dc2626',
-                    textAlign: 'center'
-                  }}>
-                    ⚠️ המועד להצבעה עבר
-                  </div>
-                )}
-              </>
-            )}
+          {poll.deadline && (
+            <>
+              <div style={{
+                marginTop: '0.75rem',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                color: '#ef4444',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}>
+                ⏰ מועד אחרון להצבעה: {new Date(poll.deadline).toLocaleString('he-IL', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false
+                })}
+              </div>
+
+              {/* Countdown Timer */}
+              {!deadlineExpired ? (
+                <div style={{
+                  marginTop: '0.5rem',
+                  fontSize: '0.85rem',
+                  fontWeight: 'bold',
+                  color: '#dc2626',
+                  textAlign: 'center',
+                  direction: 'rtl'
+                }}>
+                  ⏳ נותרו להצבעה: {timeLeft.days > 0 && `${timeLeft.days} ימים, `}{timeLeft.hours.toString().padStart(2, '0')}:{timeLeft.minutes.toString().padStart(2, '0')}:{timeLeft.seconds.toString().padStart(2, '0')}
+                </div>
+              ) : (
+                <div style={{
+                  marginTop: '0.5rem',
+                  fontSize: '0.85rem',
+                  fontWeight: 'bold',
+                  color: '#dc2626',
+                  textAlign: 'center'
+                }}>
+                  ⚠️ המועד להצבעה עבר
+                </div>
+              )}
+            </>
+          )}
           </div>
 
           {error && (
