@@ -368,6 +368,22 @@ export default function VotePage() {
             transform: translateY(0) scale(1);
           }
         }
+        @keyframes hapticTap {
+          0% { transform: scale(1); }
+          50% { transform: scale(0.92); }
+          100% { transform: scale(1); }
+        }
+        @keyframes hapticPulse {
+          0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+          70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .haptic-button {
+          transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .haptic-button:active {
+          animation: hapticTap 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         @media (min-width: 640px) {
           .responsive-container {
             padding: 2rem !important;
@@ -400,11 +416,14 @@ export default function VotePage() {
 
         {/* Progress Bar */}
         <div style={{
-          backgroundColor: 'white',
-          borderRadius: '10px',
-          padding: '1rem',
-          marginBottom: '1rem',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+          backgroundColor: 'rgba(255, 255, 255, 0.75)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderRadius: '16px',
+          padding: '1.25rem',
+          marginBottom: '1.5rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+          border: '1px solid rgba(255, 255, 255, 0.4)'
         }}>
           <div style={{
             display: 'flex',
@@ -531,34 +550,43 @@ export default function VotePage() {
         </div>
 
         <div style={{
-          backgroundColor: 'white',
-          borderRadius: '20px',
-          padding: '2rem',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          backgroundColor: 'rgba(255, 255, 255, 0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRadius: '24px',
+          padding: '2.5rem',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.3)'
         }}>
           <h1 style={{
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
+            fontSize: '1.8rem',
+            fontWeight: '800',
             textAlign: 'center',
-            marginBottom: '1.5rem',
+            marginBottom: '2rem',
             background: 'linear-gradient(45deg, #10b981, #fbbf24)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: '-0.02em'
           }}>
             📊 הצבעה
           </h1>
 
           <div style={{
-            backgroundColor: '#f0f9ff',
-            border: '2px solid #bfdbfe',
-            borderRadius: '12px',
-            padding: '1rem',
-            marginBottom: '1.5rem',
+            backgroundColor: 'rgba(240, 249, 255, 0.6)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            border: '2px solid rgba(191, 219, 254, 0.4)',
+            borderRadius: '16px',
+            padding: '2rem',
+            marginBottom: '2rem',
             whiteSpace: 'pre-wrap',
-            fontSize: '0.95rem',
-            lineHeight: '1.5',
-            textAlign: 'center'
+            fontSize: '1.25rem',
+            fontWeight: '700',
+            lineHeight: '1.6',
+            textAlign: 'center',
+            color: '#1f2937',
+            letterSpacing: '-0.01em'
           }}>
             {poll.question}
             {poll.eventDate && (
@@ -766,6 +794,7 @@ export default function VotePage() {
                           return (
                             <button
                               key={option.id}
+                              className="haptic-button"
                               onClick={() => toggleOption(member.name, option.id)}
                               style={{
                                 minHeight: '44px',
@@ -825,6 +854,7 @@ export default function VotePage() {
                           );
                         })}
                         <button
+                          className="haptic-button"
                           onClick={() => handleVote(member.name)}
                           style={{
                             minHeight: '44px',
@@ -867,6 +897,7 @@ export default function VotePage() {
                         return (
                           <button
                             key={option.id}
+                            className="haptic-button"
                             onClick={() => handleVote(member.name, option.id)}
                             style={{
                               minHeight: '44px',
