@@ -5,7 +5,7 @@ export const teamMembers = [
   { name: 'אבי לוי', role: 'מנהל הפקה', icon: '🎬', color: '#dc2626' },
   { name: 'דני קרן', role: 'אמן בידור', icon: '🎨', color: '#a855f7' },
   { name: 'דודי אמסלם', role: 'מוזיקאי', icon: '🎵', color: '#22d3ee' },
-  { name: 'ליאור תמיר', role: 'כוריאוגרף', icon: '💃', color: '#ec4899' },
+  { name: 'ליאור טמיר', role: 'כוריאוגרף', icon: '💃', color: '#ec4899' },
   { name: 'מומי שושן', role: 'מעצב תחפושות', icon: '👗', color: '#8b5cf6' },
   { name: 'משה מרקו', role: 'טכנאי סאונד', icon: '🎧', color: '#14b8a6' },
   { name: 'נדב חורי', role: 'מנהל במה', icon: '🎯', color: '#f97316' },
