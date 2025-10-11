@@ -419,35 +419,34 @@ export default function VotePage() {
 
         {/* Progress Bar */}
         <div style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.75)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+          backgroundColor: 'white',
           borderRadius: '16px',
-          padding: '1.25rem',
+          padding: '1.5rem',
           marginBottom: '1.5rem',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
-          border: '1px solid rgba(255, 255, 255, 0.4)'
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+          border: '2px solid #10b981'
         }}>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '0.5rem'
+            marginBottom: '1rem'
           }}>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 'bold', margin: 0 }}>
-              התקדמות הצבעה
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: 0, color: '#059669' }}>
+              📊 התקדמות הצבעה
             </h3>
-            <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#10b981' }}>
+            <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#10b981' }}>
               {votedMembers} / {totalMembers}
             </div>
           </div>
           <div style={{
             width: '100%',
-            height: '24px',
-            backgroundColor: '#e5e7eb',
-            borderRadius: '12px',
+            height: '32px',
+            backgroundColor: '#f0fdf4',
+            borderRadius: '16px',
             overflow: 'hidden',
-            position: 'relative'
+            position: 'relative',
+            border: '2px solid #d1fae5'
           }}>
             <div style={{
               width: `${progressPercentage}%`,
@@ -459,55 +458,11 @@ export default function VotePage() {
               justifyContent: 'center',
               color: 'white',
               fontWeight: 'bold',
-              fontSize: '0.8rem'
+              fontSize: '0.9rem',
+              boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
               {progressPercentage}%
             </div>
-          </div>
-
-          {/* Vote Totals */}
-          <div style={{
-            display: 'flex',
-            gap: '0.5rem',
-            marginTop: '0.75rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}>
-            {poll?.options.map((option) => {
-              // Count votes that include this option (for multiple answer support)
-              const optionVotes = existingVotes.filter(v => {
-                const selectedOptions = v.optionIds || [v.optionId];
-                return selectedOptions.includes(option.id);
-              }).length;
-              return (
-                <div
-                  key={option.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.35rem',
-                    padding: '0.4rem 0.75rem',
-                    backgroundColor: option.text === 'מגיע' ? '#f0fdf4' : '#fef2f2',
-                    border: option.text === 'מגיע' ? '2px solid #10b981' : '2px solid #ef4444',
-                    borderRadius: '6px'
-                  }}
-                >
-                  <span style={{ fontSize: '1rem' }}>
-                    {option.text === 'מגיע' ? '✅' : '❌'}
-                  </span>
-                  <span style={{ fontWeight: 'bold', fontSize: '0.85rem' }}>
-                    {option.text}:
-                  </span>
-                  <span style={{
-                    fontSize: '1rem',
-                    fontWeight: 'bold',
-                    color: option.text === 'מגיע' ? '#10b981' : '#ef4444'
-                  }}>
-                    {optionVotes}
-                  </span>
-                </div>
-              );
-            })}
           </div>
         </div>
 
