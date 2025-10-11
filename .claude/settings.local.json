@@ -20,7 +20,10 @@
       "Bash(npm run keep-db-active:continuous:*)",
       "Bash(git log:*)",
       "Bash(vercel:*)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "WebFetch(domain:peter-pan-boca.vercel.app)",
+      "Bash(npx tsx:*)",
+      "Bash(source:*)"
     ],
     "deny": [],
     "ask": []
