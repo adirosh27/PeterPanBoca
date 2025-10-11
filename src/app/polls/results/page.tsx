@@ -476,9 +476,6 @@ export default function ResultsPage() {
                           >
                             <div>
                               <div style={{ fontWeight: 'bold' }}>{vote.voterName}</div>
-                              <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
-                                {vote.voterEmail}
-                              </div>
                               {vote.comment && (
                                 <div style={{
                                   fontSize: '0.85rem',
