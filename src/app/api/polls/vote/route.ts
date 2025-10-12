@@ -34,11 +34,10 @@ export async function POST(request: NextRequest) {
     } catch (voteError) {
       // Check if it's the IP already voted error
       if (voteError instanceof Error && voteError.message.startsWith('IP_ALREADY_VOTED:')) {
-        const otherVoterName = voteError.message.split(':')[1];
         return NextResponse.json(
           {
             success: false,
-            message: `המכשיר הזה כבר הצביע עבור ${otherVoterName}. אי אפשר להצביע עבור מספר אנשים מאותו מכשיר.`
+            message: 'אתה כבר הצבעת'
           },
           { status: 403 }
         );
