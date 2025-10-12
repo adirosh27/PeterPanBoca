@@ -346,7 +346,8 @@ export default function ResultsPage() {
             marginBottom: '2rem',
             whiteSpace: 'pre-wrap',
             fontSize: '1.1rem',
-            lineHeight: '1.6'
+            lineHeight: '1.6',
+            textAlign: 'center'
           }}>
             {poll.question}
             <div style={{
@@ -413,7 +414,7 @@ export default function ResultsPage() {
                       fontWeight: 'bold',
                       margin: 0
                     }}>
-                      {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                      {option.text}
                     </h3>
                     <div style={{
                       fontSize: '1.5rem',
