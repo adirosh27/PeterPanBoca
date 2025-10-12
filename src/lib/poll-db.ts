@@ -182,7 +182,8 @@ export async function submitVote(
     );
 
     // Check if this IP address has already voted for a DIFFERENT person in this poll
-    if (ipAddress && existingVoteIndex === -1) {
+    // This applies to both new votes AND vote changes
+    if (ipAddress) {
       const ipAlreadyVoted = allVotes.find(
         v => v.pollId === pollId && v.ipAddress === ipAddress && v.voterEmail !== voterEmail
       );
