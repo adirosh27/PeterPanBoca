@@ -221,7 +221,9 @@ export default function VotePage() {
         setError(data.message || 'Failed to submit vote');
       }
     } catch (err) {
-      setError('Error submitting vote: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      const errorMessage = err instanceof Error ? err.message : 'אתה כבר הצבעת';
+      alert(errorMessage);
+      setError(errorMessage);
     }
   };
 
