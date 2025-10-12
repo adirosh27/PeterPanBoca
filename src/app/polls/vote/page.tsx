@@ -641,35 +641,12 @@ export default function VotePage() {
               color: '#dc2626',
               padding: '1rem',
               borderRadius: '8px',
-              marginBottom: '1rem'
+              marginBottom: '1rem',
+              marginTop: poll.deadline ? '0' : '2rem'
             }}>
               {error}
             </div>
           )}
-
-          {/* Vote Here Header */}
-          <div style={{
-            marginTop: poll.deadline ? '0' : '2rem',
-            marginBottom: '1.5rem',
-            padding: '1rem',
-            backgroundColor: '#f0fdf4',
-            borderRadius: '12px',
-            border: '2px solid #10b981'
-          }}>
-            <div style={{
-              fontSize: '1.2rem',
-              fontWeight: '700',
-              textAlign: 'center',
-              color: '#059669',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.75rem'
-            }}>
-              <span style={{ fontSize: '1.5rem' }}>👇</span>
-              <span>הצבע פה</span>
-            </div>
-          </div>
 
           {/* Members List */}
           <div style={{
