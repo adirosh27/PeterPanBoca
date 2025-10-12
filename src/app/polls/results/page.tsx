@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { teamMembers } from '@/lib/members';
 
 interface PollOption {
   id: string;
@@ -207,6 +208,10 @@ export default function ResultsPage() {
   }
 
   const totalVotes = votes.length;
+
+  // Calculate who hasn't voted yet
+  const votedNames = new Set(votes.map(v => v.voterName));
+  const notVotedMembers = teamMembers.filter(member => !votedNames.has(member.name));
 
   return (
     <div style={{
@@ -505,6 +510,54 @@ export default function ResultsPage() {
             })}
           </div>
         </div>
+
+        {/* Not Voted Yet Section */}
+        {notVotedMembers.length > 0 && (
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            marginBottom: '2rem',
+            border: '2px solid #fbbf24'
+          }}>
+            <h3 style={{
+              fontSize: '1.3rem',
+              fontWeight: 'bold',
+              marginBottom: '1rem',
+              color: '#d97706',
+              textAlign: 'center'
+            }}>
+              ⏳ עדיין לא הצביעו ({notVotedMembers.length})
+            </h3>
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.5rem',
+              justifyContent: 'center'
+            }}>
+              {notVotedMembers.map((member) => (
+                <div
+                  key={member.name}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    backgroundColor: '#fef3c7',
+                    border: '1px solid #fbbf24',
+                    borderRadius: '20px',
+                    fontSize: '0.9rem',
+                    fontWeight: '500'
+                  }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>{member.icon}</span>
+                  <span>{member.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Share poll link */}
         <div style={{
