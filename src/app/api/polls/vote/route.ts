@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
     // Capture IP address from request headers
     const ipAddress = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
       || request.headers.get('x-real-ip')
-      || request.ip
       || 'unknown';
 
     const success = await submitVote(pollId, voterName, voterEmail, optionId, comment, ipAddress);
