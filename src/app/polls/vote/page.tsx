@@ -223,6 +223,36 @@ export default function VotePage() {
     }
   };
 
+  const handleDeleteVote = async (memberName: string) => {
+    if (!confirm(`האם אתה בטוח שברצונך למחוק את ההצבעה של ${memberName}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/polls/delete-vote?pollId=${poll?.id}&voterEmail=${memberName}@peterpan.com`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Clear selected options for this member
+        setSelectedOptions(prev => {
+          const newOptions = { ...prev };
+          delete newOptions[memberName];
+          return newOptions;
+        });
+        // Refresh votes to show updated list
+        setRefreshTrigger(prev => prev + 1);
+        setError('');
+      } else {
+        setError(data.message || 'Failed to delete vote');
+      }
+    } catch (err) {
+      setError('Error deleting vote: ' + (err instanceof Error ? err.message : 'Unknown error'));
+    }
+  };
+
   const toggleOption = (memberName: string, optionId: string) => {
     setSelectedOptions(prev => {
       const current = prev[memberName] || [];
@@ -853,59 +883,137 @@ export default function VotePage() {
                         >
                           💾 שמור
                         </button>
+                        {hasVoted && (
+                          <button
+                            className="haptic-button"
+                            onClick={() => handleDeleteVote(member.name)}
+                            style={{
+                              minHeight: '44px',
+                              padding: '0.6rem 1.2rem',
+                              border: '2px solid #ef4444',
+                              borderRadius: '6px',
+                              backgroundColor: '#ef4444',
+                              color: 'white',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              fontSize: '0.9rem',
+                              background: 'linear-gradient(145deg, #ef4444, #dc2626)',
+                              boxShadow: '0 4px 6px rgba(239, 68, 68, 0.4)',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.boxShadow = '0 6px 10px rgba(239, 68, 68, 0.5)';
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.boxShadow = '0 4px 6px rgba(239, 68, 68, 0.4)';
+                              e.currentTarget.style.transform = 'translateY(0)';
+                            }}
+                            onMouseDown={(e) => {
+                              e.currentTarget.style.transform = 'translateY(1px)';
+                              e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.2)';
+                            }}
+                            onMouseUp={(e) => {
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 6px 10px rgba(239, 68, 68, 0.5)';
+                            }}
+                          >
+                            🗑️ מחק
+                          </button>
+                        )}
                       </>
                     ) : (
                       // Single selection mode - radio buttons
-                      poll.options.map((option) => {
-                        const isSelected = hasVoted && memberVote.optionId === option.id;
-                        return (
+                      <>
+                        {poll.options.map((option) => {
+                          const isSelected = hasVoted && memberVote.optionId === option.id;
+                          return (
+                            <button
+                              key={option.id}
+                              className="haptic-button"
+                              onClick={() => handleVote(member.name, option.id)}
+                              style={{
+                                minHeight: '44px',
+                                padding: '0.6rem 1rem',
+                                border: isSelected ? '2px solid #10b981' : '2px solid #e5e7eb',
+                                borderRadius: '6px',
+                                backgroundColor: isSelected ? '#10b981' : 'white',
+                                color: isSelected ? 'white' : 'black',
+                                cursor: 'pointer',
+                                fontWeight: isSelected ? 'bold' : '500',
+                                fontSize: '0.9rem',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                boxShadow: isSelected
+                                  ? 'inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(16, 185, 129, 0.3)'
+                                  : '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                transform: isSelected ? 'translateY(2px)' : 'translateY(0)',
+                                background: isSelected
+                                  ? 'linear-gradient(145deg, #10b981, #059669)'
+                                  : 'linear-gradient(145deg, #ffffff, #f9fafb)'
+                              }}
+                              onMouseEnter={(e) => {
+                                if (!isSelected) {
+                                  e.currentTarget.style.background = 'linear-gradient(145deg, #f0fdf4, #dcfce7)';
+                                  e.currentTarget.style.borderColor = '#10b981';
+                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(16, 185, 129, 0.2)';
+                                  e.currentTarget.style.transform = 'translateY(-2px)';
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (!isSelected) {
+                                  e.currentTarget.style.background = 'linear-gradient(145deg, #ffffff, #f9fafb)';
+                                  e.currentTarget.style.borderColor = '#e5e7eb';
+                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                  e.currentTarget.style.transform = 'translateY(0)';
+                                }
+                              }}
+                            >
+                              {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                            </button>
+                          );
+                        })}
+                        {hasVoted && (
                           <button
-                            key={option.id}
                             className="haptic-button"
-                            onClick={() => handleVote(member.name, option.id)}
+                            onClick={() => handleDeleteVote(member.name)}
                             style={{
                               minHeight: '44px',
-                              padding: '0.6rem 1rem',
-                              border: isSelected ? '2px solid #10b981' : '2px solid #e5e7eb',
+                              padding: '0.6rem 1.2rem',
+                              border: '2px solid #ef4444',
                               borderRadius: '6px',
-                              backgroundColor: isSelected ? '#10b981' : 'white',
-                              color: isSelected ? 'white' : 'black',
+                              backgroundColor: '#ef4444',
+                              color: 'white',
                               cursor: 'pointer',
-                              fontWeight: isSelected ? 'bold' : '500',
+                              fontWeight: 'bold',
                               fontSize: '0.9rem',
-                              transition: 'all 0.2s',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              boxShadow: isSelected
-                                ? 'inset 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(16, 185, 129, 0.3)'
-                                : '0 2px 4px rgba(0, 0, 0, 0.1)',
-                              transform: isSelected ? 'translateY(2px)' : 'translateY(0)',
-                              background: isSelected
-                                ? 'linear-gradient(145deg, #10b981, #059669)'
-                                : 'linear-gradient(145deg, #ffffff, #f9fafb)'
+                              background: 'linear-gradient(145deg, #ef4444, #dc2626)',
+                              boxShadow: '0 4px 6px rgba(239, 68, 68, 0.4)',
+                              transition: 'all 0.2s'
                             }}
                             onMouseEnter={(e) => {
-                              if (!isSelected) {
-                                e.currentTarget.style.background = 'linear-gradient(145deg, #f0fdf4, #dcfce7)';
-                                e.currentTarget.style.borderColor = '#10b981';
-                                e.currentTarget.style.boxShadow = '0 4px 8px rgba(16, 185, 129, 0.2)';
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                              }
+                              e.currentTarget.style.boxShadow = '0 6px 10px rgba(239, 68, 68, 0.5)';
+                              e.currentTarget.style.transform = 'translateY(-2px)';
                             }}
                             onMouseLeave={(e) => {
-                              if (!isSelected) {
-                                e.currentTarget.style.background = 'linear-gradient(145deg, #ffffff, #f9fafb)';
-                                e.currentTarget.style.borderColor = '#e5e7eb';
-                                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                              }
+                              e.currentTarget.style.boxShadow = '0 4px 6px rgba(239, 68, 68, 0.4)';
+                              e.currentTarget.style.transform = 'translateY(0)';
+                            }}
+                            onMouseDown={(e) => {
+                              e.currentTarget.style.transform = 'translateY(1px)';
+                              e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.2)';
+                            }}
+                            onMouseUp={(e) => {
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 6px 10px rgba(239, 68, 68, 0.5)';
                             }}
                           >
-                            {option.text === 'מגיע' ? '✅' : '❌'} {option.text}
+                            🗑️ מחק הצבעה
                           </button>
-                        );
-                      })
+                        )}
+                      </>
                     )}
                   </div>
 

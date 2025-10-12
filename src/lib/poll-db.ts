@@ -324,6 +324,60 @@ export async function getSuspiciousVotes(pollId: string): Promise<Vote[]> {
   }
 }
 
+// Delete a user's vote
+export async function deleteVote(pollId: string, voterEmail: string): Promise<boolean> {
+  try {
+    if (!redis) {
+      console.log('Redis not available, cannot delete vote');
+      return false;
+    }
+
+    // Get all votes
+    const allVotes = await getAllVotes();
+
+    // Find the vote to delete
+    const voteIndex = allVotes.findIndex(
+      v => v.pollId === pollId && v.voterEmail === voterEmail
+    );
+
+    if (voteIndex === -1) {
+      console.log('Vote not found');
+      return false;
+    }
+
+    const voteToDelete = allVotes[voteIndex];
+    const optionIds = voteToDelete.optionIds || [voteToDelete.optionId];
+
+    // Remove the vote from array
+    allVotes.splice(voteIndex, 1);
+    await redis.set(VOTES_KEY, allVotes);
+
+    // Update poll vote counts (decrease for all selected options)
+    const polls = await getAllPolls();
+    const pollIndex = polls.findIndex(p => p.id === pollId);
+
+    if (pollIndex !== -1) {
+      const poll = polls[pollIndex];
+
+      // Decrease count for each selected option
+      optionIds.forEach(optionId => {
+        const optionIndex = poll.options.findIndex(o => o.id === optionId);
+        if (optionIndex !== -1 && poll.options[optionIndex].votes > 0) {
+          poll.options[optionIndex].votes -= 1;
+        }
+      });
+
+      await redis.set(POLLS_KEY, polls);
+    }
+
+    console.log('Vote deleted successfully');
+    return true;
+  } catch (error) {
+    console.error('Error deleting vote:', error);
+    return false;
+  }
+}
+
 // Delete a poll and its votes
 export async function deletePoll(pollId: string): Promise<boolean> {
   try {
