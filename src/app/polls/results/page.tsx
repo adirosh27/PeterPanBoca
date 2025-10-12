@@ -16,6 +16,7 @@ interface Poll {
   question: string;
   eventDate?: string | null;
   deadline?: string | null;
+  allowMultipleAnswers?: boolean;
   options: PollOption[];
   createdAt: string;
   isActive: boolean;
@@ -27,6 +28,7 @@ interface Vote {
   voterName: string;
   voterEmail: string;
   optionId: string;
+  optionIds?: string[];
   votedAt: string;
   wasChanged?: boolean;
   comment?: string;
@@ -209,6 +211,14 @@ export default function ResultsPage() {
 
   const totalVotes = votes.length;
 
+  // For multiple answer polls, calculate total selections across all options
+  const totalSelections = poll.allowMultipleAnswers
+    ? votes.reduce((sum, vote) => {
+        const selections = vote.optionIds?.length || 1;
+        return sum + selections;
+      }, 0)
+    : totalVotes;
+
   // Calculate who hasn't voted yet
   const votedNames = new Set(votes.map(v => v.voterName));
   const notVotedMembers = teamMembers.filter(member => !votedNames.has(member.name));
@@ -385,7 +395,7 @@ export default function ResultsPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {poll.options.map((option, optionIndex) => {
               const optionVotes = votesByOption[option.id] || [];
-              const percentage = totalVotes > 0 ? (optionVotes.length / totalVotes * 100).toFixed(1) : '0';
+              const percentage = totalSelections > 0 ? (optionVotes.length / totalSelections * 100).toFixed(1) : '0';
 
               // Color scheme for each option (matching vote page)
               const optionColors = [
