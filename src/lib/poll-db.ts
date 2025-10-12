@@ -181,6 +181,18 @@ export async function submitVote(
       v => v.pollId === pollId && v.voterEmail === voterEmail
     );
 
+    // Check if this IP address has already voted for a DIFFERENT person in this poll
+    if (ipAddress && existingVoteIndex === -1) {
+      const ipAlreadyVoted = allVotes.find(
+        v => v.pollId === pollId && v.ipAddress === ipAddress && v.voterEmail !== voterEmail
+      );
+
+      if (ipAlreadyVoted) {
+        console.log(`IP ${ipAddress} already voted for ${ipAlreadyVoted.voterName}, cannot vote for ${voterName}`);
+        throw new Error(`IP_ALREADY_VOTED:${ipAlreadyVoted.voterName}`);
+      }
+    }
+
     // Convert optionId to array format if it's a single value
     const optionIds = Array.isArray(optionId) ? optionId : [optionId];
     const primaryOptionId = optionIds[0];

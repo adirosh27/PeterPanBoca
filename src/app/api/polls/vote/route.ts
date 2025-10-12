@@ -20,16 +20,31 @@ export async function POST(request: NextRequest) {
       || request.headers.get('x-real-ip')
       || 'unknown';
 
-    const success = await submitVote(pollId, voterName, voterEmail, optionId, comment, ipAddress);
+    try {
+      const success = await submitVote(pollId, voterName, voterEmail, optionId, comment, ipAddress);
 
-    if (!success) {
-      throw new Error('Failed to submit vote');
+      if (!success) {
+        throw new Error('Failed to submit vote');
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: 'Vote submitted successfully'
+      });
+    } catch (voteError) {
+      // Check if it's the IP already voted error
+      if (voteError instanceof Error && voteError.message.startsWith('IP_ALREADY_VOTED:')) {
+        const otherVoterName = voteError.message.split(':')[1];
+        return NextResponse.json(
+          {
+            success: false,
+            message: `המכשיר הזה כבר הצביע עבור ${otherVoterName}. אי אפשר להצביע עבור מספר אנשים מאותו מכשיר.`
+          },
+          { status: 403 }
+        );
+      }
+      throw voteError;
     }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Vote submitted successfully'
-    });
   } catch (error) {
     console.error('Error in POST /api/polls/vote:', error);
     return NextResponse.json(
