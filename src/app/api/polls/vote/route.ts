@@ -20,36 +20,40 @@ export async function POST(request: NextRequest) {
       || request.headers.get('x-real-ip')
       || 'unknown';
 
-    try {
-      const success = await submitVote(pollId, voterName, voterEmail, optionId, comment, ipAddress);
+    const success = await submitVote(pollId, voterName, voterEmail, optionId, comment, ipAddress);
 
-      if (!success) {
-        throw new Error('Failed to submit vote');
-      }
-
-      return NextResponse.json({
-        success: true,
-        message: 'Vote submitted successfully'
-      });
-    } catch (voteError) {
-      // Check if it's the IP already voted error
-      if (voteError instanceof Error && voteError.message.startsWith('IP_ALREADY_VOTED:')) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: 'אתה כבר הצבעת'
-          },
-          { status: 403 }
-        );
-      }
-      throw voteError;
+    if (!success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'אתה כבר הצבעת'
+        },
+        { status: 403 }
+      );
     }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Vote submitted successfully'
+    });
   } catch (error) {
     console.error('Error in POST /api/polls/vote:', error);
+
+    // Check if it's the IP already voted error
+    if (error instanceof Error && error.message.startsWith('IP_ALREADY_VOTED:')) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'אתה כבר הצבעת'
+        },
+        { status: 403 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
-        message: 'Failed to submit vote',
+        message: 'אתה כבר הצבעת',
         error: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
