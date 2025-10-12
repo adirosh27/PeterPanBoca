@@ -216,6 +216,8 @@ export default function VotePage() {
         setRefreshTrigger(prev => prev + 1);
         setError('');
       } else {
+        // Show popup alert for errors
+        alert(data.message || 'Failed to submit vote');
         setError(data.message || 'Failed to submit vote');
       }
     } catch (err) {
