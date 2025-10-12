@@ -28,6 +28,8 @@ export interface Vote {
   votedAt: string;
   wasChanged?: boolean;
   comment?: string;
+  ipAddress?: string;
+  previousIpAddress?: string; // Track if IP changed when vote was modified
 }
 
 const POLLS_KEY = 'peter-pan-polls';
@@ -162,7 +164,8 @@ export async function submitVote(
   voterName: string,
   voterEmail: string,
   optionId: string | string[],
-  comment?: string
+  comment?: string,
+  ipAddress?: string
 ): Promise<boolean> {
   try {
     if (!redis) {
@@ -185,15 +188,21 @@ export async function submitVote(
     if (existingVoteIndex !== -1) {
       // User is changing their vote
       const oldOptionIds = allVotes[existingVoteIndex].optionIds || [allVotes[existingVoteIndex].optionId];
+      const existingVote = allVotes[existingVoteIndex];
+
+      // Track if IP changed
+      const ipChanged = ipAddress && existingVote.ipAddress && ipAddress !== existingVote.ipAddress;
 
       // Update the vote
       allVotes[existingVoteIndex] = {
-        ...allVotes[existingVoteIndex],
+        ...existingVote,
         optionId: primaryOptionId,
         optionIds: optionIds,
         votedAt: new Date().toISOString(),
         wasChanged: true,
-        comment: comment !== undefined ? comment : allVotes[existingVoteIndex].comment
+        comment: comment !== undefined ? comment : existingVote.comment,
+        ipAddress: ipAddress || existingVote.ipAddress,
+        previousIpAddress: ipChanged ? existingVote.ipAddress : existingVote.previousIpAddress
       };
 
       await redis.set(VOTES_KEY, allVotes);
@@ -233,7 +242,8 @@ export async function submitVote(
         optionId: primaryOptionId,
         optionIds: optionIds,
         votedAt: new Date().toISOString(),
-        comment: comment || undefined
+        comment: comment || undefined,
+        ipAddress: ipAddress || undefined
       };
 
       allVotes.push(newVote);
@@ -293,6 +303,24 @@ export async function getPollResults(pollId: string): Promise<{
   } catch (error) {
     console.error('Error getting poll results:', error);
     return { poll: null, votes: [], votesByOption: {} };
+  }
+}
+
+// Check if a vote has suspicious IP activity
+export function isSuspiciousVote(vote: Vote): boolean {
+  // Vote is suspicious if:
+  // 1. It was changed AND the IP address changed
+  return !!(vote.wasChanged && vote.previousIpAddress && vote.ipAddress !== vote.previousIpAddress);
+}
+
+// Get suspicious votes for a poll
+export async function getSuspiciousVotes(pollId: string): Promise<Vote[]> {
+  try {
+    const votes = await getPollVotes(pollId);
+    return votes.filter(isSuspiciousVote);
+  } catch (error) {
+    console.error('Error getting suspicious votes:', error);
+    return [];
   }
 }
 

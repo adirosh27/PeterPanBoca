@@ -32,6 +32,8 @@ interface Vote {
   votedAt: string;
   wasChanged?: boolean;
   comment?: string;
+  ipAddress?: string;
+  previousIpAddress?: string;
 }
 
 export default function ResultsPage() {
@@ -223,6 +225,14 @@ export default function ResultsPage() {
   const votedNames = new Set(votes.map(v => v.voterName));
   const notVotedMembers = teamMembers.filter(member => !votedNames.has(member.name));
 
+  // Helper function to check if vote is suspicious
+  const isSuspiciousVote = (vote: Vote): boolean => {
+    return !!(vote.wasChanged && vote.previousIpAddress && vote.ipAddress !== vote.previousIpAddress);
+  };
+
+  // Count suspicious votes
+  const suspiciousVotes = votes.filter(isSuspiciousVote);
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -391,6 +401,37 @@ export default function ResultsPage() {
             סך הכל הצבעות: {totalVotes}
           </div>
 
+          {/* Suspicious Activity Warning */}
+          {suspiciousVotes.length > 0 && (
+            <div style={{
+              backgroundColor: '#fef2f2',
+              border: '2px solid #ef4444',
+              borderRadius: '12px',
+              padding: '1.5rem',
+              marginBottom: '2rem',
+              textAlign: 'center'
+            }}>
+              <div style={{
+                fontSize: '1.5rem',
+                marginBottom: '0.5rem'
+              }}>⚠️</div>
+              <div style={{
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                color: '#dc2626',
+                marginBottom: '0.5rem'
+              }}>
+                זוהתה פעילות חשודה
+              </div>
+              <div style={{
+                fontSize: '0.95rem',
+                color: '#991b1b'
+              }}>
+                {suspiciousVotes.length} הצבע{suspiciousVotes.length > 1 ? 'ות שונו' : 'ה שונתה'} ממכשיר/מיקום שונה
+              </div>
+            </div>
+          )}
+
           {/* Results by option */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {poll.options.map((option, optionIndex) => {
@@ -477,41 +518,74 @@ export default function ResultsPage() {
                         flexDirection: 'column',
                         gap: '0.5rem'
                       }}>
-                        {optionVotes.map((vote) => (
-                          <div
-                            key={vote.voterId}
-                            style={{
-                              backgroundColor: 'white',
-                              padding: '0.75rem',
-                              borderRadius: '8px',
-                              border: '1px solid #e5e7eb',
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <div>
-                              <div style={{ fontWeight: 'bold' }}>{vote.voterName}</div>
-                              {vote.comment && (
+                        {optionVotes.map((vote) => {
+                          const suspicious = isSuspiciousVote(vote);
+                          return (
+                            <div
+                              key={vote.voterId}
+                              style={{
+                                backgroundColor: suspicious ? '#fef2f2' : 'white',
+                                padding: '0.75rem',
+                                borderRadius: '8px',
+                                border: suspicious ? '2px solid #ef4444' : '1px solid #e5e7eb',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <div style={{ flex: 1 }}>
                                 <div style={{
-                                  fontSize: '0.85rem',
-                                  color: '#4b5563',
-                                  marginTop: '0.25rem',
-                                  fontStyle: 'italic',
-                                  direction: 'rtl'
+                                  fontWeight: 'bold',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '0.5rem'
                                 }}>
-                                  💬 {vote.comment}
+                                  {vote.voterName}
+                                  {suspicious && (
+                                    <span
+                                      style={{
+                                        fontSize: '0.9rem',
+                                        color: '#dc2626'
+                                      }}
+                                      title={`הצבעה שונתה ממכשיר/מיקום אחר\nכתובת IP קודמת: ${vote.previousIpAddress}\nכתובת IP נוכחית: ${vote.ipAddress}`}
+                                    >
+                                      ⚠️
+                                    </span>
+                                  )}
                                 </div>
-                              )}
+                                {vote.comment && (
+                                  <div style={{
+                                    fontSize: '0.85rem',
+                                    color: '#4b5563',
+                                    marginTop: '0.25rem',
+                                    fontStyle: 'italic',
+                                    direction: 'rtl'
+                                  }}>
+                                    💬 {vote.comment}
+                                  </div>
+                                )}
+                                {suspicious && (
+                                  <div style={{
+                                    fontSize: '0.75rem',
+                                    color: '#dc2626',
+                                    marginTop: '0.25rem',
+                                    fontWeight: '500'
+                                  }}>
+                                    הצבעה שונתה ממכשיר/מיקום שונה
+                                  </div>
+                                )}
+                              </div>
+                              <div style={{
+                                fontSize: '0.8rem',
+                                color: '#9ca3af',
+                                whiteSpace: 'nowrap',
+                                marginLeft: '0.5rem'
+                              }}>
+                                {new Date(vote.votedAt).toLocaleString('he-IL')}
+                              </div>
                             </div>
-                            <div style={{
-                              fontSize: '0.8rem',
-                              color: '#9ca3af'
-                            }}>
-                              {new Date(vote.votedAt).toLocaleString('he-IL')}
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}
