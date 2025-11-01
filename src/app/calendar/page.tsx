@@ -32,6 +32,7 @@ const birthdays = [
   { name: 'Nadav Houri', month: 5, day: 13 },
   { name: 'Daniel Kern', month: 3, day: 3 },
   { name: 'Avi Levi', month: 7, day: 8 },
+  { name: 'Moshe Marcu', month: 12, day: 8 },
   { name: 'Steven (Shuly) Michaels', month: 12, day: 3 },
   { name: 'Tal Shaked', month: 7, day: 25 },
   { name: 'Sagie Shanun', month: 2, day: 21 },
