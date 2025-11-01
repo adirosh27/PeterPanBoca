@@ -7,7 +7,8 @@ import { useEffect, useState } from 'react';
 
 // Upcoming events data
 const UPCOMING_EVENTS = [
-  { id: 'top-golf-event', name: 'Top Golf', date: '2025-10-18T19:00:00' }
+  { id: 'top-golf-event', name: 'Top Golf', date: '2025-10-18T19:00:00' },
+  { id: 'biking-bbq-event', name: 'פיטר פן Biking and BBQ', date: '2025-11-16T10:00:00' }
 ];
 
 // Countdown Timer Component

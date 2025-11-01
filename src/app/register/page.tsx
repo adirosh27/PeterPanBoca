@@ -16,7 +16,8 @@ interface FormData {
 }
 
 const EVENTS = [
-  { id: 'top-golf-event', name: 'Top Golf', date: 'October 19, 2025 at 19:30' }
+  { id: 'top-golf-event', name: 'Top Golf', date: 'October 19, 2025 at 19:30' },
+  { id: 'biking-bbq-event', name: 'פיטר פן Biking and BBQ', date: 'November 16, 2025' }
 ];
 
 export default function RegisterPage() {
