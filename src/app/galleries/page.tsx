@@ -9,7 +9,7 @@ const galleryData = {
     { name: 'הרמת כוסית לראש השנה - ספטמבר 2025', folder: 'הרמת כוסית לראש השנה - ספטמבר 2025' },
     { name: 'חיפוש המטמון - אוגוסט 2025', folder: 'חיפוש המטמון - אוגוסט 2025' },
     { name: 'אופניים, על האש, פוקר - נובמבר 2025', folder: 'אופניים, על האש, פוקר - נובמבר 2025' },
-    { name: 'Top Golf - אוקטובר 2025', folder: 'Top Golf - אוקטובר 2025' },
+    { name: 'Top Golf - אוקטובר 2025', folder: 'Top Golf - אוקטובר 2025', videosUrl: 'https://drive.google.com/drive/folders/1xOVjcZc9z0E5MF3cxplfWI2z73Xr5K1b?usp=sharing' },
     { name: 'סרט בורקס - מאי 2025', folder: 'סרט בורקס - מאי 2025' },
     { name: 'Karting - April 26th, 2025', folder: 'Karting - April 26th, 2025' },
     { name: 'שייט - מרץ 2025', folder: 'שייט - מרץ 2025' },
@@ -388,10 +388,70 @@ export default function GalleriesPage() {
                 backdropFilter: 'blur(20px)',
                 border: '2px solid rgba(255, 255, 255, 0.3)'
               }}>
-                <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>📷</div>
-                <p style={{ fontSize: '1.2rem', color: '#6b7280' }}>
-                  לא נמצאו תמונות לאירוע זה
-                </p>
+                {(() => {
+                  const currentEvent = galleryData[selectedYear as keyof typeof galleryData]?.find(
+                    (e) => e.folder === selectedEvent
+                  );
+                  const videosUrl = currentEvent && 'videosUrl' in currentEvent ? (currentEvent as any).videosUrl : null;
+
+                  if (videosUrl) {
+                    return (
+                      <>
+                        <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>🎥</div>
+                        <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
+                          סרטונים מהאירוע
+                        </h3>
+                        <p style={{ fontSize: '1.1rem', color: '#6b7280', marginBottom: '2rem', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
+                          האירוע כולל סרטונים בלבד. לחצו על הכפתור למטה לצפייה בכל הסרטונים ב-Google Drive
+                        </p>
+                        <a
+                          href={videosUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            background: 'linear-gradient(135deg, #10b981, #fbbf24)',
+                            color: 'white',
+                            padding: '1rem 2rem',
+                            borderRadius: '50px',
+                            fontSize: '1.1rem',
+                            fontWeight: 'bold',
+                            textDecoration: 'none',
+                            boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)',
+                            transition: 'all 0.3s ease',
+                            border: 'none',
+                            cursor: 'pointer'
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-3px)';
+                            e.currentTarget.style.boxShadow = '0 15px 35px rgba(16, 185, 129, 0.4)';
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 10px 25px rgba(16, 185, 129, 0.3)';
+                          }}
+                        >
+                          <span style={{ fontSize: '1.5rem' }}>🎬</span>
+                          <span>צפו בסרטונים</span>
+                          <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      </>
+                    );
+                  }
+
+                  return (
+                    <>
+                      <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>📷</div>
+                      <p style={{ fontSize: '1.2rem', color: '#6b7280' }}>
+                        לא נמצאו תמונות לאירוע זה
+                      </p>
+                    </>
+                  );
+                })()}
               </div>
             ) : (
               <div style={{
