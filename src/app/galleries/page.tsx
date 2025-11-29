@@ -8,7 +8,7 @@ const galleryData = {
   2025: [
     { name: 'הרמת כוסית לראש השנה - ספטמבר 2025', folder: 'הרמת כוסית לראש השנה - ספטמבר 2025' },
     { name: 'חיפוש המטמון - אוגוסט 2025', folder: 'חיפוש המטמון - אוגוסט 2025' },
-    { name: 'אופניים, על האש, פוקר - נובמבר 2025', folder: 'אופניים, על האש, פוקר - נובמבר 2025' },
+    { name: 'אופניים, על האש, פוקר - נובמבר 2025', folder: 'אופניים, על האש, פוקר - נובמבר 2025', videosUrl: 'https://drive.google.com/drive/folders/14u2MHcTobMddsO2zEJHFXVyFtk1SlF6W?usp=sharing' },
     { name: 'Top Golf - אוקטובר 2025', folder: 'Top Golf - אוקטובר 2025', videosUrl: 'https://drive.google.com/drive/folders/1xOVjcZc9z0E5MF3cxplfWI2z73Xr5K1b?usp=sharing' },
     { name: 'סרט בורקס - מאי 2025', folder: 'סרט בורקס - מאי 2025' },
     { name: 'Karting - April 26th, 2025', folder: 'Karting - April 26th, 2025' },
@@ -508,6 +508,64 @@ export default function GalleriesPage() {
                 }}>
                   📸 {photos.length} תמונות
                 </div>
+
+                {/* Videos Button if available */}
+                {(() => {
+                  const currentEvent = galleryData[selectedYear as keyof typeof galleryData]?.find(
+                    (e) => e.folder === selectedEvent
+                  );
+                  const videosUrl = currentEvent && 'videosUrl' in currentEvent ? (currentEvent as any).videosUrl : null;
+
+                  if (videosUrl) {
+                    return (
+                      <div style={{ marginTop: '2rem', textAlign: 'center', paddingTop: '2rem', borderTop: '2px solid #e5e7eb' }}>
+                        <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🎥</div>
+                        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.75rem' }}>
+                          סרטונים מהאירוע
+                        </h3>
+                        <p style={{ fontSize: '1rem', color: '#6b7280', marginBottom: '1.5rem' }}>
+                          לצפייה בסרטונים נוספים מהאירוע
+                        </p>
+                        <a
+                          href={videosUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            background: 'linear-gradient(135deg, #10b981, #fbbf24)',
+                            color: 'white',
+                            padding: '0.875rem 1.75rem',
+                            borderRadius: '50px',
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            textDecoration: 'none',
+                            boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)',
+                            transition: 'all 0.3s ease',
+                            border: 'none',
+                            cursor: 'pointer'
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-3px)';
+                            e.currentTarget.style.boxShadow = '0 15px 35px rgba(16, 185, 129, 0.4)';
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 10px 25px rgba(16, 185, 129, 0.3)';
+                          }}
+                        >
+                          <span style={{ fontSize: '1.3rem' }}>🎬</span>
+                          <span>צפו בסרטונים</span>
+                          <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
             )}
 
