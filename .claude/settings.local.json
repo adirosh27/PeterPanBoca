@@ -23,7 +23,8 @@
       "Bash(git tag:*)",
       "WebFetch(domain:peter-pan-boca.vercel.app)",
       "Bash(npx tsx:*)",
-      "Bash(source:*)"
+      "Bash(source:*)",
+      "WebFetch(domain:drive.google.com)"
     ],
     "deny": [],
     "ask": []

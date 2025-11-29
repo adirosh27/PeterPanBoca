@@ -16,6 +16,7 @@ export interface Event {
   year: number;
   coverImage: Photo;
   photos: Photo[];
+  videosUrl?: string;
 }
 
 export interface Year {
@@ -286,6 +287,7 @@ export const galleryData: Year[] = [
           { src: '/images/2025/אופניים, על האש, פוקר - November 16th, 2025/IMG-20251116-WA0065.jpg', alt: 'אופניים ופוקר 51', width: 800, height: 600 },
           { src: '/images/2025/אופניים, על האש, פוקר - November 16th, 2025/IMG-20251116-WA0066.jpg', alt: 'אופניים ופוקר 52', width: 800, height: 600 },
         ],
+        videosUrl: 'https://drive.google.com/drive/folders/14u2MHcTobMddsO2zEJHFXVyFtk1SlF6W?usp=sharing',
       },
     ],
   },
