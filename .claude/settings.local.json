@@ -25,7 +25,11 @@
       "Bash(npx tsx:*)",
       "Bash(source:*)",
       "WebFetch(domain:drive.google.com)",
-      "Bash(xargs cat:*)"
+      "Bash(xargs cat:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run lint)",
+      "Bash(tee:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []
