@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { getFeaturedEvents, getYears } from '@/lib/data';
 import { useEffect, useState } from 'react';
 
 // Upcoming events data
@@ -211,9 +210,6 @@ export default function HomePage() {
     window.addEventListener('theme-change', updateContent);
     return () => window.removeEventListener('theme-change', updateContent);
   }, []);
-
-  const featuredEvents = getFeaturedEvents(3);
-  const years = getYears();
 
   return (
     <div style={{ 

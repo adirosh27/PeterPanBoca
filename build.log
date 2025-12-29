@@ -1,0 +1,59 @@
+
+> peter-pan-boca@1.0.0 build
+> next build
+
+   ▲ Next.js 15.5.2
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 1856ms
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/32) ...
+   Generating static pages (8/32) 
+   Generating static pages (16/32) 
+   Generating static pages (24/32) 
+ ✓ Generating static pages (32/32)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                     Size  First Load JS
+┌ ○ /                                        7.29 kB         109 kB
+├ ○ /_not-found                                989 B         103 kB
+├ ○ /admin                                   1.62 kB         104 kB
+├ ƒ /api/download                              152 B         102 kB
+├ ƒ /api/fix-name                              152 B         102 kB
+├ ƒ /api/health                                152 B         102 kB
+├ ƒ /api/photos                                152 B         102 kB
+├ ƒ /api/polls                                 152 B         102 kB
+├ ƒ /api/polls/delete                          152 B         102 kB
+├ ƒ /api/polls/delete-vote                     152 B         102 kB
+├ ƒ /api/polls/results                         152 B         102 kB
+├ ƒ /api/polls/vote                            152 B         102 kB
+├ ƒ /api/register                              152 B         102 kB
+├ ƒ /api/remove-duplicates                     152 B         102 kB
+├ ƒ /api/test                                  152 B         102 kB
+├ ○ /calendar                                7.46 kB         109 kB
+├ ○ /characters                              4.86 kB         107 kB
+├ ○ /galleries                                4.5 kB         112 kB
+├ ● /galleries/[year]                          174 B         111 kB
+├   ├ /galleries/2025
+├   ├ /galleries/2024
+├   └ /galleries/2023
+├ ● /galleries/[year]/[slug]                 1.86 kB         112 kB
+├   ├ /galleries/2023/neverland-gala
+├   ├ /galleries/2023/pirate-ship-adventure
+├   ├ /galleries/2024/pixie-dust-festival
+├   └ [+3 more paths]
+├ ○ /polls/create                            5.28 kB         111 kB
+├ ○ /polls/results                           3.74 kB         113 kB
+└ ○ /polls/vote                              5.37 kB         114 kB
++ First Load JS shared by all                 102 kB
+  ├ chunks/255-e3bf15caf1f1e0f9.js           45.7 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js      54.2 kB
+  └ other shared chunks (total)              1.99 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
