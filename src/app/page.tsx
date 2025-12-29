@@ -51,31 +51,31 @@ function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targe
   }
 
   return (
-    <div 
+    <div
       data-card
       style={{
         borderRadius: '20px',
-        padding: '2rem',
+        padding: 'clamp(1rem, 4vw, 2rem)',
         textAlign: 'center',
         background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(251, 191, 36, 0.1))',
         border: '2px solid rgba(16, 185, 129, 0.2)',
         marginBottom: '2rem'
       }}
     >
-      <h3 style={{ 
-        fontSize: '1.5rem', 
-        fontWeight: 'bold', 
+      <h3 style={{
+        fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
+        fontWeight: 'bold',
         marginBottom: '1rem',
         color: '#10b981'
       }}>
         🎭 האירוע הקרוב: {eventName}
       </h3>
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(4, 1fr)', 
-        gap: '1rem', 
-        maxWidth: '400px', 
-        margin: '0 auto' 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(70px, 1fr))',
+        gap: 'clamp(0.5rem, 2vw, 1rem)',
+        maxWidth: '500px',
+        margin: '0 auto'
       }}>
         {[
           { label: 'ימים', value: timeLeft.days },
@@ -86,33 +86,48 @@ function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targe
           <div key={index} style={{
             background: 'linear-gradient(135deg, #10b981, #fbbf24)',
             color: 'white',
-            padding: '1rem',
+            padding: 'clamp(0.75rem, 3vw, 1rem)',
             borderRadius: '10px',
             fontWeight: 'bold'
           }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{item.value}</div>
-            <div style={{ fontSize: '0.9rem' }}>{item.label}</div>
+            <div style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', marginBottom: '0.25rem' }}>{item.value}</div>
+            <div style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.9rem)' }}>{item.label}</div>
           </div>
         ))}
       </div>
       {address && (
         <div style={{
           marginTop: '1.5rem',
-          padding: '1rem',
+          padding: 'clamp(0.75rem, 3vw, 1rem)',
           background: 'rgba(255, 255, 255, 0.8)',
           borderRadius: '10px',
-          fontSize: '1rem',
-          color: '#1f2937'
+          fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
+          color: '#1f2937',
+          textAlign: 'center'
         }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '1.1rem' }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: 'clamp(1rem, 3vw, 1.1rem)' }}>
             📍 {address}
           </div>
           {fullAddress && (
-            <div style={{ fontSize: '0.95rem', color: '#4b5563' }}>
-              {fullAddress}
-            </div>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)',
+                color: '#2563eb',
+                textDecoration: 'none',
+                display: 'block',
+                marginBottom: '0.5rem',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#1d4ed8'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#2563eb'}
+            >
+              🗺️ {fullAddress}
+            </a>
           )}
-          <div style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: '#6b7280' }}>
+          <div style={{ marginTop: '0.75rem', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)', color: '#6b7280' }}>
             ⏰ {new Date(targetDate).toLocaleString('he-IL', {
               weekday: 'long',
               year: 'numeric',

@@ -29,7 +29,10 @@
       "Bash(npx tsc:*)",
       "Bash(npm run lint)",
       "Bash(tee:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(cat:*)",
+      "Bash(npm show:*)",
+      "Bash(npm audit fix:*)"
     ],
     "deny": [],
     "ask": []
