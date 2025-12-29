@@ -279,24 +279,6 @@ export default function SimpleThemedHomePage() {
             <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6' }}>
               Join us for upcoming Peter Pan events and create magical memories that will last a lifetime.
             </p>
-            <Link 
-              href="/register" 
-              data-button
-              style={{
-                padding: '1rem 2rem',
-                borderRadius: '10px',
-                textDecoration: 'none',
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                display: 'inline-block',
-                transition: 'all 0.3s',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              {themeContent.ctaButton}
-            </Link>
           </div>
         </div>
       </section>

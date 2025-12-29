@@ -7,12 +7,17 @@ import { useEffect, useState } from 'react';
 
 // Upcoming events data
 const UPCOMING_EVENTS = [
-  { id: 'top-golf-event', name: 'Top Golf', date: '2025-10-18T19:00:00' },
-  { id: 'biking-bbq-event', name: 'פיטר פן Biking and BBQ', date: '2025-11-16T10:00:00' }
+  {
+    id: 'family-friday-dinner',
+    name: 'ארוחת שישי משפחות',
+    date: '2026-01-30T19:30:00',
+    address: 'Boca Falls Club House',
+    fullAddress: '21700 Boca Falls Dr, Boca Raton, FL 33428'
+  }
 ];
 
 // Countdown Timer Component
-function CountdownTimer({ targetDate, eventName }: { targetDate: string, eventName: string }) {
+function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targetDate: string, eventName: string, address?: string, fullAddress?: string }) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -91,24 +96,35 @@ function CountdownTimer({ targetDate, eventName }: { targetDate: string, eventNa
           </div>
         ))}
       </div>
-      <Link 
-        href="/register"
-        style={{
-          display: 'inline-block',
+      {address && (
+        <div style={{
           marginTop: '1.5rem',
-          padding: '0.75rem 1.5rem',
-          background: 'linear-gradient(135deg, #10b981, #fbbf24)',
-          color: 'white',
-          borderRadius: '25px',
-          textDecoration: 'none',
-          fontWeight: 'bold',
-          transition: 'transform 0.3s ease'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-      >
-        🎪 הרשמה לאירוע
-      </Link>
+          padding: '1rem',
+          background: 'rgba(255, 255, 255, 0.8)',
+          borderRadius: '10px',
+          fontSize: '1rem',
+          color: '#1f2937'
+        }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '1.1rem' }}>
+            📍 {address}
+          </div>
+          {fullAddress && (
+            <div style={{ fontSize: '0.95rem', color: '#4b5563' }}>
+              {fullAddress}
+            </div>
+          )}
+          <div style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: '#6b7280' }}>
+            ⏰ {new Date(targetDate).toLocaleString('he-IL', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -345,9 +361,11 @@ export default function HomePage() {
             
             if (nextEvent) {
               return (
-                <CountdownTimer 
-                  targetDate={nextEvent.date} 
-                  eventName={nextEvent.name} 
+                <CountdownTimer
+                  targetDate={nextEvent.date}
+                  eventName={nextEvent.name}
+                  address={nextEvent.address}
+                  fullAddress={nextEvent.fullAddress}
                 />
               );
             }
@@ -356,47 +374,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section style={{ padding: 'clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem)' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div 
-            data-card
-            style={{
-              borderRadius: '20px',
-              padding: '3rem',
-              textAlign: 'center'
-            }}
-          >
-            <div style={{ fontSize: '4rem', marginBottom: '2rem' }}>
-              ✨
-            </div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-              {themeContent.ctaTitle}
-            </h2>
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6' }}>
-              Join us for upcoming Peter Pan events and create magical memories that will last a lifetime.
-            </p>
-            <Link 
-              href="/register" 
-              data-button
-              style={{
-                padding: '1rem 2rem',
-                borderRadius: '10px',
-                textDecoration: 'none',
-                fontSize: '1.2rem',
-                fontWeight: 'bold',
-                display: 'inline-block',
-                transition: 'all 0.3s',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              {themeContent.ctaButton}
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

@@ -24,7 +24,8 @@
       "WebFetch(domain:peter-pan-boca.vercel.app)",
       "Bash(npx tsx:*)",
       "Bash(source:*)",
-      "WebFetch(domain:drive.google.com)"
+      "WebFetch(domain:drive.google.com)",
+      "Bash(xargs cat:*)"
     ],
     "deny": [],
     "ask": []
