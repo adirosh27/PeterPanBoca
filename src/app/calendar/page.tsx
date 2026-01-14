@@ -101,6 +101,18 @@ const holidays: Holiday[] = [
 
 const events: Event[] = [
   {
+    id: 1,
+    date: '2026-01-30',
+    title: 'ארוחת שישי משפחות',
+    description: 'ארוחת שישי משפחתית - כל משפחה מביאה אוכל לשיתוף. מה מביאים: עדה, רם - קינוח וסלט עלים.',
+    time: '19:30',
+    location: 'Boca Falls Club House',
+    type: 'special',
+    price: 'חינם',
+    ageGroup: 'כל המשפחה',
+    spotsLeft: 50
+  },
+  {
     id: 2,
     date: '2024-01-15',
     title: 'הרפתקת הפיראטים הגדולה',

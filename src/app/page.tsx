@@ -11,12 +11,22 @@ const UPCOMING_EVENTS = [
     name: 'ארוחת שישי משפחות',
     date: '2026-01-30T19:30:00',
     address: 'Boca Falls Club House',
-    fullAddress: '21700 Boca Falls Dr, Boca Raton, FL 33428'
+    fullAddress: '21700 Boca Falls Dr, Boca Raton, FL 33428',
+    foodAssignments: [
+      { name: 'עדה', items: [] },
+      { name: 'רם', items: ['קינוח', 'סלט עלים'] },
+    ]
   }
 ];
 
 // Countdown Timer Component
-function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targetDate: string, eventName: string, address?: string, fullAddress?: string }) {
+function CountdownTimer({ targetDate, eventName, address, fullAddress, foodAssignments }: {
+  targetDate: string,
+  eventName: string,
+  address?: string,
+  fullAddress?: string,
+  foodAssignments?: { name: string, items: string[] }[]
+}) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -136,6 +146,36 @@ function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targe
               hour: '2-digit',
               minute: '2-digit'
             })}
+          </div>
+        </div>
+      )}
+      {foodAssignments && foodAssignments.length > 0 && (
+        <div style={{
+          marginTop: '1.5rem',
+          padding: 'clamp(0.75rem, 3vw, 1rem)',
+          background: 'rgba(255, 255, 255, 0.9)',
+          borderRadius: '10px',
+          textAlign: 'right',
+          direction: 'rtl'
+        }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '0.75rem', fontSize: 'clamp(1rem, 3vw, 1.1rem)', color: '#1f2937' }}>
+            🍽️ מה מביאים?
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {foodAssignments.map((assignment, index) => (
+              <div key={index} style={{
+                padding: '0.5rem 0.75rem',
+                background: 'rgba(16, 185, 129, 0.1)',
+                borderRadius: '8px',
+                fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)',
+                color: '#374151'
+              }}>
+                <strong>{assignment.name}</strong>
+                {assignment.items.length > 0 && (
+                  <span> - {assignment.items.join(', ')}</span>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -377,6 +417,7 @@ export default function HomePage() {
                   eventName={nextEvent.name}
                   address={nextEvent.address}
                   fullAddress={nextEvent.fullAddress}
+                  foodAssignments={nextEvent.foodAssignments}
                 />
               );
             }
