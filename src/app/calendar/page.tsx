@@ -643,28 +643,6 @@ export default function CalendarPage() {
               <div><strong>📍 מקום:</strong> {selectedEvent.location}</div>
               <div><strong>👶 גילאים:</strong> {selectedEvent.ageGroup}</div>
               <div><strong>💰 מחיר:</strong> {selectedEvent.price}</div>
-              <div style={{ color: selectedEvent.spotsLeft < 10 ? '#dc2626' : '#10b981' }}>
-                <strong>🎟️ מקומות פנויים:</strong> {selectedEvent.spotsLeft}
-              </div>
-            </div>
-            
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-              <button
-                data-button
-                style={{
-                  padding: '1rem 2rem',
-                  borderRadius: '25px',
-                  border: 'none',
-                  fontSize: '1.1rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-              >
-                🎫 הרשמה לאירוע
-              </button>
             </div>
           </div>
         </div>
