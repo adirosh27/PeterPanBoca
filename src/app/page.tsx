@@ -369,7 +369,7 @@ export default function HomePage() {
             // Find the next upcoming event
             const now = new Date();
             const nextEvent = UPCOMING_EVENTS.find(event => new Date(event.date) > now);
-            
+
             if (nextEvent) {
               return (
                 <CountdownTimer
@@ -382,6 +382,30 @@ export default function HomePage() {
             }
             return null;
           })()}
+        </div>
+      </section>
+
+      {/* Founded Section */}
+      <section style={{
+        padding: 'clamp(1rem, 4vw, 2rem)',
+        textAlign: 'center'
+      }}>
+        <div style={{
+          display: 'inline-block',
+          background: 'rgba(255, 255, 255, 0.8)',
+          borderRadius: '15px',
+          padding: '1rem 2rem',
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+          border: '2px solid rgba(16, 185, 129, 0.3)'
+        }}>
+          <p style={{
+            margin: 0,
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+            color: '#4b5563',
+            direction: 'rtl'
+          }}>
+            🎉 הקבוצה נוסדה ב-23 בנובמבר 2021
+          </p>
         </div>
       </section>
 
