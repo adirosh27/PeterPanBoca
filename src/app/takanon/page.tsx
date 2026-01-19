@@ -1,5 +1,99 @@
 'use client';
 
+const regulations = [
+  {
+    title: 'מטרת הקבוצה',
+    content: 'מטרת הקבוצה היא גיבוש וחיזוק קשרי החברות באמצעות מפגשים ופעילויות מגוונות.',
+    icon: '🎯'
+  },
+  {
+    title: 'התנהגות',
+    content: 'החברים מתחייבים לשמור על שיח מכבד ונאות כלפי כלל חברי הקבוצה.',
+    icon: '🤝'
+  },
+  {
+    title: 'מספר חברים',
+    content: 'מספר חברי הקבוצה לא יעלה על 27 חברים.',
+    icon: '👥'
+  },
+  {
+    title: 'השתתפות באירועים',
+    content: 'החברים מחויבים להשתתף באירועי הקבוצה על מנת לשמור על חברותם בקבוצה. חבר שלא ישתתף בלפחות 6 מפגשים במהלך 12 חודשים – יוצא מהקבוצה. הספירה תחל מחודש אוגוסט.',
+    icon: '📅'
+  },
+  {
+    title: 'מעורבות בארגון',
+    content: 'כל חבר מחויב להיות מעורב באופן פעיל בארגון אירוע, הן באופן עצמאי והן בשיתוף עם חבר אחד או יותר.',
+    icon: '🎪'
+  },
+  {
+    title: 'בדיקת ספקים',
+    content: 'במידה והאירוע מתקיים במקום המספק שירותים, על מארגן האירוע לבדוק מראש את תנאי הספק, ובכלל זה:',
+    subItems: [
+      'כמות משתתפים (מינימום הזמנה)',
+      'סכום ההשתתפות כולל מיסים',
+      'תנאים נוספים שעל החברים לדעת'
+    ],
+    icon: '📋'
+  },
+  {
+    title: 'תיאום עם הוועד',
+    content: 'כל אירוע יתואם עם חברי הוועד לפני הצגתו לחברי הקבוצה. על המארגן לתאם עם אחד מחברי הוועד כבר בשלב התכנון ולעדכן בהתקדמות.',
+    icon: '✅'
+  },
+  {
+    title: 'מחויבות תשלום',
+    content: 'כל חבר שהתחייב להגיע לאירוע מחויב בתשלום עבורו, גם אם נאלץ לבטל לאחר סגירת האירוע, אלא אם מצא מחליף שיגיע במקומו.',
+    icon: '💰'
+  },
+  {
+    title: 'הצטרפות מאוחרת',
+    content: 'הצטרפות לאירוע לאחר התאריך שפורסם תתאפשר על בסיס מקום פנוי בלבד ובאישור מארגן האירוע.',
+    icon: '⏰'
+  },
+  {
+    title: 'הבאת אורחים',
+    content: 'הבאת אורח שאינו חבר בקבוצה למפגש חודשי תתאפשר רק באישור מראש של חברי הוועד, ובכפוף למגבלה של אורח אחד בלבד למפגש. בקשה להבאת אורח תתאפשר רק במצב של: "יש לי אורח שמבקר אותי ואני לא רוצה להשאיר אותו לבד."',
+    icon: '🎫'
+  },
+  {
+    title: 'אחריות מארגן',
+    content: 'חבר שלקח על עצמו לתכנן מפגש אחראי להוציאו לפועל. אי הוצאה לפועל של המפגש מהווה עילה להוצאה מהקבוצה.',
+    icon: '⚠️'
+  },
+  {
+    title: 'מועמד לחברות בקבוצה',
+    content: 'תהליך ההצטרפות לקבוצה:',
+    subItems: [
+      'הצטרפות תתאפשר על בסיס מקום פנוי בלבד',
+      'המועמד יתבקש להגיע למפגש אחד כאורח',
+      'לאחר מכן יצטרף לצוות להפקת פעילות',
+      'נדרשות המלצות מלפחות 50% מחברי הקבוצה, בהצבעה אנונימית'
+    ],
+    icon: '🆕'
+  },
+  {
+    title: 'חבר במילואים',
+    content: 'חבר פיטר פן שהעתיק את מקום מגוריו מחוץ לאזור, אך ממשיך להגיע לביקורים:',
+    subItems: [
+      'אינו תופס מקום בקבוצה',
+      'אינו מחויב לפעילויות',
+      'בעת ביקורו – מוזמן להצטרף לפעילויות'
+    ],
+    icon: '🏠'
+  },
+  {
+    title: 'שינוי תקנון',
+    content: 'הצעה לשינוי או הוספת כללים תוצג בפני חברי הוועד, אשר יעלו אותה להצבעה בקבוצה. שינוי או הוספה מחייבים רוב.',
+    icon: '📝'
+  },
+  {
+    title: 'פגישה דו-שנתית',
+    content: 'תתקיים פגישה דו-שנתית של כלל חברי הקבוצה, במסגרתה יידונו דרכי התייעלות ועדכון התקנון.',
+    icon: '🗓️'
+  }
+];
+
 export default function TakanonPage() {
   return (
     <div style={{
@@ -37,7 +131,7 @@ export default function TakanonPage() {
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite'
           }}>
-            📜 תקנון הקבוצה
+            📜 תקנון פיטר פן
           </h1>
           <p style={{
             fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
@@ -55,7 +149,7 @@ export default function TakanonPage() {
           style={{
             background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
             borderRadius: '20px',
-            padding: 'clamp(2rem, 5vw, 3rem)',
+            padding: 'clamp(1.5rem, 5vw, 3rem)',
             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
             border: '2px solid rgba(16, 185, 129, 0.2)'
           }}
@@ -63,33 +157,49 @@ export default function TakanonPage() {
           <div style={{
             direction: 'rtl',
             textAlign: 'right',
-            lineHeight: '2',
-            fontSize: 'clamp(1rem, 2.5vw, 1.15rem)',
+            lineHeight: '1.8',
+            fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
             color: '#1f2937'
           }}>
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(251, 191, 36, 0.1))',
-              borderRadius: '15px',
-              padding: '1.5rem',
-              marginBottom: '1.5rem',
-              borderRight: '4px solid #10b981'
-            }}>
-              <p style={{ margin: 0 }}>
-                <strong>שינויים בתקנון:</strong> שינוי או הוספה לתקנון מצריכים העלאה להצבעה בקבוצה על ידי חברי הוועד, ואישור ברוב קולות.
-              </p>
-            </div>
-
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(16, 185, 129, 0.1))',
-              borderRadius: '15px',
-              padding: '1.5rem',
-              marginBottom: '1.5rem',
-              borderRight: '4px solid #fbbf24'
-            }}>
-              <p style={{ margin: 0 }}>
-                <strong>15.</strong> תתקיים פגישה דו-שנתית של כלל חברי הקבוצה, במסגרתה נדון בדרכי התייעלות ועדכון התקנון.
-              </p>
-            </div>
+            {regulations.map((reg, index) => (
+              <div
+                key={index}
+                style={{
+                  background: index % 2 === 0
+                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(251, 191, 36, 0.08))'
+                    : 'linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(16, 185, 129, 0.08))',
+                  borderRadius: '15px',
+                  padding: 'clamp(1rem, 3vw, 1.5rem)',
+                  marginBottom: '1rem',
+                  borderRight: `4px solid ${index % 2 === 0 ? '#10b981' : '#fbbf24'}`
+                }}
+              >
+                <h3 style={{
+                  margin: '0 0 0.75rem 0',
+                  fontSize: 'clamp(1.1rem, 3vw, 1.25rem)',
+                  fontWeight: 'bold',
+                  color: index % 2 === 0 ? '#10b981' : '#d97706',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <span>{reg.icon}</span>
+                  <span>{index + 1}. {reg.title}</span>
+                </h3>
+                <p style={{ margin: 0 }}>{reg.content}</p>
+                {reg.subItems && (
+                  <ul style={{
+                    margin: '0.75rem 0 0 0',
+                    paddingRight: '1.5rem',
+                    listStyleType: 'disc'
+                  }}>
+                    {reg.subItems.map((item, subIndex) => (
+                      <li key={subIndex} style={{ marginBottom: '0.25rem' }}>{item}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -98,7 +208,8 @@ export default function TakanonPage() {
           textAlign: 'center',
           marginTop: '2rem',
           color: '#6b7280',
-          fontSize: '0.9rem'
+          fontSize: '0.9rem',
+          direction: 'rtl'
         }}>
           <p>📌 התקנון עודכן לאחרונה: ינואר 2026</p>
         </div>
