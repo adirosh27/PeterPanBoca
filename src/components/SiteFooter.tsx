@@ -11,8 +11,8 @@ export default function SiteFooter() {
           </div>
           
           <div className="text-sm text-gray-600 text-center md:text-right">
-            <p>&copy; 2025 Peter Pan Boca. All rights reserved.</p>
-            <p className="mt-1">Capturing magical moments since 2023</p>
+            <p>&copy; 2026 Peter Pan Boca. All rights reserved.</p>
+            <p className="mt-1">Capturing magical moments since 2021</p>
           </div>
         </div>
         
