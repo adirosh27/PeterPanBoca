@@ -143,6 +143,59 @@ export default function TakanonPage() {
           </p>
         </div>
 
+        {/* Committee Section */}
+        <div
+          data-card
+          style={{
+            background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
+            borderRadius: '20px',
+            padding: 'clamp(1.5rem, 5vw, 2rem)',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+            border: '2px solid rgba(251, 191, 36, 0.3)',
+            marginBottom: '2rem',
+            direction: 'rtl',
+            textAlign: 'center'
+          }}
+        >
+          <h2 style={{
+            fontSize: 'clamp(1.3rem, 4vw, 1.6rem)',
+            fontWeight: 'bold',
+            color: '#d97706',
+            marginBottom: '1rem'
+          }}>
+            👑 וועד הקבוצה
+          </h2>
+          <p style={{
+            fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
+            color: '#4b5563',
+            marginBottom: '1.25rem'
+          }}>
+            וועד הקבוצה מונה 5 חברים, ויהיה וועד מנהל בהתאם למסגרת התקנון:
+          </p>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '0.75rem'
+          }}>
+            {['עופר גלעדי', 'דני קרן', 'רון דיקסון', 'טל שקד', 'אבי לוי'].map((name, index) => (
+              <span
+                key={index}
+                style={{
+                  background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+                  color: '#1f2937',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '25px',
+                  fontWeight: '600',
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1rem)'
+                }}
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* Regulations Content */}
         <div
           data-card
