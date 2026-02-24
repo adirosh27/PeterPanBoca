@@ -46,6 +46,7 @@ const birthdays = [
   { name: 'Dudi Amsalem', month: 6, day: 29 },
   { name: 'Shalom Moldavski', month: 9, day: 17 },
   { name: 'Itamar Ankorion', month: 10, day: 4 },
+  { name: 'Safi Bar', month: 2, day: 23 },
 ];
 
 
