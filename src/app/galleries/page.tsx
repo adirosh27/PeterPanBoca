@@ -5,6 +5,8 @@ import Image from 'next/image';
 
 // Define the gallery structure based on the actual folder structure
 const galleryData = {
+  2026: [
+  ],
   2025: [
     { name: 'הרמת כוסית לראש השנה - ספטמבר 2025', folder: 'הרמת כוסית לראש השנה - ספטמבר 2025' },
     { name: 'חיפוש המטמון - אוגוסט 2025', folder: 'חיפוש המטמון - אוגוסט 2025' },
@@ -184,7 +186,7 @@ export default function GalleriesPage() {
                   }}
                 >
                   <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
-                    {year === 2025 ? '🌟' : year === 2024 ? '🎊' : year === 2023 ? '🎭' : year === 2022 ? '🎪' : '⚡'}
+                    {year === 2026 ? '🚀' : year === 2025 ? '🌟' : year === 2024 ? '🎊' : year === 2023 ? '🎭' : year === 2022 ? '🎪' : '⚡'}
                   </div>
                   <h3 style={{ 
                     fontSize: '2rem', 
