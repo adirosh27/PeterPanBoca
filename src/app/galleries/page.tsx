@@ -8,6 +8,7 @@ const galleryData = {
   2026: [
   ],
   2025: [
+    { name: 'Shooting Range - דצמבר 2025', folder: 'Shooting Range - דצמבר 2025' },
     { name: 'הרמת כוסית לראש השנה - ספטמבר 2025', folder: 'הרמת כוסית לראש השנה - ספטמבר 2025' },
     { name: 'חיפוש המטמון - אוגוסט 2025', folder: 'חיפוש המטמון - אוגוסט 2025' },
     { name: 'אופניים, על האש, פוקר - נובמבר 2025', folder: 'אופניים, על האש, פוקר - נובמבר 2025', videosUrl: 'https://drive.google.com/drive/folders/14u2MHcTobMddsO2zEJHFXVyFtk1SlF6W?usp=sharing' },
