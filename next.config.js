@@ -4,6 +4,9 @@ const nextConfig = {
     domains: ['via.placeholder.com'],
     formats: ['image/avif', 'image/webp'],
   },
+  outputFileTracingExcludes: {
+    '/api/photos': ['./public/images/**', './public/Photos/**'],
+  },
   // Force cache invalidation
   generateBuildId: async () => {
     return `build-${Date.now()}`

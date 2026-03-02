@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/generate-image-manifest.js && next build",
     "start": "next start",
     "lint": "next lint",
     "keep-db-active": "node keep-db-active.js",
