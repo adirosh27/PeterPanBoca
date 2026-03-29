@@ -37,4 +37,4 @@ next-env.d.ts
 # registration data - keep private
 /data/registrations.json*.log
 public/images/2026/קומזיץ אצל ספי - פברואר 2026/20260301_203824.mp4
-*.mp4
+public/images/2024/לילה בחווה - אפריל 2024/*.mp4

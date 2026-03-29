@@ -6,6 +6,7 @@ import Image from 'next/image';
 // Define the gallery structure based on the actual folder structure
 const galleryData = {
   2026: [
+    { name: 'ערב פיצה ויין - מרץ 2026', folder: 'ערב פיצה ויין - מרץ 2026' },
     { name: 'קומזיץ אצל ספי - פברואר 2026', folder: 'קומזיץ אצל ספי - פברואר 2026' },
   ],
   2025: [
