@@ -30,7 +30,7 @@ const teamMembers = [
   { name: 'אייל בישרי', role: 'מנהל קשרי קהילה', icon: '🌟', color: '#06b6d4' },
   { name: 'רועי וולקן', role: 'מתאמן חדש', icon: '🌱', color: '#10b981' },
   { name: 'איתמר אנקוריון', role: 'מתאם אירועים', icon: '📋', color: '#8b5cf6' },
-  { name: 'אורי פייגין', role: 'חבר חדש', icon: '🌟', color: '#eab308' }
+  { name: 'אורי פייגין', role: 'קצין המורל', icon: '🎖️', color: '#eab308' }
 ];
 
 
