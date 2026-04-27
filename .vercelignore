@@ -1,5 +1,7 @@
-public/images/**/*.mp4
-public/images/**/*.mov
-public/images/**/*.avi
-public/images/**/*.webm
-public/images/**/*.mkv
+*.mp4
+*.mov
+*.avi
+*.webm
+*.mkv
+!public/videos/hero-video.mp4
+!public/videos/hero-video.webm
