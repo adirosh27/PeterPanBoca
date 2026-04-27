@@ -1,0 +1,5 @@
+public/images/**/*.mp4
+public/images/**/*.mov
+public/images/**/*.avi
+public/images/**/*.webm
+public/images/**/*.mkv
