@@ -47,7 +47,7 @@ const birthdays = [
   { name: 'Shalom Moldavski', month: 9, day: 17 },
   { name: 'Itamar Ankorion', month: 10, day: 4 },
   { name: 'Safi Bar', month: 2, day: 23 },
-  { name: 'Ori Feigin', month: 6, day: 5 },
+  { name: 'Ori Feigin', month: 5, day: 6 },
 ];
 
 
@@ -185,6 +185,18 @@ const events: Event[] = [
     price: '$50',
     ageGroup: '2-99',
     spotsLeft: 25
+  },
+  {
+    id: 7,
+    date: '2026-06-13',
+    title: '⚽ משחק ידידות מונדיאל 2026',
+    description: 'משחק כדורגל ידידותי לכבוד פתיחת מונדיאל 2026! קבוצות מעורבות של הורים וילדים, גביע משפחתי, צביעת פנים בצבעי הנבחרות וצפייה משותפת במשחקים על מסך ענק.',
+    time: '17:00-20:00',
+    location: 'Boca Falls Club House',
+    type: 'special',
+    price: 'חינם',
+    ageGroup: 'כל המשפחה',
+    spotsLeft: 40
   },
 ];
 
