@@ -161,10 +161,6 @@ export default function WorldCupPage() {
     .filter((entry) => entry.team)
     .sort((a, b) => b.count - a.count);
 
-  // Teams ranked by estimated chance to win the title
-  const teamsByChance = [...worldCupTeams].sort((a, b) => b.winChance - a.winChance);
-  const maxChance = teamsByChance[0]?.winChance || 1;
-
   const finalDateLabel = (() => {
     const [year, month, day] = FINAL_DATE.split('-');
     return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).toLocaleDateString('he-IL', {
@@ -330,65 +326,6 @@ export default function WorldCupPage() {
             ✅ הצבעת מהמכשיר הזה בתור <strong>{myVote}</strong>. לא ניתן להצביע עבור חברים אחרים.
           </div>
         )}
-
-        {/* Title odds */}
-        <div
-          style={{
-            backgroundColor: 'white',
-            borderRadius: '16px',
-            padding: '1.5rem',
-            marginBottom: '1.5rem',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-            border: '1px solid #e5e7eb',
-          }}
-        >
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold', margin: '0 0 0.25rem', color: '#111827' }}>
-            📈 סיכויי הזכייה בגביע
-          </h3>
-          <p style={{ fontSize: '0.8rem', color: '#9ca3af', margin: '0 0 1rem' }}>
-            הערכה לפני הטורניר — מתעדכן לפי תוצאות המשחקים
-          </p>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-              maxHeight: '320px',
-              overflowY: 'auto',
-              paddingLeft: '0.25rem',
-            }}
-          >
-            {teamsByChance.map((team, index) => (
-              <div key={team.code} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{ width: '1.5rem', fontWeight: 'bold', color: '#9ca3af', textAlign: 'center', fontSize: '0.85rem' }}>
-                  {index + 1}
-                </div>
-                <div style={{ fontSize: '1.3rem' }}>{team.flag}</div>
-                <div style={{ minWidth: '110px', fontWeight: 600, fontSize: '0.9rem' }}>{team.nameHe}</div>
-                <div
-                  style={{
-                    flex: 1,
-                    height: '16px',
-                    backgroundColor: '#f3f4f6',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${Math.max(2, (team.winChance / maxChance) * 100)}%`,
-                      height: '100%',
-                      background: 'linear-gradient(90deg, #f59e0b, #fbbf24)',
-                    }}
-                  />
-                </div>
-                <div style={{ width: '3.2rem', textAlign: 'left', fontWeight: 'bold', color: '#d97706', fontSize: '0.85rem' }}>
-                  {formatWinChance(team.winChance)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Progress Bar */}
         <div
