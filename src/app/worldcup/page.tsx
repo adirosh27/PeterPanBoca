@@ -29,12 +29,42 @@ export default function WorldCupPage() {
   const [error, setError] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
   const [savingMember, setSavingMember] = useState<string | null>(null);
+  const [adminPassword, setAdminPassword] = useState('');
+  const adminMode = adminPassword !== '';
 
   useEffect(() => {
     fetchResults();
     const interval = setInterval(fetchResults, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('worldcup-admin-pw');
+    if (saved) setAdminPassword(saved);
+  }, []);
+
+  const enterAdminMode = async () => {
+    const input = prompt('הזן סיסמת מנהל:');
+    if (!input) return;
+    try {
+      const res = await fetch(`/api/worldcup/admin?password=${encodeURIComponent(input)}`);
+      const data = await res.json();
+      if (data.valid) {
+        setAdminPassword(input);
+        localStorage.setItem('worldcup-admin-pw', input);
+        setError('');
+      } else {
+        alert('סיסמת מנהל שגויה');
+      }
+    } catch {
+      alert('שגיאה באימות סיסמה');
+    }
+  };
+
+  const exitAdminMode = () => {
+    setAdminPassword('');
+    localStorage.removeItem('worldcup-admin-pw');
+  };
 
   const fetchResults = async () => {
     try {
@@ -63,6 +93,7 @@ export default function WorldCupPage() {
           voterName: memberName,
           voterEmail: emailFor(memberName),
           teamCode,
+          adminPassword: adminMode ? adminPassword : undefined,
         }),
       });
       const data = await response.json();
@@ -85,7 +116,7 @@ export default function WorldCupPage() {
     if (!confirm(`למחוק את הניחוש של ${memberName}?`)) return;
     try {
       const response = await fetch(
-        `/api/worldcup/vote?voterEmail=${encodeURIComponent(emailFor(memberName))}`,
+        `/api/worldcup/vote?voterEmail=${encodeURIComponent(emailFor(memberName))}&adminPassword=${encodeURIComponent(adminPassword)}`,
         { method: 'DELETE' }
       );
       const data = await response.json();
@@ -154,18 +185,61 @@ export default function WorldCupPage() {
           transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
         }}
       >
-        <Link
-          href="/"
+        <div
           style={{
-            display: 'inline-block',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             marginBottom: '1rem',
-            color: '#10b981',
-            textDecoration: 'none',
-            fontWeight: 'bold',
+            flexWrap: 'wrap',
+            gap: '0.5rem',
           }}
         >
-          ← חזרה לדף הבית
-        </Link>
+          <Link
+            href="/"
+            style={{
+              display: 'inline-block',
+              color: '#10b981',
+              textDecoration: 'none',
+              fontWeight: 'bold',
+            }}
+          >
+            ← חזרה לדף הבית
+          </Link>
+          {adminMode ? (
+            <button
+              onClick={exitAdminMode}
+              style={{
+                padding: '0.4rem 0.9rem',
+                borderRadius: '20px',
+                border: '2px solid #f59e0b',
+                background: '#fffbeb',
+                color: '#92400e',
+                fontWeight: 'bold',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              🔓 מצב מנהל פעיל — יציאה
+            </button>
+          ) : (
+            <button
+              onClick={enterAdminMode}
+              style={{
+                padding: '0.4rem 0.9rem',
+                borderRadius: '20px',
+                border: '2px solid #e5e7eb',
+                background: 'white',
+                color: '#6b7280',
+                fontWeight: 'bold',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              🔒 מצב מנהל
+            </button>
+          )}
+        </div>
 
         {/* Header */}
         <div
@@ -416,7 +490,9 @@ export default function WorldCupPage() {
                           border: hasVoted ? '1px solid #10b981' : '1px solid #f59e0b',
                         }}
                       >
-                        {hasVoted && votedTeam ? `${votedTeam.flag} ${votedTeam.nameHe}` : '⏳ טרם ניחש'}
+                        {hasVoted && votedTeam
+                          ? `${adminMode ? '' : '🔒 '}${votedTeam.flag} ${votedTeam.nameHe}`
+                          : '⏳ טרם ניחש'}
                       </div>
                     </div>
                   </div>
@@ -424,17 +500,18 @@ export default function WorldCupPage() {
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <select
                       value={memberVote?.teamCode || ''}
-                      disabled={savingMember === member.name}
+                      disabled={savingMember === member.name || (hasVoted && !adminMode)}
                       onChange={(e) => handleVote(member.name, e.target.value)}
                       style={{
                         minHeight: '44px',
                         padding: '0.5rem 0.75rem',
                         borderRadius: '8px',
                         border: hasVoted ? '2px solid #10b981' : '2px solid #e5e7eb',
-                        backgroundColor: 'white',
+                        backgroundColor: hasVoted && !adminMode ? '#f3f4f6' : 'white',
+                        color: hasVoted && !adminMode ? '#6b7280' : 'inherit',
                         fontSize: '0.95rem',
                         fontWeight: 600,
-                        cursor: 'pointer',
+                        cursor: hasVoted && !adminMode ? 'not-allowed' : 'pointer',
                         minWidth: '200px',
                         direction: 'rtl',
                       }}
@@ -455,7 +532,7 @@ export default function WorldCupPage() {
                       ))}
                     </select>
 
-                    {hasVoted && (
+                    {hasVoted && adminMode && (
                       <button
                         onClick={() => handleDelete(member.name)}
                         style={{
