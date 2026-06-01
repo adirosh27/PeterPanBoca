@@ -32,6 +32,8 @@ export default function WorldCupPage() {
   const [savingMember, setSavingMember] = useState<string | null>(null);
   const [adminPassword, setAdminPassword] = useState('');
   const adminMode = adminPassword !== '';
+  // The member this device already voted as (one vote per device).
+  const [myVote, setMyVote] = useState<string | null>(null);
 
   useEffect(() => {
     fetchResults();
@@ -42,7 +44,17 @@ export default function WorldCupPage() {
   useEffect(() => {
     const saved = localStorage.getItem('worldcup-admin-pw');
     if (saved) setAdminPassword(saved);
+    const savedVote = localStorage.getItem('worldcup-my-vote');
+    if (savedVote) setMyVote(savedVote);
   }, []);
+
+  // If this device's vote was removed (e.g. by an admin), release the lock.
+  useEffect(() => {
+    if (myVote && votes.length > 0 && !votes.some((v) => v.voterName === myVote)) {
+      setMyVote(null);
+      localStorage.removeItem('worldcup-my-vote');
+    }
+  }, [votes, myVote]);
 
   const enterAdminMode = async () => {
     const input = prompt('הזן סיסמת מנהל:');
@@ -99,6 +111,11 @@ export default function WorldCupPage() {
       });
       const data = await response.json();
       if (data.success) {
+        // Remember this device's own vote (skip when an admin is editing)
+        if (!adminMode) {
+          setMyVote(memberName);
+          localStorage.setItem('worldcup-my-vote', memberName);
+        }
         await fetchResults();
       } else {
         alert(data.message || 'לא ניתן לשמור את הניחוש');
@@ -295,6 +312,24 @@ export default function WorldCupPage() {
             📅 הגמר: {finalDateLabel}
           </div>
         </div>
+
+        {/* This-device already-voted notice */}
+        {myVote && !adminMode && (
+          <div
+            style={{
+              backgroundColor: '#ecfdf5',
+              border: '2px solid #10b981',
+              borderRadius: '12px',
+              padding: '1rem',
+              marginBottom: '1.5rem',
+              textAlign: 'center',
+              color: '#065f46',
+              fontWeight: 700,
+            }}
+          >
+            ✅ הצבעת מהמכשיר הזה בתור <strong>{myVote}</strong>. לא ניתן להצביע עבור חברים אחרים.
+          </div>
+        )}
 
         {/* Title odds */}
         <div
@@ -498,6 +533,9 @@ export default function WorldCupPage() {
               const memberVote = voteMap.get(member.name);
               const hasVoted = !!memberVote;
               const votedTeam = memberVote ? worldCupTeamsByCode[memberVote.teamCode] : undefined;
+              // This device already voted as someone else -> can't vote here
+              const lockedForMe = !adminMode && !!myVote && myVote !== member.name;
+              const disabled = savingMember === member.name || (hasVoted && !adminMode) || lockedForMe;
 
               return (
                 <div
@@ -564,18 +602,18 @@ export default function WorldCupPage() {
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <select
                       value={memberVote?.teamCode || ''}
-                      disabled={savingMember === member.name || (hasVoted && !adminMode)}
+                      disabled={disabled}
                       onChange={(e) => handleVote(member.name, e.target.value)}
                       style={{
                         minHeight: '44px',
                         padding: '0.5rem 0.75rem',
                         borderRadius: '8px',
                         border: hasVoted ? '2px solid #10b981' : '2px solid #e5e7eb',
-                        backgroundColor: hasVoted && !adminMode ? '#f3f4f6' : 'white',
-                        color: hasVoted && !adminMode ? '#6b7280' : 'inherit',
+                        backgroundColor: disabled ? '#f3f4f6' : 'white',
+                        color: disabled ? '#9ca3af' : 'inherit',
                         fontSize: '0.95rem',
                         fontWeight: 600,
-                        cursor: hasVoted && !adminMode ? 'not-allowed' : 'pointer',
+                        cursor: disabled ? 'not-allowed' : 'pointer',
                         minWidth: '200px',
                         direction: 'rtl',
                       }}
