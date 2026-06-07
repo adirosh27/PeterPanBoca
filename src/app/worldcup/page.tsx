@@ -60,6 +60,8 @@ export default function WorldCupPage() {
   const [myVote, setMyVote] = useState<string | null>(null);
   // Live countdown to the opening match (null until mounted, to avoid SSR hydration mismatch).
   const [countdown, setCountdown] = useState<Countdown | null>(null);
+  // The member whose row should play the flip+glow animation right after voting.
+  const [justVoted, setJustVoted] = useState<string | null>(null);
 
   useEffect(() => {
     setCountdown(getCountdown());
@@ -149,6 +151,9 @@ export default function WorldCupPage() {
           localStorage.setItem('worldcup-my-vote', memberName);
         }
         await fetchResults();
+        // Trigger the celebratory flip+glow on this member's row.
+        setJustVoted(memberName);
+        setTimeout(() => setJustVoted((m) => (m === memberName ? null : m)), 1000);
       } else {
         alert(data.message || 'לא ניתן לשמור את הניחוש');
         setError(data.message || 'לא ניתן לשמור את הניחוש');
@@ -219,6 +224,16 @@ export default function WorldCupPage() {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
+        }
+        @keyframes flagPop {
+          0% { transform: scale(0); opacity: 0; }
+          70% { transform: scale(1.25); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes voteFlip {
+          0% { transform: perspective(900px) rotateY(0deg); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+          50% { box-shadow: 0 0 28px 6px rgba(16, 185, 129, 0.55); }
+          100% { transform: perspective(900px) rotateY(360deg); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
         @media (min-width: 640px) {
           .wc-container { padding: 2rem !important; }
@@ -580,6 +595,7 @@ export default function WorldCupPage() {
                     gap: '0.75rem',
                     flexWrap: 'wrap',
                     transition: 'all 0.3s ease',
+                    animation: justVoted === member.name ? 'voteFlip 0.9s ease-in-out' : undefined,
                   }}
                 >
                   <div
@@ -607,6 +623,20 @@ export default function WorldCupPage() {
                     >
                       {member.icon}
                     </div>
+                    {hasVoted && votedTeam && (
+                      <div
+                        title={votedTeam.nameHe}
+                        style={{
+                          fontSize: '2.4rem',
+                          lineHeight: 1,
+                          flexShrink: 0,
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+                          animation: 'flagPop 0.4s ease-out',
+                        }}
+                      >
+                        {votedTeam.flag}
+                      </div>
+                    )}
                     <div>
                       <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>{member.name}</div>
                       <div
