@@ -654,9 +654,6 @@ export default function CalendarPage() {
             <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
               <div><strong>📅 תאריך:</strong> {new Date(selectedEvent.date).toLocaleDateString('he-IL')}</div>
               <div><strong>⏰ שעה:</strong> {selectedEvent.time}</div>
-              <div><strong>📍 מקום:</strong> {selectedEvent.location}</div>
-              <div><strong>👶 גילאים:</strong> {selectedEvent.ageGroup}</div>
-              <div><strong>💰 מחיר:</strong> {selectedEvent.price}</div>
             </div>
           </div>
         </div>
