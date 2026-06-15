@@ -528,7 +528,7 @@ export default function WorldCupPage() {
                     <div style={{ width: '1.5rem', fontWeight: 'bold', color: '#6b7280', textAlign: 'center' }}>
                       {index + 1}
                     </div>
-                    <div style={{ fontSize: '1.5rem' }}>{entry.team.flag}</div>
+                    <div className="flag-emoji" style={{ fontSize: '1.5rem' }}>{entry.team.flag}</div>
                     <div style={{ minWidth: '110px', fontWeight: 600 }}>{entry.team.nameHe}</div>
                     <div
                       style={{
@@ -625,6 +625,7 @@ export default function WorldCupPage() {
                     </div>
                     {hasVoted && votedTeam && (
                       <div
+                        className="flag-emoji"
                         title={votedTeam.nameHe}
                         style={{
                           fontSize: '2.4rem',
@@ -652,9 +653,15 @@ export default function WorldCupPage() {
                           border: hasVoted ? '1px solid #10b981' : '1px solid #f59e0b',
                         }}
                       >
-                        {hasVoted && votedTeam
-                          ? `${adminMode ? '' : '🔒 '}${votedTeam.flag} ${votedTeam.nameHe}`
-                          : '⏳ טרם ניחש'}
+                        {hasVoted && votedTeam ? (
+                          <>
+                            {adminMode ? '' : '🔒 '}
+                            <span className="flag-emoji">{votedTeam.flag}</span>{' '}
+                            {votedTeam.nameHe}
+                          </>
+                        ) : (
+                          '⏳ טרם ניחש'
+                        )}
                       </div>
                     </div>
                   </div>

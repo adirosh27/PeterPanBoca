@@ -56,6 +56,8 @@ export default function RootLayout({
         <link rel="icon" href="/images/PP_Logo.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/images/PP_Logo.png" />
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Pirata+One&family=Fredoka+One:wght@400&family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        {/* Noto Color Emoji includes flag glyphs, which Windows desktop fonts lack. */}
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet" />
       </head>
       <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <PasswordGate>

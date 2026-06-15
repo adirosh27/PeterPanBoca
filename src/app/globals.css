@@ -13,10 +13,17 @@
   html {
     font-family: var(--font-body);
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
   }
+}
+
+/* Force flag emoji to use a font that actually has flag glyphs. Windows desktop
+   emoji fonts lack flags and render the two regional-indicator letters instead
+   (e.g. "BR"), so we list Noto Color Emoji first for flag elements. */
+.flag-emoji {
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
 }
 
 @layer components {
