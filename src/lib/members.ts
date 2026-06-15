@@ -14,7 +14,7 @@ export const teamMembers = [
   { name: 'רם אלמוג', role: 'מנהל ייצור', icon: '⚙️', color: '#ef4444' },
   { name: 'רועי וגנר', role: 'צלם ראשי', icon: '📸', color: '#06b6d4' },
   { name: 'רון דיקסון', role: 'מוביל קבוצה', icon: '👥', color: '#84cc16' },
-  { name: 'שגיא שנון', role: 'מאפר ראשי', icon: '🎨', color: '#f59e0b' },
+  { name: 'אורי פייגין', role: 'מאפר ראשי', icon: '🎨', color: '#f59e0b' },
   { name: 'סהר אביאני', role: 'מעצבת שיער', icon: '💇‍♀️', color: '#ec4899' },
   { name: 'ספי בר', role: 'רכז בטיחות', icon: '🛡️', color: '#10b981' },
   { name: 'שלום מולדבסקי', role: 'מנהל לוגיסטיקה', icon: '🚛', color: '#8b5cf6' },
