@@ -868,30 +868,6 @@ export default function CalendarPage() {
                 ))}
               </div>
 
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedEvent.location)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.6rem',
-                  padding: '0.9rem 1.1rem',
-                  borderRadius: '14px',
-                  background: `${typeColors[selectedEvent.type]}0f`,
-                  border: `1px solid ${typeColors[selectedEvent.type]}33`,
-                  textDecoration: 'none',
-                  color: '#1f2937',
-                  marginBottom: '1.25rem',
-                  transition: 'background 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = `${typeColors[selectedEvent.type]}22`}
-                onMouseLeave={(e) => e.currentTarget.style.background = `${typeColors[selectedEvent.type]}0f`}
-              >
-                <span style={{ fontSize: '1.1rem' }}>📍</span>
-                <span style={{ fontWeight: 500 }}>{selectedEvent.location}</span>
-              </a>
-
               {selectedEvent.spotsLeft <= 10 && (
                 <div style={{
                   textAlign: 'center',
