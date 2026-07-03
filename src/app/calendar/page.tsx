@@ -131,7 +131,7 @@ const events: Event[] = [
     date: '2024-01-22',
     title: 'נשף הפיות הקסום',
     description: 'ערב קסום עם טינקר בל! יצירת אבק פיות, מסיבת תחפושות והרבה קסמים.',
-    time: '17:00-19:00', 
+    time: '17:00-19:00',
     location: 'אולם האירועים המרכזי',
     type: 'fairy',
     price: '$40',
@@ -198,11 +198,35 @@ const events: Event[] = [
     ageGroup: 'כל המשפחה',
     spotsLeft: 50
   },
+  {
+    id: 8,
+    date: '2026-07-19',
+    title: '🏆 גמר מונדיאל 2026™',
+    description: 'צפייה משותפת בגמר FIFA World Cup 2026™! בואו לחגוג את הרגע הגדול ביותר בכדורגל העולמי יחד עם כל הקהילה.',
+    time: '15:00',
+    location: 'Saturnia Clubhouse - 19350 Saturnia Lakes Dr, Boca Raton, FL 33498',
+    type: 'special',
+    price: 'חינם',
+    ageGroup: 'כל המשפחה',
+    spotsLeft: 50
+  },
+  {
+    id: 9,
+    date: '2026-07-30',
+    title: '📋 מפגש דיון חצי שנתי',
+    description: 'מפגש דיון חצי שנתי להתנהלות ותקנון הקבוצה.',
+    time: '20:00',
+    location: 'Boca Falls Club House',
+    type: 'special',
+    price: 'חינם',
+    ageGroup: 'כל המשפחה',
+    spotsLeft: 50
+  },
 ];
 
 const typeColors = {
   pirate: '#dc2626',
-  fairy: '#a855f7', 
+  fairy: '#a855f7',
   adventure: '#10b981',
   special: '#f59e0b'
 };
@@ -214,6 +238,31 @@ const typeIcons = {
   special: '👑'
 };
 
+const typeLabels = {
+  pirate: 'הרפתקאות פיראטים',
+  fairy: 'קסמי פיות',
+  adventure: 'הרפתקאות כלליות',
+  special: 'אירועים מיוחדים'
+};
+
+// Rich two-tone gradients used for the event modal's hero banner
+const typeGradients: Record<Event['type'], string> = {
+  pirate: 'linear-gradient(135deg, #f87171 0%, #dc2626 45%, #7c2d12 100%)',
+  fairy: 'linear-gradient(135deg, #e9d5ff 0%, #a855f7 50%, #6d28d9 100%)',
+  adventure: 'linear-gradient(135deg, #6ee7b7 0%, #10b981 50%, #047857 100%)',
+  special: 'linear-gradient(135deg, #fde68a 0%, #f59e0b 50%, #b45309 100%)'
+};
+
+// Floating decorative emoji scattered across the hero banner, per event type
+const typeDecor: Record<Event['type'], string[]> = {
+  pirate: ['🏴‍☠️', '⚓', '💀', '🗺️'],
+  fairy: ['🧚‍♀️', '✨', '🌟', '🦋'],
+  adventure: ['⭐', '🧭', '🗺️', '🌟'],
+  special: ['👑', '🎉', '✨', '🎊']
+};
+
+const SPARKLES = ['✨', '⭐', '🌟', '💫'];
+
 export default function CalendarPage() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -224,7 +273,7 @@ export default function CalendarPage() {
     const today = new Date();
     const todayMonth = today.getMonth() + 1;
     const todayDay = today.getDate();
-    const birthdaysToday = birthdays.filter(birthday => 
+    const birthdaysToday = birthdays.filter(birthday =>
       birthday.month === todayMonth && birthday.day === todayDay
     );
     return birthdaysToday.map(birthday => ({
@@ -249,9 +298,9 @@ export default function CalendarPage() {
     const dateString = date.toISOString().split('T')[0];
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    
+
     // Get birthdays for this date
-    const birthdaysToday = birthdays.filter(birthday => 
+    const birthdaysToday = birthdays.filter(birthday =>
       birthday.month === month && birthday.day === day
     ).map(birthday => ({
       date: dateString,
@@ -259,10 +308,10 @@ export default function CalendarPage() {
       emoji: '🎂',
       color: '#ec4899'
     }));
-    
+
     // Get regular holidays
     const regularHolidays = holidays.filter(holiday => holiday.date === dateString);
-    
+
     return [...regularHolidays, ...birthdaysToday];
   };
 
@@ -278,58 +327,72 @@ export default function CalendarPage() {
     const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
     const firstDay = getFirstDayOfMonth(selectedMonth, selectedYear);
     const days = [];
-    
+
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} />);
     }
-    
+
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(selectedYear, selectedMonth, day);
       const dayEvents = getEventsForDate(date);
       const dayHolidays = getHolidaysForDate(date);
       const isToday = date.toDateString() === new Date().toDateString();
-      
+
       days.push(
         <div
           key={day}
           style={{
-            minHeight: 'clamp(60px, 15vw, 80px)',
-            padding: 'clamp(0.25rem, 1vw, 0.5rem)',
-            border: '1px solid #e5e7eb',
-            backgroundColor: isToday ? '#fef3c7' : '#ffffff',
-            borderRadius: '8px',
+            minHeight: 'clamp(60px, 15vw, 84px)',
+            padding: 'clamp(0.35rem, 1.2vw, 0.6rem)',
+            border: isToday ? '2px solid #f59e0b' : '1px solid rgba(16, 185, 129, 0.15)',
+            backgroundColor: isToday ? 'rgba(254, 243, 199, 0.85)' : 'rgba(255, 255, 255, 0.75)',
+            borderRadius: '12px',
             cursor: dayEvents.length > 0 ? 'pointer' : 'default',
-            transition: 'all 0.3s'
+            transition: 'all 0.25s ease',
+            boxShadow: isToday ? '0 0 0 3px rgba(245, 158, 11, 0.15)' : 'none'
           }}
           onMouseEnter={(e) => {
             if (dayEvents.length > 0) {
-              e.currentTarget.style.backgroundColor = '#f0fdf4';
-              e.currentTarget.style.transform = 'scale(1.02)';
+              e.currentTarget.style.backgroundColor = 'rgba(240, 253, 244, 0.95)';
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.25)';
             }
           }}
           onMouseLeave={(e) => {
             if (dayEvents.length > 0) {
-              e.currentTarget.style.backgroundColor = isToday ? '#fef3c7' : '#ffffff';
-              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.backgroundColor = isToday ? 'rgba(254, 243, 199, 0.85)' : 'rgba(255, 255, 255, 0.75)';
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = isToday ? '0 0 0 3px rgba(245, 158, 11, 0.15)' : 'none';
             }
           }}
         >
-          <div style={{ 
-            fontWeight: isToday ? 'bold' : 'normal',
-            color: isToday ? '#92400e' : '#374151',
-            marginBottom: '0.25rem',
+          <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.25rem'
+            gap: '0.3rem',
+            marginBottom: '0.25rem'
           }}>
-            {day}
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: isToday ? 'clamp(1.3rem, 4vw, 1.6rem)' : 'auto',
+              height: isToday ? 'clamp(1.3rem, 4vw, 1.6rem)' : 'auto',
+              borderRadius: '50%',
+              background: isToday ? 'linear-gradient(135deg, #f59e0b, #fbbf24)' : 'transparent',
+              color: isToday ? 'white' : '#374151',
+              fontWeight: isToday ? 'bold' : 'normal',
+              fontSize: 'clamp(0.8rem, 2.5vw, 0.95rem)'
+            }}>
+              {day}
+            </span>
             {dayHolidays.map(holiday => (
               <span
                 key={holiday.name}
                 style={{
-                  fontSize: '0.8rem',
+                  fontSize: '0.75rem',
                   color: holiday.color
                 }}
                 title={holiday.name}
@@ -343,23 +406,28 @@ export default function CalendarPage() {
               key={event.id}
               onClick={() => setSelectedEvent(event)}
               style={{
-                fontSize: 'clamp(0.6rem, 2vw, 0.75rem)',
-                padding: 'clamp(1px, 0.5vw, 2px) clamp(2px, 1vw, 4px)',
-                borderRadius: '4px',
-                backgroundColor: typeColors[event.type],
+                fontSize: 'clamp(0.6rem, 2vw, 0.72rem)',
+                padding: 'clamp(2px, 0.6vw, 3px) clamp(5px, 1.2vw, 7px)',
+                borderRadius: '999px',
+                background: `linear-gradient(135deg, ${typeColors[event.type]}, ${typeColors[event.type]}cc)`,
                 color: 'white',
-                marginBottom: '2px',
-                cursor: 'pointer'
+                marginBottom: '3px',
+                cursor: 'pointer',
+                boxShadow: `0 2px 6px ${typeColors[event.type]}55`,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}
             >
-              {typeIcons[event.type]} {event.title.substring(0, 15)}...
+              {typeIcons[event.type]} {event.title.length > 14 ? `${event.title.substring(0, 14)}…` : event.title}
             </div>
           ))}
           {dayHolidays.length > 0 && (
             <div style={{
-              fontSize: '0.7rem',
-              color: '#666',
-              marginTop: '0.25rem'
+              fontSize: '0.65rem',
+              color: '#6b7280',
+              marginTop: '0.2rem',
+              fontStyle: 'italic'
             }}>
               {dayHolidays.map(holiday => holiday.name).join(', ')}
             </div>
@@ -367,13 +435,15 @@ export default function CalendarPage() {
         </div>
       );
     }
-    
+
     return days;
   };
 
   return (
-    <div style={{ 
+    <div style={{
       minHeight: '100vh',
+      position: 'relative',
+      overflow: 'hidden',
       background: 'linear-gradient(135deg, #a7f3d0 0%, #fef3c7 25%, #bbf7d0 50%, #fde68a 75%, #86efac 100%)',
       backgroundSize: '400% 400%',
       animation: 'gradientShift 15s ease infinite',
@@ -385,7 +455,7 @@ export default function CalendarPage() {
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
-        
+
         @keyframes textShimmer {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -397,9 +467,46 @@ export default function CalendarPage() {
           40% { transform: translateY(-10px); }
           60% { transform: translateY(-5px); }
         }
+
+        @keyframes sparkleDrift {
+          0% { transform: translateY(0) rotate(0deg); opacity: 0.35; }
+          50% { transform: translateY(-18px) rotate(15deg); opacity: 0.7; }
+          100% { transform: translateY(0) rotate(0deg); opacity: 0.35; }
+        }
+
+        @keyframes modalPopIn {
+          0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes heroFloat {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-6px) scale(1.05); }
+        }
       `}</style>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      {/* Ambient floating sparkles */}
+      {[...Array(10)].map((_, i) => (
+        <span
+          key={`sparkle-${i}`}
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: `${(i * 37) % 100}%`,
+            left: `${(i * 53) % 100}%`,
+            fontSize: 'clamp(1rem, 2vw, 1.5rem)',
+            opacity: 0.4,
+            pointerEvents: 'none',
+            animation: `sparkleDrift ${4 + (i % 5)}s ease-in-out infinite`,
+            animationDelay: `${i * 0.4}s`,
+            zIndex: 0
+          }}
+        >
+          {SPARKLES[i % SPARKLES.length]}
+        </span>
+      ))}
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Birthday Notification */}
         {todaysBirthdays.length > 0 && (
           <div style={{
@@ -423,9 +530,9 @@ export default function CalendarPage() {
             {todaysBirthdays.map((birthday, index) => {
               const displayName = birthday.name.replace('יום הולדת ', '');
               return (
-                <div key={`birthday-${index}`} style={{ 
-                  fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', 
-                  marginBottom: index < todaysBirthdays.length - 1 ? '0.25rem' : '0' 
+                <div key={`birthday-${index}`} style={{
+                  fontSize: 'clamp(0.7rem, 2vw, 0.9rem)',
+                  marginBottom: index < todaysBirthdays.length - 1 ? '0.25rem' : '0'
                 }}>
                   {displayName}
                 </div>
@@ -436,11 +543,12 @@ export default function CalendarPage() {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div style={{ fontSize: '4rem', marginBottom: '2rem', animation: 'bounce 2s infinite' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '1rem', animation: 'bounce 2s infinite' }}>
+            ✨ 📅 ✨
           </div>
-          <h1 style={{ 
-            fontSize: 'clamp(2.5rem, 6vw, 4rem)', 
-            fontWeight: 'bold', 
+          <h1 style={{
+            fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+            fontWeight: 'bold',
             marginBottom: '1.5rem',
             background: 'linear-gradient(45deg, #10b981, #fbbf24, #34d399, #f59e0b, #22d3ee)',
             backgroundClip: 'text',
@@ -449,25 +557,29 @@ export default function CalendarPage() {
             backgroundSize: '300% 300%',
             animation: 'textShimmer 3s ease-in-out infinite'
           }}>
-            📅 לוח האירועים הקסום
+            לוח האירועים הקסום
           </h1>
-          <p style={{ fontSize: '1.3rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
+          <p style={{ fontSize: '1.3rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6', color: '#374151' }}>
             גלו את כל האירועים המיוחדים שלנו והזמינו את המקום שלכם בהרפתקאות הקסומות
           </p>
         </div>
 
         {/* Calendar Navigation */}
-        <div 
+        <div
           data-card
           style={{
-            borderRadius: '20px',
+            borderRadius: '24px',
             padding: 'clamp(1.5rem, 4vw, 2rem)',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            background: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(10px)',
+            border: '2px solid rgba(16, 185, 129, 0.2)',
+            boxShadow: '0 10px 30px rgba(16, 185, 129, 0.12)'
           }}
         >
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
             marginBottom: '2rem'
           }}>
@@ -489,16 +601,17 @@ export default function CalendarPage() {
                 height: '50px',
                 fontSize: '1.5rem',
                 cursor: 'pointer',
-                transition: 'all 0.3s'
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)'
               }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
               ←
             </button>
-            
-            <h2 style={{ 
-              fontSize: '2rem', 
+
+            <h2 style={{
+              fontSize: '2rem',
               fontWeight: 'bold',
               background: 'linear-gradient(45deg, #10b981, #fbbf24)',
               backgroundClip: 'text',
@@ -507,7 +620,7 @@ export default function CalendarPage() {
             }}>
               {months[selectedMonth]} {selectedYear}
             </h2>
-            
+
             <button
               onClick={() => {
                 if (selectedMonth === 11) {
@@ -526,7 +639,8 @@ export default function CalendarPage() {
                 height: '50px',
                 fontSize: '1.5rem',
                 cursor: 'pointer',
-                transition: 'all 0.3s'
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)'
               }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -536,19 +650,20 @@ export default function CalendarPage() {
           </div>
 
           {/* Days of week header */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(7, 1fr)', 
-            gap: '1px',
-            marginBottom: '1rem'
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: '4px',
+            marginBottom: '0.75rem'
           }}>
             {['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'].map(day => (
-              <div key={day} style={{ 
-                textAlign: 'center', 
+              <div key={day} style={{
+                textAlign: 'center',
                 fontWeight: 'bold',
-                padding: '1rem',
-                background: '#f3f4f6',
-                borderRadius: '8px'
+                padding: '0.75rem',
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(251, 191, 36, 0.12))',
+                borderRadius: '10px',
+                color: '#059669'
               }}>
                 {day}
               </div>
@@ -556,43 +671,50 @@ export default function CalendarPage() {
           </div>
 
           {/* Calendar grid */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(7, 1fr)', 
-            gap: '1px'
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: '6px'
           }}>
             {renderCalendar()}
           </div>
         </div>
 
         {/* Event Types Legend */}
-        <div 
+        <div
           data-card
           style={{
-            borderRadius: '20px',
+            borderRadius: '24px',
             padding: 'clamp(1.5rem, 4vw, 2rem)',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            background: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(10px)',
+            border: '2px solid rgba(16, 185, 129, 0.2)',
+            boxShadow: '0 10px 30px rgba(16, 185, 129, 0.12)'
           }}
         >
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.25rem', textAlign: 'center', color: '#374151' }}>
             סוגי אירועים
           </h3>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
-            {Object.entries(typeColors).map(([type, color]) => (
-              <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ 
-                  width: '20px', 
-                  height: '20px', 
-                  backgroundColor: color,
-                  borderRadius: '4px'
-                }} />
-                <span>{typeIcons[type as keyof typeof typeIcons]}</span>
-                <span>
-                  {type === 'pirate' && 'הרפתקאות פיראטים'}
-                  {type === 'fairy' && 'קסמי פיות'}
-                  {type === 'adventure' && 'הרפתקאות כלליות'}
-                  {type === 'special' && 'אירועים מיוחדים'}
-                </span>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            {(Object.keys(typeColors) as Array<keyof typeof typeColors>).map((type) => (
+              <div
+                key={type}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.6rem 1.1rem',
+                  borderRadius: '999px',
+                  background: `${typeColors[type]}14`,
+                  border: `1.5px solid ${typeColors[type]}44`,
+                  transition: 'transform 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <span style={{ fontSize: '1.1rem' }}>{typeIcons[type]}</span>
+                <span style={{ color: '#374151', fontWeight: 500 }}>{typeLabels[type]}</span>
               </div>
             ))}
           </div>
@@ -608,52 +730,182 @@ export default function CalendarPage() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backgroundColor: 'rgba(15, 23, 42, 0.65)',
+          backdropFilter: 'blur(6px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '2rem'
+          padding: '1.5rem'
         }}
         onClick={() => setSelectedEvent(null)}
         >
           <div
-            data-card
             style={{
-              borderRadius: '20px',
-              padding: '2rem',
-              maxWidth: '600px',
+              borderRadius: '24px',
+              maxWidth: '560px',
               width: '100%',
-              maxHeight: '80vh',
-              overflowY: 'auto'
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              background: 'rgba(255, 255, 255, 0.97)',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.35)',
+              animation: 'modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', color: typeColors[selectedEvent.type], margin: 0 }}>
-                {typeIcons[selectedEvent.type]} {selectedEvent.title}
-              </h3>
+            {/* Hero banner */}
+            <div style={{
+              position: 'relative',
+              height: 'clamp(150px, 30vw, 210px)',
+              background: typeGradients[selectedEvent.type],
+              borderRadius: '24px 24px 0 0',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              {/* Scattered decorative emoji */}
+              {typeDecor[selectedEvent.type].map((emoji, i) => (
+                <span
+                  key={i}
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    top: `${[15, 65, 20, 70][i % 4]}%`,
+                    left: `${[10, 15, 85, 80][i % 4]}%`,
+                    fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
+                    opacity: 0.5,
+                    animation: `sparkleDrift ${3 + i}s ease-in-out infinite`,
+                    animationDelay: `${i * 0.3}s`
+                  }}
+                >
+                  {emoji}
+                </span>
+              ))}
+
+              {/* Big centered type icon */}
+              <span style={{
+                fontSize: 'clamp(3.5rem, 9vw, 5rem)',
+                filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.25))',
+                animation: 'heroFloat 3s ease-in-out infinite'
+              }}>
+                {typeIcons[selectedEvent.type]}
+              </span>
+
+              {/* Close button */}
               <button
                 onClick={() => setSelectedEvent(null)}
+                aria-label="סגור"
                 style={{
-                  background: 'none',
+                  position: 'absolute',
+                  top: '0.9rem',
+                  insetInlineEnd: '0.9rem',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
                   border: 'none',
-                  fontSize: '1.5rem',
+                  background: 'rgba(255, 255, 255, 0.85)',
+                  fontSize: '1.1rem',
                   cursor: 'pointer',
-                  color: '#666'
+                  color: '#374151',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.25)'
                 }}
               >
                 ✕
               </button>
+
+              {/* Title scrim */}
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: '2.5rem 1.5rem 1rem',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.65), transparent)'
+              }}>
+                <h3 style={{
+                  fontSize: 'clamp(1.3rem, 4vw, 1.7rem)',
+                  fontWeight: 'bold',
+                  color: 'white',
+                  margin: 0,
+                  textShadow: '0 2px 6px rgba(0,0,0,0.4)'
+                }}>
+                  {selectedEvent.title}
+                </h3>
+              </div>
             </div>
-            
-            <p style={{ fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '2rem' }}>
-              {selectedEvent.description}
-            </p>
-            
-            <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
-              <div><strong>📅 תאריך:</strong> {new Date(selectedEvent.date).toLocaleDateString('he-IL')}</div>
-              <div><strong>⏰ שעה:</strong> {selectedEvent.time}</div>
+
+            {/* Content */}
+            <div style={{ padding: 'clamp(1.25rem, 4vw, 2rem)' }}>
+              <p style={{ fontSize: '1.05rem', lineHeight: '1.7', color: '#374151', marginBottom: '1.5rem', borderInlineStart: `3px solid ${typeColors[selectedEvent.type]}`, paddingInlineStart: '0.9rem' }}>
+                {selectedEvent.description}
+              </p>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                gap: '0.75rem',
+                marginBottom: '1.5rem'
+              }}>
+                {[
+                  { icon: '📅', label: 'תאריך', value: new Date(selectedEvent.date + 'T12:00:00').toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' }) },
+                  { icon: '⏰', label: 'שעה', value: selectedEvent.time },
+                  { icon: '💰', label: 'מחיר', value: selectedEvent.price },
+                  { icon: '👨‍👩‍👧‍👦', label: 'גילאים', value: selectedEvent.ageGroup },
+                ].map((item) => (
+                  <div key={item.label} style={{
+                    background: `${typeColors[selectedEvent.type]}0f`,
+                    border: `1px solid ${typeColors[selectedEvent.type]}33`,
+                    borderRadius: '14px',
+                    padding: '0.85rem 1rem'
+                  }}>
+                    <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '0.25rem' }}>
+                      {item.icon} {item.label}
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#1f2937', fontSize: '0.95rem' }}>
+                      {item.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedEvent.location)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.6rem',
+                  padding: '0.9rem 1.1rem',
+                  borderRadius: '14px',
+                  background: `${typeColors[selectedEvent.type]}0f`,
+                  border: `1px solid ${typeColors[selectedEvent.type]}33`,
+                  textDecoration: 'none',
+                  color: '#1f2937',
+                  marginBottom: '1.25rem',
+                  transition: 'background 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = `${typeColors[selectedEvent.type]}22`}
+                onMouseLeave={(e) => e.currentTarget.style.background = `${typeColors[selectedEvent.type]}0f`}
+              >
+                <span style={{ fontSize: '1.1rem' }}>📍</span>
+                <span style={{ fontWeight: 500 }}>{selectedEvent.location}</span>
+              </a>
+
+              {selectedEvent.spotsLeft <= 10 && (
+                <div style={{
+                  textAlign: 'center',
+                  padding: '0.7rem',
+                  borderRadius: '999px',
+                  background: 'linear-gradient(135deg, #fca5a5, #f87171)',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '0.9rem'
+                }}>
+                  🔥 נשארו רק {selectedEvent.spotsLeft} מקומות!
+                </div>
+              )}
             </div>
           </div>
         </div>
