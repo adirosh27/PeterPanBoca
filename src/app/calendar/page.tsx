@@ -851,7 +851,6 @@ export default function CalendarPage() {
                   { icon: '📅', label: 'תאריך', value: new Date(selectedEvent.date + 'T12:00:00').toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' }) },
                   { icon: '⏰', label: 'שעה', value: selectedEvent.time },
                   { icon: '💰', label: 'מחיר', value: selectedEvent.price },
-                  { icon: '👨‍👩‍👧‍👦', label: 'גילאים', value: selectedEvent.ageGroup },
                 ].map((item) => (
                   <div key={item.label} style={{
                     background: `${typeColors[selectedEvent.type]}0f`,
