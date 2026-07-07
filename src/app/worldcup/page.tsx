@@ -528,8 +528,15 @@ export default function WorldCupPage() {
                     <div style={{ width: '1.5rem', fontWeight: 'bold', color: '#6b7280', textAlign: 'center' }}>
                       {index + 1}
                     </div>
-                    <div className="flag-emoji" style={{ fontSize: '1.5rem' }}>{entry.team.flag}</div>
-                    <div style={{ minWidth: '110px', fontWeight: 600 }}>{entry.team.nameHe}</div>
+                    <div className="flag-emoji" style={{ fontSize: '1.5rem', opacity: entry.team.eliminated ? 0.5 : 1 }}>{entry.team.flag}</div>
+                    <div style={{ minWidth: '110px', fontWeight: 600, color: entry.team.eliminated ? '#9ca3af' : 'inherit' }}>
+                      {entry.team.nameHe}
+                      {entry.team.eliminated && (
+                        <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: '#ef4444', marginInlineStart: '0.35rem' }}>
+                          ❌ הודחה
+                        </span>
+                      )}
+                    </div>
                     <div
                       style={{
                         flex: 1,
@@ -543,7 +550,9 @@ export default function WorldCupPage() {
                         style={{
                           width: `${pct}%`,
                           height: '100%',
-                          background: 'linear-gradient(90deg, #10b981, #34d399)',
+                          background: entry.team.eliminated
+                            ? 'linear-gradient(90deg, #d1d5db, #9ca3af)'
+                            : 'linear-gradient(90deg, #10b981, #34d399)',
                           transition: 'width 0.5s ease',
                         }}
                       />
@@ -648,9 +657,9 @@ export default function WorldCupPage() {
                           padding: '0.15rem 0.5rem',
                           borderRadius: '12px',
                           marginTop: '0.25rem',
-                          backgroundColor: hasVoted ? '#d1fae5' : '#fef3c7',
-                          color: hasVoted ? '#065f46' : '#92400e',
-                          border: hasVoted ? '1px solid #10b981' : '1px solid #f59e0b',
+                          backgroundColor: hasVoted ? (votedTeam?.eliminated ? '#fee2e2' : '#d1fae5') : '#fef3c7',
+                          color: hasVoted ? (votedTeam?.eliminated ? '#991b1b' : '#065f46') : '#92400e',
+                          border: hasVoted ? `1px solid ${votedTeam?.eliminated ? '#ef4444' : '#10b981'}` : '1px solid #f59e0b',
                         }}
                       >
                         {hasVoted && votedTeam ? (
@@ -658,6 +667,7 @@ export default function WorldCupPage() {
                             {adminMode ? '' : '🔒 '}
                             <span className="flag-emoji">{votedTeam.flag}</span>{' '}
                             {votedTeam.nameHe}
+                            {votedTeam.eliminated && ' — הודחה ❌'}
                           </>
                         ) : (
                           '⏳ טרם ניחש'
@@ -693,8 +703,12 @@ export default function WorldCupPage() {
                           {worldCupTeams
                             .filter((t) => t.confederation === conf)
                             .map((team) => (
-                              <option key={team.code} value={team.code}>
-                                {team.flag} {team.nameHe} ({formatWinChance(team.winChance)})
+                              <option
+                                key={team.code}
+                                value={team.code}
+                                disabled={team.eliminated && memberVote?.teamCode !== team.code}
+                              >
+                                {team.flag} {team.nameHe} {team.eliminated ? '(❌ הודחה)' : `(${formatWinChance(team.winChance)})`}
                               </option>
                             ))}
                         </optgroup>
