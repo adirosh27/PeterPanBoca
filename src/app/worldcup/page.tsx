@@ -529,11 +529,15 @@ export default function WorldCupPage() {
                       {index + 1}
                     </div>
                     <div className="flag-emoji" style={{ fontSize: '1.5rem', opacity: entry.team.eliminated ? 0.5 : 1 }}>{entry.team.flag}</div>
-                    <div style={{ minWidth: '110px', fontWeight: 600, color: entry.team.eliminated ? '#9ca3af' : 'inherit' }}>
+                    <div style={{ minWidth: '150px', fontWeight: 600, color: entry.team.eliminated ? '#9ca3af' : 'inherit' }}>
                       {entry.team.nameHe}
-                      {entry.team.eliminated && (
+                      {entry.team.eliminated ? (
                         <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: '#ef4444', marginInlineStart: '0.35rem' }}>
                           ❌ הודחה
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#f59e0b', marginInlineStart: '0.35rem' }}>
+                          🏆 {formatWinChance(entry.team.winChance)}
                         </span>
                       )}
                     </div>
