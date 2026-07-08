@@ -58,10 +58,10 @@ export const worldCupTeams: WorldCupTeam[] = [
   { code: 'PAN', name: 'Panama', nameHe: 'פנמה', flag: '🇵🇦', confederation: 'CONCACAF', winChance: 0, eliminated: true },
   { code: 'USA', name: 'United States', nameHe: 'ארצות הברית', flag: '🇺🇸', confederation: 'CONCACAF', winChance: 0, eliminated: true },
 
-  // CONMEBOL (6) - Argentina and Colombia still alive
-  { code: 'ARG', name: 'Argentina', nameHe: 'ארגנטינה', flag: '🇦🇷', confederation: 'CONMEBOL', winChance: 18.1 },
+  // CONMEBOL (6) - only Argentina still alive (Colombia lost in the Round of 16)
+  { code: 'ARG', name: 'Argentina', nameHe: 'ארגנטינה', flag: '🇦🇷', confederation: 'CONMEBOL', winChance: 18.6 },
   { code: 'BRA', name: 'Brazil', nameHe: 'ברזיל', flag: '🇧🇷', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
-  { code: 'COL', name: 'Colombia', nameHe: 'קולומביה', flag: '🇨🇴', confederation: 'CONMEBOL', winChance: 2.5 },
+  { code: 'COL', name: 'Colombia', nameHe: 'קולומביה', flag: '🇨🇴', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
   { code: 'ECU', name: 'Ecuador', nameHe: 'אקוודור', flag: '🇪🇨', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
   { code: 'PAR', name: 'Paraguay', nameHe: 'פרגוואי', flag: '🇵🇾', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
   { code: 'URU', name: 'Uruguay', nameHe: 'אורוגוואי', flag: '🇺🇾', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
@@ -71,20 +71,20 @@ export const worldCupTeams: WorldCupTeam[] = [
 
   // UEFA (16) - Belgium, England, France, Norway, Spain, Switzerland still alive
   { code: 'AUT', name: 'Austria', nameHe: 'אוסטריה', flag: '🇦🇹', confederation: 'UEFA', winChance: 0, eliminated: true },
-  { code: 'BEL', name: 'Belgium', nameHe: 'בלגיה', flag: '🇧🇪', confederation: 'UEFA', winChance: 4.9 },
+  { code: 'BEL', name: 'Belgium', nameHe: 'בלגיה', flag: '🇧🇪', confederation: 'UEFA', winChance: 5.1 },
   { code: 'BIH', name: 'Bosnia and Herzegovina', nameHe: 'בוסניה והרצגובינה', flag: '🇧🇦', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'CRO', name: 'Croatia', nameHe: 'קרואטיה', flag: '🇭🇷', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'CZE', name: 'Czech Republic', nameHe: "צ'כיה", flag: '🇨🇿', confederation: 'UEFA', winChance: 0, eliminated: true },
-  { code: 'ENG', name: 'England', nameHe: 'אנגליה', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', confederation: 'UEFA', winChance: 19.8 },
-  { code: 'FRA', name: 'France', nameHe: 'צרפת', flag: '🇫🇷', confederation: 'UEFA', winChance: 23.1 },
+  { code: 'ENG', name: 'England', nameHe: 'אנגליה', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', confederation: 'UEFA', winChance: 20.3 },
+  { code: 'FRA', name: 'France', nameHe: 'צרפת', flag: '🇫🇷', confederation: 'UEFA', winChance: 23.6 },
   { code: 'GER', name: 'Germany', nameHe: 'גרמניה', flag: '🇩🇪', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'NED', name: 'Netherlands', nameHe: 'הולנד', flag: '🇳🇱', confederation: 'UEFA', winChance: 0, eliminated: true },
-  { code: 'NOR', name: 'Norway', nameHe: 'נורווגיה', flag: '🇳🇴', confederation: 'UEFA', winChance: 1.1 },
+  { code: 'NOR', name: 'Norway', nameHe: 'נורווגיה', flag: '🇳🇴', confederation: 'UEFA', winChance: 1.2 },
   { code: 'POR', name: 'Portugal', nameHe: 'פורטוגל', flag: '🇵🇹', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'SCO', name: 'Scotland', nameHe: 'סקוטלנד', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', confederation: 'UEFA', winChance: 0, eliminated: true },
-  { code: 'ESP', name: 'Spain', nameHe: 'ספרד', flag: '🇪🇸', confederation: 'UEFA', winChance: 26.4 },
+  { code: 'ESP', name: 'Spain', nameHe: 'ספרד', flag: '🇪🇸', confederation: 'UEFA', winChance: 27.0 },
   { code: 'SWE', name: 'Sweden', nameHe: 'שוודיה', flag: '🇸🇪', confederation: 'UEFA', winChance: 0, eliminated: true },
-  { code: 'SUI', name: 'Switzerland', nameHe: 'שווייץ', flag: '🇨🇭', confederation: 'UEFA', winChance: 1.6 },
+  { code: 'SUI', name: 'Switzerland', nameHe: 'שווייץ', flag: '🇨🇭', confederation: 'UEFA', winChance: 1.7 },
   { code: 'TUR', name: 'Turkey', nameHe: 'טורקיה', flag: '🇹🇷', confederation: 'UEFA', winChance: 0, eliminated: true },
 ];
 
