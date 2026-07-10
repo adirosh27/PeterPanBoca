@@ -21,8 +21,9 @@ interface WorldCupVote {
 
 const emailFor = (memberName: string) => `${memberName}@peterpan.com`;
 
-// Final of the 2026 FIFA World Cup (MetLife Stadium, New Jersey)
+// Final of the 2026 FIFA World Cup (MetLife Stadium, New Jersey), 15:00 ET kickoff
 const FINAL_DATE = '2026-07-19';
+const FINAL_KICKOFF_TIME = new Date('2026-07-19T15:00:00-04:00').getTime();
 // Opening match of the 2026 FIFA World Cup (Estadio Azteca, Mexico City), 20:00 Mexico City time (UTC-6)
 const KICKOFF_TIME = new Date('2026-06-11T20:00:00-06:00').getTime();
 
@@ -34,8 +35,8 @@ interface Countdown {
   started: boolean;
 }
 
-const getCountdown = (): Countdown => {
-  const diff = KICKOFF_TIME - Date.now();
+const getCountdownTo = (targetTime: number): Countdown => {
+  const diff = targetTime - Date.now();
   if (diff <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0, started: true };
   }
@@ -47,6 +48,9 @@ const getCountdown = (): Countdown => {
     started: false,
   };
 };
+
+const getCountdown = (): Countdown => getCountdownTo(KICKOFF_TIME);
+const getFinalCountdown = (): Countdown => getCountdownTo(FINAL_KICKOFF_TIME);
 
 export default function WorldCupPage() {
   const [votes, setVotes] = useState<WorldCupVote[]>([]);
@@ -60,12 +64,18 @@ export default function WorldCupPage() {
   const [myVote, setMyVote] = useState<string | null>(null);
   // Live countdown to the opening match (null until mounted, to avoid SSR hydration mismatch).
   const [countdown, setCountdown] = useState<Countdown | null>(null);
+  // Live countdown to the final, shown once the tournament is underway.
+  const [finalCountdown, setFinalCountdown] = useState<Countdown | null>(null);
   // The member whose row should play the flip+glow animation right after voting.
   const [justVoted, setJustVoted] = useState<string | null>(null);
 
   useEffect(() => {
     setCountdown(getCountdown());
-    const interval = setInterval(() => setCountdown(getCountdown()), 1000);
+    setFinalCountdown(getFinalCountdown());
+    const interval = setInterval(() => {
+      setCountdown(getCountdown());
+      setFinalCountdown(getFinalCountdown());
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -369,11 +379,7 @@ export default function WorldCupPage() {
               color: 'white',
             }}
           >
-            {countdown.started ? (
-              <div style={{ fontSize: '1.4rem', fontWeight: 800 }}>
-                🎉 המונדיאל יצא לדרך! בהצלחה לכולם ⚽
-              </div>
-            ) : (
+            {!countdown.started ? (
               <>
                 <div style={{ fontSize: '1rem', fontWeight: 700, opacity: 0.9, marginBottom: '1rem' }}>
                   ⏳ עד פתיחת מונדיאל 2026 נותרו
@@ -413,6 +419,50 @@ export default function WorldCupPage() {
                   ))}
                 </div>
               </>
+            ) : finalCountdown && !finalCountdown.started ? (
+              <>
+                <div style={{ fontSize: '1rem', fontWeight: 700, opacity: 0.9, marginBottom: '1rem' }}>
+                  🏆 עד הגמר נותרו
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '0.75rem',
+                    flexWrap: 'wrap',
+                    direction: 'ltr',
+                  }}
+                >
+                  {[
+                    { value: finalCountdown.days, label: 'ימים' },
+                    { value: finalCountdown.hours, label: 'שעות' },
+                    { value: finalCountdown.minutes, label: 'דקות' },
+                    { value: finalCountdown.seconds, label: 'שניות' },
+                  ].map((unit) => (
+                    <div
+                      key={unit.label}
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                        borderRadius: '14px',
+                        padding: '0.75rem 0.5rem',
+                        minWidth: '70px',
+                        border: '1px solid rgba(255, 255, 255, 0.25)',
+                      }}
+                    >
+                      <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>
+                        {String(unit.value).padStart(2, '0')}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, opacity: 0.85, marginTop: '0.25rem' }}>
+                        {unit.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div style={{ fontSize: '1.4rem', fontWeight: 800 }}>
+                🎉 גמר המונדיאל כאן! בהצלחה לנבחרות שנשארו ⚽
+              </div>
             )}
           </div>
         )}
