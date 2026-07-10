@@ -238,13 +238,6 @@ const typeIcons = {
   special: '👑'
 };
 
-const typeLabels = {
-  pirate: 'הרפתקאות פיראטים',
-  fairy: 'קסמי פיות',
-  adventure: 'הרפתקאות כלליות',
-  special: 'אירועים מיוחדים'
-};
-
 // Rich two-tone gradients used for the event modal's hero banner
 const typeGradients: Record<Event['type'], string> = {
   pirate: 'linear-gradient(135deg, #f87171 0%, #dc2626 45%, #7c2d12 100%)',
@@ -344,6 +337,7 @@ export default function CalendarPage() {
         <div
           key={day}
           style={{
+            minWidth: 0,
             minHeight: 'clamp(60px, 15vw, 84px)',
             padding: 'clamp(0.35rem, 1.2vw, 0.6rem)',
             border: isToday ? '2px solid #f59e0b' : '1px solid rgba(16, 185, 129, 0.15)',
@@ -416,7 +410,8 @@ export default function CalendarPage() {
                 boxShadow: `0 2px 6px ${typeColors[event.type]}55`,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
-                textOverflow: 'ellipsis'
+                textOverflow: 'ellipsis',
+                maxWidth: '100%'
               }}
             >
               {typeIcons[event.type]} {event.title.length > 14 ? `${event.title.substring(0, 14)}…` : event.title}
@@ -652,7 +647,7 @@ export default function CalendarPage() {
           {/* Days of week header */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(7, 1fr)',
+            gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
             gap: '4px',
             marginBottom: '0.75rem'
           }}>
@@ -673,50 +668,10 @@ export default function CalendarPage() {
           {/* Calendar grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(7, 1fr)',
+            gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
             gap: '6px'
           }}>
             {renderCalendar()}
-          </div>
-        </div>
-
-        {/* Event Types Legend */}
-        <div
-          data-card
-          style={{
-            borderRadius: '24px',
-            padding: 'clamp(1.5rem, 4vw, 2rem)',
-            marginBottom: '2rem',
-            background: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(10px)',
-            border: '2px solid rgba(16, 185, 129, 0.2)',
-            boxShadow: '0 10px 30px rgba(16, 185, 129, 0.12)'
-          }}
-        >
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.25rem', textAlign: 'center', color: '#374151' }}>
-            סוגי אירועים
-          </h3>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            {(Object.keys(typeColors) as Array<keyof typeof typeColors>).map((type) => (
-              <div
-                key={type}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.6rem 1.1rem',
-                  borderRadius: '999px',
-                  background: `${typeColors[type]}14`,
-                  border: `1.5px solid ${typeColors[type]}44`,
-                  transition: 'transform 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                <span style={{ fontSize: '1.1rem' }}>{typeIcons[type]}</span>
-                <span style={{ color: '#374151', fontWeight: 500 }}>{typeLabels[type]}</span>
-              </div>
-            ))}
           </div>
         </div>
 
