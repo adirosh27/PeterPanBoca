@@ -26,6 +26,8 @@ const FINAL_DATE = '2026-07-19';
 const FINAL_KICKOFF_TIME = new Date('2026-07-19T15:00:00-04:00').getTime();
 // Opening match of the 2026 FIFA World Cup (Estadio Azteca, Mexico City), 20:00 Mexico City time (UTC-6)
 const KICKOFF_TIME = new Date('2026-06-11T20:00:00-06:00').getTime();
+// Voting/prediction changes are locked once the field is down to the semifinalists.
+const VOTING_OPEN = false;
 
 interface Countdown {
   days: number;
@@ -467,8 +469,26 @@ export default function WorldCupPage() {
           </div>
         )}
 
+        {/* Voting-closed notice */}
+        {!VOTING_OPEN && !adminMode && (
+          <div
+            style={{
+              backgroundColor: '#fef2f2',
+              border: '2px solid #ef4444',
+              borderRadius: '12px',
+              padding: '1rem',
+              marginBottom: '1.5rem',
+              textAlign: 'center',
+              color: '#991b1b',
+              fontWeight: 700,
+            }}
+          >
+            🔒 ההצבעה נסגרה - נותרו רק 4 נבחרות בתחרות. לא ניתן להוסיף או לשנות ניחושים יותר.
+          </div>
+        )}
+
         {/* This-device already-voted notice */}
-        {myVote && !adminMode && (
+        {VOTING_OPEN && myVote && !adminMode && (
           <div
             style={{
               backgroundColor: '#ecfdf5',
@@ -643,7 +663,7 @@ export default function WorldCupPage() {
               const votedTeam = memberVote ? worldCupTeamsByCode[memberVote.teamCode] : undefined;
               // This device already voted as someone else -> can't vote here
               const lockedForMe = !adminMode && !!myVote && myVote !== member.name;
-              const disabled = savingMember === member.name || (hasVoted && !adminMode) || lockedForMe;
+              const disabled = savingMember === member.name || (hasVoted && !adminMode) || lockedForMe || (!adminMode && !VOTING_OPEN);
 
               return (
                 <div
