@@ -29,6 +29,23 @@ const KICKOFF_TIME = new Date('2026-06-11T20:00:00-06:00').getTime();
 // Voting/prediction changes are locked once the field is down to the semifinalists.
 const VOTING_OPEN = false;
 
+interface RemainingGame {
+  round: string;
+  date: string; // YYYY-MM-DD
+  time: string; // e.g. "15:00" (US Eastern, matches the community's local time)
+  teamA: string | null; // team code, or null if not yet determined
+  teamB: string | null;
+  venue: string;
+}
+
+// Remaining 2026 FIFA World Cup fixtures (semifinals through the final)
+const remainingGames: RemainingGame[] = [
+  { round: 'חצי גמר 1', date: '2026-07-14', time: '15:00', teamA: 'FRA', teamB: 'ESP', venue: 'AT&T Stadium, דאלאס' },
+  { round: 'חצי גמר 2', date: '2026-07-15', time: '15:00', teamA: 'ENG', teamB: 'ARG', venue: 'Mercedes-Benz Stadium, אטלנטה' },
+  { round: 'משחק על מקום שלישי', date: '2026-07-18', time: '17:00', teamA: null, teamB: null, venue: 'Hard Rock Stadium, מיאמי גרדנס' },
+  { round: 'הגמר', date: '2026-07-19', time: '15:00', teamA: null, teamB: null, venue: 'MetLife Stadium, ניו ג\'רזי' },
+];
+
 interface Countdown {
   days: number;
   hours: number;
@@ -468,6 +485,74 @@ export default function WorldCupPage() {
             )}
           </div>
         )}
+
+        {/* Remaining Games */}
+        <div
+          style={{
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '1.5rem',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+            border: '1px solid #e5e7eb',
+          }}
+        >
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold', margin: '0 0 1rem', color: '#111827' }}>
+            📅 המשחקים שנותרו
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {remainingGames.map((game) => {
+              const teamAInfo = game.teamA ? worldCupTeamsByCode[game.teamA] : null;
+              const teamBInfo = game.teamB ? worldCupTeamsByCode[game.teamB] : null;
+              const dateLabel = new Date(game.date + 'T12:00:00').toLocaleDateString('he-IL', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              });
+              return (
+                <div
+                  key={game.round}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '0.75rem',
+                    padding: '1rem',
+                    borderRadius: '12px',
+                    background: '#f9fafb',
+                    border: '1px solid #e5e7eb',
+                  }}
+                >
+                  <div style={{ minWidth: '150px' }}>
+                    <div style={{ fontWeight: 'bold', color: '#111827', fontSize: '0.95rem' }}>{game.round}</div>
+                    <div style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.15rem' }}>
+                      {dateLabel} · {game.time}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.1rem' }}>📍 {game.venue}</div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: 600, fontSize: '0.95rem' }}>
+                    {teamAInfo ? (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span className="flag-emoji" style={{ fontSize: '1.4rem' }}>{teamAInfo.flag}</span> {teamAInfo.nameHe}
+                      </span>
+                    ) : (
+                      <span style={{ color: '#9ca3af', fontStyle: 'italic', fontWeight: 400 }}>יקבע</span>
+                    )}
+                    <span style={{ color: '#9ca3af', fontWeight: 400 }}>נגד</span>
+                    {teamBInfo ? (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span className="flag-emoji" style={{ fontSize: '1.4rem' }}>{teamBInfo.flag}</span> {teamBInfo.nameHe}
+                      </span>
+                    ) : (
+                      <span style={{ color: '#9ca3af', fontStyle: 'italic', fontWeight: 400 }}>יקבע</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Voting-closed notice */}
         {!VOTING_OPEN && !adminMode && (
