@@ -36,14 +36,16 @@ interface RemainingGame {
   teamA: string | null; // team code, or null if not yet determined
   teamB: string | null;
   venue: string;
+  winner?: string; // team code, set once the game has finished
+  score?: string; // e.g. "0-2" (teamA-teamB), set once the game has finished
 }
 
 // Remaining 2026 FIFA World Cup fixtures (semifinals through the final)
 const remainingGames: RemainingGame[] = [
-  { round: 'חצי גמר 1', date: '2026-07-14', time: '15:00', teamA: 'FRA', teamB: 'ESP', venue: 'AT&T Stadium, דאלאס' },
+  { round: 'חצי גמר 1', date: '2026-07-14', time: '15:00', teamA: 'FRA', teamB: 'ESP', venue: 'AT&T Stadium, דאלאס', winner: 'ESP', score: '0-2' },
   { round: 'חצי גמר 2', date: '2026-07-15', time: '15:00', teamA: 'ENG', teamB: 'ARG', venue: 'Mercedes-Benz Stadium, אטלנטה' },
-  { round: 'משחק על מקום שלישי', date: '2026-07-18', time: '17:00', teamA: null, teamB: null, venue: 'Hard Rock Stadium, מיאמי גרדנס' },
-  { round: 'הגמר', date: '2026-07-19', time: '15:00', teamA: null, teamB: null, venue: 'MetLife Stadium, ניו ג\'רזי' },
+  { round: 'משחק על מקום שלישי', date: '2026-07-18', time: '17:00', teamA: 'FRA', teamB: null, venue: 'Hard Rock Stadium, מיאמי גרדנס' },
+  { round: 'הגמר', date: '2026-07-19', time: '15:00', teamA: 'ESP', teamB: null, venue: 'MetLife Stadium, ניו ג\'רזי' },
 ];
 
 interface Countdown {
@@ -525,7 +527,14 @@ export default function WorldCupPage() {
                   }}
                 >
                   <div style={{ minWidth: '150px' }}>
-                    <div style={{ fontWeight: 'bold', color: '#111827', fontSize: '0.95rem' }}>{game.round}</div>
+                    <div style={{ fontWeight: 'bold', color: '#111827', fontSize: '0.95rem' }}>
+                      {game.round}
+                      {game.winner && (
+                        <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#10b981', marginInlineStart: '0.4rem' }}>
+                          ✅ הסתיים
+                        </span>
+                      )}
+                    </div>
                     <div style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.15rem' }}>
                       {dateLabel} · {game.time}
                     </div>
@@ -533,19 +542,52 @@ export default function WorldCupPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: 600, fontSize: '0.95rem' }}>
                     {teamAInfo ? (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          opacity: game.winner && game.winner !== teamAInfo.code ? 0.5 : 1,
+                          fontWeight: game.winner === teamAInfo.code ? 800 : 600,
+                        }}
+                      >
                         <span className="flag-emoji" style={{ fontSize: '1.4rem' }}>{teamAInfo.flag}</span> {teamAInfo.nameHe}
+                        {game.winner === teamAInfo.code && ' 🏆'}
                       </span>
                     ) : (
                       <span style={{ color: '#9ca3af', fontStyle: 'italic', fontWeight: 400 }}>יקבע</span>
                     )}
                     <span style={{ color: '#9ca3af', fontWeight: 400 }}>נגד</span>
                     {teamBInfo ? (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          opacity: game.winner && game.winner !== teamBInfo.code ? 0.5 : 1,
+                          fontWeight: game.winner === teamBInfo.code ? 800 : 600,
+                        }}
+                      >
                         <span className="flag-emoji" style={{ fontSize: '1.4rem' }}>{teamBInfo.flag}</span> {teamBInfo.nameHe}
+                        {game.winner === teamBInfo.code && ' 🏆'}
                       </span>
                     ) : (
                       <span style={{ color: '#9ca3af', fontStyle: 'italic', fontWeight: 400 }}>יקבע</span>
+                    )}
+                    {game.score && (
+                      <span
+                        style={{
+                          direction: 'ltr',
+                          fontWeight: 800,
+                          color: '#111827',
+                          backgroundColor: '#f3f4f6',
+                          borderRadius: '8px',
+                          padding: '0.15rem 0.5rem',
+                          fontSize: '0.9rem',
+                        }}
+                      >
+                        {game.score}
+                      </span>
                     )}
                   </div>
                 </div>

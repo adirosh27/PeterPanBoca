@@ -2,7 +2,8 @@
 // Source: https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/teams
 //
 // winChance = estimated chance (in %) to win the tournament.
-// Updated as of the Round of 16 (July 6, 2026): eliminated teams are set to 0
+// Updated as of the semifinals (July 14, 2026): Spain beat France in
+// semifinal 1 and advances to the final; eliminated teams are set to 0
 // and marked `eliminated: true`; the remaining teams' chances are rescaled
 // (from the original pre-tournament bookmaker odds) so they sum to ~100%.
 // Update these numbers as the tournament progresses / based on results.
@@ -59,7 +60,7 @@ export const worldCupTeams: WorldCupTeam[] = [
   { code: 'USA', name: 'United States', nameHe: 'ארצות הברית', flag: '🇺🇸', confederation: 'CONCACAF', winChance: 0, eliminated: true },
 
   // CONMEBOL (6) - only Argentina still alive (Colombia lost in the Round of 16)
-  { code: 'ARG', name: 'Argentina', nameHe: 'ארגנטינה', flag: '🇦🇷', confederation: 'CONMEBOL', winChance: 20.8 },
+  { code: 'ARG', name: 'Argentina', nameHe: 'ארגנטינה', flag: '🇦🇷', confederation: 'CONMEBOL', winChance: 28.3 },
   { code: 'BRA', name: 'Brazil', nameHe: 'ברזיל', flag: '🇧🇷', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
   { code: 'COL', name: 'Colombia', nameHe: 'קולומביה', flag: '🇨🇴', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
   { code: 'ECU', name: 'Ecuador', nameHe: 'אקוודור', flag: '🇪🇨', confederation: 'CONMEBOL', winChance: 0, eliminated: true },
@@ -69,20 +70,20 @@ export const worldCupTeams: WorldCupTeam[] = [
   // OFC (1) - eliminated
   { code: 'NZL', name: 'New Zealand', nameHe: 'ניו זילנד', flag: '🇳🇿', confederation: 'OFC', winChance: 0, eliminated: true },
 
-  // UEFA (16) - England, France, Spain still alive (Norway lost to England, Switzerland lost to Argentina in the quarterfinals)
+  // UEFA (16) - England, Spain still alive (Norway lost to England, Switzerland lost to Argentina in the quarterfinals; France lost to Spain in the semifinal)
   { code: 'AUT', name: 'Austria', nameHe: 'אוסטריה', flag: '🇦🇹', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'BEL', name: 'Belgium', nameHe: 'בלגיה', flag: '🇧🇪', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'BIH', name: 'Bosnia and Herzegovina', nameHe: 'בוסניה והרצגובינה', flag: '🇧🇦', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'CRO', name: 'Croatia', nameHe: 'קרואטיה', flag: '🇭🇷', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'CZE', name: 'Czech Republic', nameHe: "צ'כיה", flag: '🇨🇿', confederation: 'UEFA', winChance: 0, eliminated: true },
-  { code: 'ENG', name: 'England', nameHe: 'אנגליה', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', confederation: 'UEFA', winChance: 22.6 },
-  { code: 'FRA', name: 'France', nameHe: 'צרפת', flag: '🇫🇷', confederation: 'UEFA', winChance: 26.4 },
+  { code: 'ENG', name: 'England', nameHe: 'אנגליה', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', confederation: 'UEFA', winChance: 30.7 },
+  { code: 'FRA', name: 'France', nameHe: 'צרפת', flag: '🇫🇷', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'GER', name: 'Germany', nameHe: 'גרמניה', flag: '🇩🇪', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'NED', name: 'Netherlands', nameHe: 'הולנד', flag: '🇳🇱', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'NOR', name: 'Norway', nameHe: 'נורווגיה', flag: '🇳🇴', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'POR', name: 'Portugal', nameHe: 'פורטוגל', flag: '🇵🇹', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'SCO', name: 'Scotland', nameHe: 'סקוטלנד', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', confederation: 'UEFA', winChance: 0, eliminated: true },
-  { code: 'ESP', name: 'Spain', nameHe: 'ספרד', flag: '🇪🇸', confederation: 'UEFA', winChance: 30.2 },
+  { code: 'ESP', name: 'Spain', nameHe: 'ספרד', flag: '🇪🇸', confederation: 'UEFA', winChance: 41.0 },
   { code: 'SWE', name: 'Sweden', nameHe: 'שוודיה', flag: '🇸🇪', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'SUI', name: 'Switzerland', nameHe: 'שווייץ', flag: '🇨🇭', confederation: 'UEFA', winChance: 0, eliminated: true },
   { code: 'TUR', name: 'Turkey', nameHe: 'טורקיה', flag: '🇹🇷', confederation: 'UEFA', winChance: 0, eliminated: true },
