@@ -44,8 +44,8 @@ interface RemainingGame {
 const remainingGames: RemainingGame[] = [
   { round: 'חצי גמר 1', date: '2026-07-14', time: '15:00', teamA: 'FRA', teamB: 'ESP', venue: 'AT&T Stadium, דאלאס', winner: 'ESP', score: '0-2' },
   { round: 'חצי גמר 2', date: '2026-07-15', time: '15:00', teamA: 'ENG', teamB: 'ARG', venue: 'Mercedes-Benz Stadium, אטלנטה', winner: 'ARG', score: '1-2' },
-  { round: 'משחק על מקום שלישי', date: '2026-07-18', time: '17:00', teamA: 'FRA', teamB: 'ENG', venue: 'Hard Rock Stadium, מיאמי גרדנס' },
-  { round: 'הגמר', date: '2026-07-19', time: '15:00', teamA: 'ESP', teamB: 'ARG', venue: 'MetLife Stadium, ניו ג\'רזי' },
+  { round: 'משחק על מקום שלישי', date: '2026-07-18', time: '17:00', teamA: 'FRA', teamB: 'ENG', venue: 'Hard Rock Stadium, מיאמי גרדנס', winner: 'ENG', score: '4-6' },
+  { round: 'הגמר', date: '2026-07-19', time: '15:00', teamA: 'ESP', teamB: 'ARG', venue: 'MetLife Stadium, ניו ג\'רזי', winner: 'ESP', score: '1-0' },
 ];
 
 interface Countdown {
