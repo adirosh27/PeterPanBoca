@@ -55,6 +55,7 @@ const galleryData = {
 interface PhotoData {
   name: string;
   url: string;
+  type?: 'image' | 'video';
 }
 
 export default function GalleriesPage() {
@@ -62,7 +63,7 @@ export default function GalleriesPage() {
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [photos, setPhotos] = useState<PhotoData[]>([]);
   const [loadingPhotos, setLoadingPhotos] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoData | null>(null);
 
   const years = Object.keys(galleryData).map(Number).sort((a, b) => b - a); // Sort years descending
 
@@ -481,7 +482,7 @@ export default function GalleriesPage() {
                   {photos.map((photo, index) => (
                     <div
                       key={index}
-                      onClick={() => setSelectedPhoto(photo.url)}
+                      onClick={() => setSelectedPhoto(photo)}
                       style={{
                         position: 'relative',
                         aspectRatio: '1',
@@ -500,13 +501,43 @@ export default function GalleriesPage() {
                         e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
                       }}
                     >
-                      <Image
-                        src={photo.url}
-                        alt={photo.name}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
+                      {photo.type === 'video' ? (
+                        <>
+                          <video
+                            src={photo.url}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                          <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '3rem',
+                            height: '3rem',
+                            borderRadius: '50%',
+                            background: 'rgba(0, 0, 0, 0.5)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.3rem',
+                            color: 'white',
+                            pointerEvents: 'none'
+                          }}>
+                            ▶️
+                          </div>
+                        </>
+                      ) : (
+                        <Image
+                          src={photo.url}
+                          alt={photo.name}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -602,18 +633,33 @@ export default function GalleriesPage() {
                   maxWidth: '90vw',
                   maxHeight: '90vh'
                 }}>
-                  <Image
-                    src={selectedPhoto}
-                    alt="Full size photo"
-                    width={1200}
-                    height={800}
-                    style={{
-                      objectFit: 'contain',
-                      maxWidth: '100%',
-                      maxHeight: '100%',
-                      borderRadius: '10px'
-                    }}
-                  />
+                  {selectedPhoto.type === 'video' ? (
+                    <video
+                      src={selectedPhoto.url}
+                      controls
+                      autoPlay
+                      playsInline
+                      style={{
+                        objectFit: 'contain',
+                        maxWidth: '90vw',
+                        maxHeight: '90vh',
+                        borderRadius: '10px'
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      src={selectedPhoto.url}
+                      alt="Full size photo"
+                      width={1200}
+                      height={800}
+                      style={{
+                        objectFit: 'contain',
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        borderRadius: '10px'
+                      }}
+                    />
+                  )}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

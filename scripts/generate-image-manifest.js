@@ -22,16 +22,17 @@ for (const dirName of imagesDirs) {
     for (const event of events) {
       const eventDir = path.join(yearDir, event);
       const files = fs.readdirSync(eventDir);
-      const imageFiles = files.filter(file =>
-        /\.(jpg|jpeg|png|gif|webp)$/i.test(file)
+      const mediaFiles = files.filter(file =>
+        /\.(jpg|jpeg|png|gif|webp|mp4|mov|webm)$/i.test(file)
       );
 
       const key = `${year}/${event}`;
       manifest[key] = {
         urlPrefix: dirName,
-        images: imageFiles.map(file => ({
+        images: mediaFiles.map(file => ({
           name: file,
-          url: `/${dirName}/${year}/${event}/${file}`
+          url: `/${dirName}/${year}/${event}/${file}`,
+          type: /\.(mp4|mov|webm)$/i.test(file) ? 'video' : 'image'
         }))
       };
     }
