@@ -521,24 +521,6 @@ export default function WorldCupPage() {
           );
         })()}
 
-        {/* Voting-closed notice */}
-        {!VOTING_OPEN && !adminMode && (
-          <div
-            style={{
-              backgroundColor: '#fef2f2',
-              border: '2px solid #ef4444',
-              borderRadius: '12px',
-              padding: '1rem',
-              marginBottom: '1.5rem',
-              textAlign: 'center',
-              color: '#991b1b',
-              fontWeight: 700,
-            }}
-          >
-            🔒 ההצבעה נסגרה - נותרו רק 4 נבחרות בתחרות. לא ניתן להוסיף או לשנות ניחושים יותר.
-          </div>
-        )}
-
         {/* This-device already-voted notice */}
         {VOTING_OPEN && myVote && !adminMode && (
           <div
