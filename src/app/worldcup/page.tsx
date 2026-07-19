@@ -28,25 +28,8 @@ const FINAL_KICKOFF_TIME = new Date('2026-07-19T15:00:00-04:00').getTime();
 const KICKOFF_TIME = new Date('2026-06-11T20:00:00-06:00').getTime();
 // Voting/prediction changes are locked once the field is down to the semifinalists.
 const VOTING_OPEN = false;
-
-interface RemainingGame {
-  round: string;
-  date: string; // YYYY-MM-DD
-  time: string; // e.g. "15:00" (US Eastern, matches the community's local time)
-  teamA: string | null; // team code, or null if not yet determined
-  teamB: string | null;
-  venue: string;
-  winner?: string; // team code, set once the game has finished
-  score?: string; // e.g. "0-2" (teamA-teamB), set once the game has finished
-}
-
-// Remaining 2026 FIFA World Cup fixtures (semifinals through the final)
-const remainingGames: RemainingGame[] = [
-  { round: 'חצי גמר 1', date: '2026-07-14', time: '15:00', teamA: 'FRA', teamB: 'ESP', venue: 'AT&T Stadium, דאלאס', winner: 'ESP', score: '0-2' },
-  { round: 'חצי גמר 2', date: '2026-07-15', time: '15:00', teamA: 'ENG', teamB: 'ARG', venue: 'Mercedes-Benz Stadium, אטלנטה', winner: 'ARG', score: '1-2' },
-  { round: 'משחק על מקום שלישי', date: '2026-07-18', time: '17:00', teamA: 'FRA', teamB: 'ENG', venue: 'Hard Rock Stadium, מיאמי גרדנס', winner: 'ENG', score: '4-6' },
-  { round: 'הגמר', date: '2026-07-19', time: '15:00', teamA: 'ESP', teamB: 'ARG', venue: 'MetLife Stadium, ניו ג\'רזי', winner: 'ESP', score: '1-0' },
-];
+// Team code of the 2026 World Cup champion, once decided.
+const CHAMPION_TEAM_CODE = 'ESP';
 
 interface Countdown {
   days: number;
@@ -482,119 +465,61 @@ export default function WorldCupPage() {
               </>
             ) : (
               <div style={{ fontSize: '1.4rem', fontWeight: 800 }}>
-                🎉 גמר המונדיאל כאן! בהצלחה לנבחרות שנשארו ⚽
+                🏆 {worldCupTeamsByCode[CHAMPION_TEAM_CODE]?.nameHe} אלופת העולם! 🎉
               </div>
             )}
           </div>
         )}
 
-        {/* Remaining Games */}
-        <div
-          style={{
-            backgroundColor: 'white',
-            borderRadius: '16px',
-            padding: '1.5rem',
-            marginBottom: '1.5rem',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-            border: '1px solid #e5e7eb',
-          }}
-        >
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold', margin: '0 0 1rem', color: '#111827' }}>
-            📅 המשחקים שנותרו
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {remainingGames.map((game) => {
-              const teamAInfo = game.teamA ? worldCupTeamsByCode[game.teamA] : null;
-              const teamBInfo = game.teamB ? worldCupTeamsByCode[game.teamB] : null;
-              const dateLabel = new Date(game.date + 'T12:00:00').toLocaleDateString('he-IL', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-              });
-              return (
-                <div
-                  key={game.round}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    flexWrap: 'wrap',
-                    gap: '0.75rem',
-                    padding: '1rem',
-                    borderRadius: '12px',
-                    background: '#f9fafb',
-                    border: '1px solid #e5e7eb',
-                  }}
-                >
-                  <div style={{ minWidth: '150px' }}>
-                    <div style={{ fontWeight: 'bold', color: '#111827', fontSize: '0.95rem' }}>
-                      {game.round}
-                      {game.winner && (
-                        <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#10b981', marginInlineStart: '0.4rem' }}>
-                          ✅ הסתיים
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.15rem' }}>
-                      {dateLabel} · {game.time}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.1rem' }}>📍 {game.venue}</div>
+        {/* Winners of the prediction contest */}
+        {countdown?.started && finalCountdown?.started && (() => {
+          const champion = worldCupTeamsByCode[CHAMPION_TEAM_CODE];
+          const winners = votes.filter((v) => v.teamCode === CHAMPION_TEAM_CODE);
+          return (
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                borderRadius: '24px',
+                padding: '1.75rem',
+                marginBottom: '1.5rem',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                textAlign: 'center',
+                color: '#78350f',
+              }}
+            >
+              <div style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem' }}>
+                🏅 מנצחי תחרות הניחושים
+              </div>
+              {winners.length > 0 ? (
+                <>
+                  <p style={{ margin: '0 0 1rem', fontWeight: 600 }}>
+                    ניחשו נכון ש{champion?.nameHe} {champion?.flag} תזכה בגביע:
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.6rem' }}>
+                    {winners.map((w) => (
+                      <span
+                        key={w.voterEmail}
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                          borderRadius: '999px',
+                          padding: '0.4rem 1rem',
+                          fontWeight: 700,
+                          fontSize: '0.95rem',
+                        }}
+                      >
+                        🎉 {w.voterName}
+                      </span>
+                    ))}
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: 600, fontSize: '0.95rem' }}>
-                    {teamAInfo ? (
-                      <span
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                          opacity: game.winner && game.winner !== teamAInfo.code ? 0.5 : 1,
-                          fontWeight: game.winner === teamAInfo.code ? 800 : 600,
-                        }}
-                      >
-                        <span className="flag-emoji" style={{ fontSize: '1.4rem' }}>{teamAInfo.flag}</span> {teamAInfo.nameHe}
-                        {game.winner === teamAInfo.code && ' 🏆'}
-                      </span>
-                    ) : (
-                      <span style={{ color: '#9ca3af', fontStyle: 'italic', fontWeight: 400 }}>יקבע</span>
-                    )}
-                    <span style={{ color: '#9ca3af', fontWeight: 400 }}>נגד</span>
-                    {teamBInfo ? (
-                      <span
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                          opacity: game.winner && game.winner !== teamBInfo.code ? 0.5 : 1,
-                          fontWeight: game.winner === teamBInfo.code ? 800 : 600,
-                        }}
-                      >
-                        <span className="flag-emoji" style={{ fontSize: '1.4rem' }}>{teamBInfo.flag}</span> {teamBInfo.nameHe}
-                        {game.winner === teamBInfo.code && ' 🏆'}
-                      </span>
-                    ) : (
-                      <span style={{ color: '#9ca3af', fontStyle: 'italic', fontWeight: 400 }}>יקבע</span>
-                    )}
-                    {game.score && (
-                      <span
-                        style={{
-                          direction: 'ltr',
-                          fontWeight: 800,
-                          color: '#111827',
-                          backgroundColor: '#f3f4f6',
-                          borderRadius: '8px',
-                          padding: '0.15rem 0.5rem',
-                          fontSize: '0.9rem',
-                        }}
-                      >
-                        {game.score}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                </>
+              ) : (
+                <p style={{ margin: 0, fontWeight: 600 }}>
+                  אף אחד לא ניחש את {champion?.nameHe} {champion?.flag} 😅
+                </p>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Voting-closed notice */}
         {!VOTING_OPEN && !adminMode && (
