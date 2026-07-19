@@ -38,5 +38,3 @@ next-env.d.ts
 /data/registrations.json*.log
 # video files in images - too large for Vercel
 public/images/**/*.mp4
-# ...except this event's short clips, which are small enough to keep
-!public/images/2026/גמר מונדיאל - יולי 2026/*.mp4
