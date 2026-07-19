@@ -493,7 +493,7 @@ export default function WorldCupPage() {
               {winners.length > 0 ? (
                 <>
                   <p style={{ margin: '0 0 1rem', fontWeight: 600 }}>
-                    ניחשו נכון ש{champion?.nameHe} {champion?.flag} תזכה בגביע:
+                    ניחשו נכון ש-{champion?.nameHe} {champion?.flag} תזכה בגביע:
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.6rem' }}>
                     {winners.map((w) => (
