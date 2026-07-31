@@ -183,7 +183,7 @@ export default function TakanonPage() {
             justifyContent: 'center',
             gap: '0.75rem'
           }}>
-            {['עופר גלעדי', 'דני קרן', 'רון דיקסון', 'טל שקד', 'אבי לוי'].map((name, index) => (
+            {['עופר גלעדי', 'משה מרקו', 'רון דיקסון', 'טל שקד', 'אבי לוי'].map((name, index) => (
               <span
                 key={index}
                 style={{
