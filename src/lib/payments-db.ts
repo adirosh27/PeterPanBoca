@@ -136,7 +136,7 @@ export async function deletePayment(id: string): Promise<boolean> {
 const memberAliases: { he: string; en: string[] }[] = [
   { he: 'אדיר חזן', en: ['Adir Hazan'] },
   { he: 'עמית תירוש', en: ['Amit Tirosh'] },
-  { he: 'אבי לוי', en: ['Avi Levi'] },
+  { he: 'אבי לוי', en: ['Avi Levi', 'Avraham Levi', 'Abraham Levi'] },
   { he: 'דני קרן', en: ['Daniel Kern', 'Dani Kern'] },
   { he: 'דודי אמסלם', en: ['Dudi Amsalem', 'David Amsalem'] },
   { he: 'ליאור טמיר', en: ['Lior Tamir'] },
