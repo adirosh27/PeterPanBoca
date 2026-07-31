@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isPaymentsAdmin } from '@/lib/payments-db';
-import { syncPaymentsFromGmail, listMailboxes, testAuth } from '@/lib/payments-gmail';
+import { syncPaymentsFromGmail, listMailboxes, testAuth, previewParsing } from '@/lib/payments-gmail';
 
 // IMAP needs the Node.js runtime and must not be statically cached.
 export const runtime = 'nodejs';
@@ -15,6 +15,16 @@ export async function GET(request: NextRequest) {
   }
   if (searchParams.get('action') === 'authtest') {
     return NextResponse.json({ success: true, results: await testAuth() });
+  }
+  if (searchParams.get('action') === 'preview') {
+    try {
+      return NextResponse.json({ success: true, messages: await previewParsing() });
+    } catch (error) {
+      return NextResponse.json(
+        { success: false, error: error instanceof Error ? error.message : 'Unknown error' },
+        { status: 500 }
+      );
+    }
   }
   if (searchParams.get('action') === 'mailboxes') {
     try {

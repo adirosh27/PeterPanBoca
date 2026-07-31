@@ -91,6 +91,42 @@ export async function listMailboxes(): Promise<string[]> {
   }
 }
 
+// Diagnostic: fetch the label's messages and show what the parser sees, so we
+// can tune parseZelleEmail against the real email format. Does NOT persist.
+export async function previewParsing(limit = 5): Promise<unknown> {
+  const { user, pass } = getCreds();
+  const label = process.env.PAYMENTS_GMAIL_LABEL || 'INBOX';
+  const client = new ImapFlow({ host: 'imap.gmail.com', port: 993, secure: true, auth: { user, pass }, logger: false });
+  const out: unknown[] = [];
+  await client.connect();
+  try {
+    const lock = await client.getMailboxLock(label);
+    try {
+      let uids = await client.search({ all: true }, { uid: true });
+      if (uids && uids.length > limit) uids = uids.slice(-limit);
+      if (uids && uids.length > 0) {
+        for await (const msg of client.fetch(uids, { uid: true, source: true }, { uid: true })) {
+          const mail = await simpleParser(msg.source as Buffer);
+          const body = mail.text || (mail.html ? htmlToText(mail.html) : '');
+          out.push({
+            subject: mail.subject,
+            from: mail.from?.text,
+            hasText: !!mail.text,
+            hasHtml: !!mail.html,
+            bodySnippet: body.slice(0, 800),
+            parsed: parseZelleEmail(mail.subject || '', body),
+          });
+        }
+      }
+    } finally {
+      lock.release();
+    }
+  } finally {
+    await client.logout().catch(() => {});
+  }
+  return out;
+}
+
 export async function syncPaymentsFromGmail(): Promise<SyncResult> {
   const { user, pass } = getCreds();
   const label = process.env.PAYMENTS_GMAIL_LABEL || 'INBOX';
