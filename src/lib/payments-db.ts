@@ -128,6 +128,23 @@ export async function deletePayment(id: string): Promise<boolean> {
   return true;
 }
 
+// Gmail push sync cursor (last processed historyId) for incremental fetches.
+const HISTORY_KEY = 'peter-pan-payments-history-id';
+
+export async function getSyncHistoryId(): Promise<string | null> {
+  try {
+    if (!redis) return null;
+    return (await redis.get<string>(HISTORY_KEY)) || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function setSyncHistoryId(historyId: string): Promise<void> {
+  if (!redis) return;
+  await redis.set(HISTORY_KEY, historyId);
+}
+
 // -------------------- Member matching --------------------
 
 // English (as Zelle spells them) -> Hebrew member name. Zelle notifications

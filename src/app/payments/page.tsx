@@ -99,6 +99,19 @@ export default function PaymentsPage() {
     }
   };
 
+  const startPush = async () => {
+    setNotice('');
+    setError('');
+    try {
+      const res = await fetch(`/api/payments/watch?password=${encodeURIComponent(adminPassword)}`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) setNotice('התראות בזמן אמת הופעלו ✓ (חידוש אוטומטי יומי)');
+      else setError(data.error || data.message || 'הפעלת ההתראות נכשלה');
+    } catch {
+      setError('הפעלת ההתראות נכשלה');
+    }
+  };
+
   const saveEdit = async (id: string, memberName: string | null, category: PaymentCategory) => {
     try {
       const res = await fetch('/api/payments/update', {
@@ -271,24 +284,41 @@ export default function PaymentsPage() {
         {/* Admin sync */}
         {adminMode && (
           <div style={{ background: 'white', borderRadius: '16px', padding: '1.25rem', marginBottom: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', border: '1px solid #e5e7eb', textAlign: 'center' }}>
-            <button
-              onClick={runSync}
-              disabled={syncing}
-              style={{
-                padding: '0.75rem 1.5rem',
-                borderRadius: '999px',
-                border: 'none',
-                background: syncing ? '#9ca3af' : 'linear-gradient(135deg, #10b981, #059669)',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                cursor: syncing ? 'default' : 'pointer',
-              }}
-            >
-              {syncing ? '⏳ מסנכרן…' : '🔄 סנכרן תשלומים מ-Gmail'}
-            </button>
+            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button
+                onClick={runSync}
+                disabled={syncing}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '999px',
+                  border: 'none',
+                  background: syncing ? '#9ca3af' : 'linear-gradient(135deg, #10b981, #059669)',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  cursor: syncing ? 'default' : 'pointer',
+                }}
+              >
+                {syncing ? '⏳ מסנכרן…' : '🔄 סנכרן עכשיו'}
+              </button>
+              <button
+                onClick={startPush}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '999px',
+                  border: '2px solid #10b981',
+                  background: 'white',
+                  color: '#059669',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                }}
+              >
+                🔔 הפעל התראות בזמן אמת
+              </button>
+            </div>
             <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.75rem', marginBottom: 0 }}>
-              קורא את הודעות ה-Zelle מתיבת המייל של הקבוצה ומעדכן את הרשימה.
+              &quot;סנכרן עכשיו&quot; קורא מיד את הודעות ה-Zelle. &quot;התראות בזמן אמת&quot; מפעיל עדכון אוטומטי מיידי בכל תשלום חדש.
             </p>
           </div>
         )}
