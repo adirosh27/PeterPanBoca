@@ -18,8 +18,24 @@ export async function GET(request: NextRequest) {
       const mailboxes = await listMailboxes();
       return NextResponse.json({ success: true, mailboxes });
     } catch (error) {
+      const e = error as Record<string, unknown>;
       return NextResponse.json(
-        { success: false, error: error instanceof Error ? error.message : 'Unknown error' },
+        {
+          success: false,
+          detail: {
+            message: e?.message,
+            name: e?.name,
+            code: e?.code,
+            response: e?.response,
+            responseText: e?.responseText,
+            serverResponseCode: e?.serverResponseCode,
+            authenticationFailed: e?.authenticationFailed,
+            hasImapUser: !!process.env.GMAIL_IMAP_USER,
+            hasImapPass: !!process.env.GMAIL_IMAP_APP_PASSWORD,
+            hasGmailUser: !!process.env.GMAIL_USER,
+            hasGmailPass: !!process.env.GMAIL_APP_PASSWORD,
+          },
+        },
         { status: 500 }
       );
     }
