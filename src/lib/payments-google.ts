@@ -127,16 +127,23 @@ export async function processHistory(notifiedHistoryId?: string): Promise<{ proc
   let pageToken: string | undefined;
   let latestHistoryId = startHistoryId;
   do {
+    // Handle both a new message arriving in the label (messageAdded) and an
+    // existing message being moved/labeled into it (labelAdded) — payments are
+    // often forwarded first, then labeled.
     const res: { data: gmail_v1.Schema$ListHistoryResponse } = await gmail.users.history.list({
       userId: 'me',
       startHistoryId,
-      historyTypes: ['messageAdded'],
+      historyTypes: ['messageAdded', 'labelAdded'],
       labelId: labelId || undefined,
       pageToken,
     });
     for (const h of res.data.history || []) {
       for (const added of h.messagesAdded || []) {
         if (added.message?.id) messageIds.add(added.message.id);
+      }
+      for (const labeled of h.labelsAdded || []) {
+        const gotOurLabel = !labelId || (labeled.labelIds || []).includes(labelId);
+        if (gotOurLabel && labeled.message?.id) messageIds.add(labeled.message.id);
       }
     }
     if (res.data.historyId) latestHistoryId = String(res.data.historyId);
