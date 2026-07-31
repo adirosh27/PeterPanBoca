@@ -34,13 +34,22 @@ export interface SyncResult {
   label: string;
 }
 
+// Resolve + sanitize IMAP credentials. Google shows app passwords as four
+// space-separated groups; the actual password is the 16 chars with no spaces,
+// so we strip whitespace (a very common source of AUTHENTICATIONFAILED).
+function getCreds(): { user: string; pass: string } {
+  const user = (process.env.GMAIL_IMAP_USER || process.env.GMAIL_USER || '').trim();
+  const pass = (process.env.GMAIL_IMAP_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
+  if (!user || !pass) {
+    throw new Error('Gmail IMAP credentials are not configured (GMAIL_IMAP_USER/GMAIL_USER + GMAIL_IMAP_APP_PASSWORD/GMAIL_APP_PASSWORD)');
+  }
+  return { user, pass };
+}
+
 // Diagnostic: list the account's mailbox/label paths so we can confirm the
 // exact PAYMENTS_GMAIL_LABEL value to use.
 export async function listMailboxes(): Promise<string[]> {
-  const user = process.env.GMAIL_IMAP_USER || process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_IMAP_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD;
-  if (!user || !pass) throw new Error('Gmail IMAP credentials are not configured');
-
+  const { user, pass } = getCreds();
   const client = new ImapFlow({ host: 'imap.gmail.com', port: 993, secure: true, auth: { user, pass }, logger: false });
   await client.connect();
   try {
@@ -52,13 +61,8 @@ export async function listMailboxes(): Promise<string[]> {
 }
 
 export async function syncPaymentsFromGmail(): Promise<SyncResult> {
-  const user = process.env.GMAIL_IMAP_USER || process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_IMAP_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD;
+  const { user, pass } = getCreds();
   const label = process.env.PAYMENTS_GMAIL_LABEL || 'INBOX';
-
-  if (!user || !pass) {
-    throw new Error('Gmail IMAP credentials are not configured (GMAIL_IMAP_USER/GMAIL_USER + GMAIL_IMAP_APP_PASSWORD/GMAIL_APP_PASSWORD)');
-  }
 
   const client = new ImapFlow({
     host: 'imap.gmail.com',
