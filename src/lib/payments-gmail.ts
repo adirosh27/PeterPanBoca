@@ -34,6 +34,23 @@ export interface SyncResult {
   label: string;
 }
 
+// Diagnostic: list the account's mailbox/label paths so we can confirm the
+// exact PAYMENTS_GMAIL_LABEL value to use.
+export async function listMailboxes(): Promise<string[]> {
+  const user = process.env.GMAIL_IMAP_USER || process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_IMAP_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) throw new Error('Gmail IMAP credentials are not configured');
+
+  const client = new ImapFlow({ host: 'imap.gmail.com', port: 993, secure: true, auth: { user, pass }, logger: false });
+  await client.connect();
+  try {
+    const boxes = await client.list();
+    return boxes.map((b) => b.path);
+  } finally {
+    await client.logout().catch(() => {});
+  }
+}
+
 export async function syncPaymentsFromGmail(): Promise<SyncResult> {
   const user = process.env.GMAIL_IMAP_USER || process.env.GMAIL_USER;
   const pass = process.env.GMAIL_IMAP_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD;
@@ -56,7 +73,15 @@ export async function syncPaymentsFromGmail(): Promise<SyncResult> {
 
   await client.connect();
   try {
-    const lock = await client.getMailboxLock(label);
+    let lock;
+    try {
+      lock = await client.getMailboxLock(label);
+    } catch (err) {
+      const available = (await client.list().catch(() => [])).map((b) => b.path);
+      throw new Error(
+        `Could not open label "${label}". Available mailboxes: ${available.join(' | ') || '(none listed)'}`
+      );
+    }
     try {
       // Only Chase Zelle notifications are of interest.
       let uids = await client.search({ from: 'chase' }, { uid: true });
