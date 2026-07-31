@@ -27,6 +27,8 @@
     "clsx": "^2.1.1",
     "eslint": "^9.34.0",
     "eslint-config-next": "^15.5.2",
+    "imapflow": "^1.6.5",
+    "mailparser": "^3.9.14",
     "next": "^16.1.1",
     "nodemailer": "^7.0.6",
     "postcss": "^8.5.6",
@@ -37,5 +39,8 @@
     "typescript": "^5.9.2",
     "xlsx": "^0.18.5",
     "yet-another-react-lightbox": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/mailparser": "^3.4.6"
   }
 }
