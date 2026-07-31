@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 // Upcoming events data
@@ -382,63 +381,6 @@ export default function HomePage() {
             }
             return null;
           })()}
-        </div>
-      </section>
-
-      {/* World Cup Prediction CTA */}
-      <section style={{ padding: 'clamp(1rem, 4vw, 2rem)' }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-          <Link href="/worldcup" style={{ textDecoration: 'none' }}>
-            <div
-              data-card
-              style={{
-                borderRadius: '20px',
-                padding: 'clamp(1.25rem, 4vw, 2rem)',
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(251, 191, 36, 0.12))',
-                border: '2px solid rgba(16, 185, 129, 0.3)',
-                cursor: 'pointer',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(16, 185, 129, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', marginBottom: '0.5rem' }}>⚽🏆</div>
-              <h3 style={{
-                fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
-                fontWeight: 'bold',
-                marginBottom: '0.5rem',
-                color: '#10b981'
-              }}>
-                תחרות הניחושים - מונדיאל 2026
-              </h3>
-              <p style={{
-                fontSize: 'clamp(0.9rem, 2.5vw, 1.05rem)',
-                color: '#4b5563',
-                direction: 'rtl',
-                marginBottom: '1.25rem'
-              }}>
-                כל חבר מנחש פעם אחת מי יזכה בגביע העולם 🏆
-              </p>
-              <span style={{
-                display: 'inline-block',
-                background: 'linear-gradient(45deg, #10b981, #fbbf24)',
-                color: 'white',
-                fontWeight: 'bold',
-                padding: '0.75rem 1.75rem',
-                borderRadius: '25px',
-                fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)'
-              }}>
-                ⚽ לניחוש שלי
-              </span>
-            </div>
-          </Link>
         </div>
       </section>
 
