@@ -261,9 +261,12 @@ export function parseZelleEmail(subject: string, bodyText: string, ctx: ParseCon
   const amountRaw = fieldAfter(lines, /Amount/i) || flat.match(/Amount\s*:?\s*\$?([0-9,]+\.\d{2})/i)?.[1] || '';
   const amount = parseFloat((amountRaw.match(/[0-9,]+\.\d{2}/)?.[0] || amountRaw).replace(/,/g, ''));
 
-  // Date: explicit "Sent on <Month DD, YYYY>" if present, else the email date.
+  // Date: explicit "Sent on <Month DD, YYYY>" (new format), else the forwarded
+  // "Sent: <weekday>, <Month DD, YYYY>" header (QuickPay), else the email date.
   const sentOn = fieldAfter(lines, /Sent on/i) || flat.match(/Sent on\s*:?\s*([A-Za-z]+ \d{1,2},? \d{4})/i)?.[1] || '';
-  const parsedDate = sentOn ? new Date(sentOn) : ctx.receivedDate || null;
+  const forwardedSent = flat.match(/\bSent:\s*(?:[A-Za-z]+,\s*)?([A-Za-z]+ \d{1,2},? \d{4})/i)?.[1] || '';
+  const dateSource = sentOn || forwardedSent;
+  const parsedDate = dateSource ? new Date(dateSource) : ctx.receivedDate || null;
   const date = parsedDate && !isNaN(parsedDate.getTime())
     ? parsedDate.toISOString().slice(0, 10)
     : new Date().toISOString().slice(0, 10);

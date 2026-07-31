@@ -153,6 +153,28 @@ export default function PaymentsPage() {
 
   const needsReview = useMemo(() => payments.filter((p) => p.needsReview), [payments]);
 
+  // Who has paid (within the active category filter): member name -> total & count.
+  const paidByMember = useMemo(() => {
+    const src = filter === 'all' ? payments : payments.filter((p) => p.category === filter);
+    const map = new Map<string, { total: number; count: number }>();
+    for (const p of src) {
+      if (!p.memberName) continue;
+      const cur = map.get(p.memberName) || { total: 0, count: 0 };
+      cur.total += p.amount;
+      cur.count += 1;
+      map.set(p.memberName, cur);
+    }
+    return map;
+  }, [payments, filter]);
+
+  const roster = useMemo(
+    () =>
+      [...teamMembers]
+        .map((m) => ({ name: m.name, icon: m.icon, paid: paidByMember.get(m.name) }))
+        .sort((a, b) => (a.paid ? 0 : 1) - (b.paid ? 0 : 1)),
+    [paidByMember]
+  );
+
   return (
     <div
       style={{
@@ -311,6 +333,48 @@ export default function PaymentsPage() {
               {c === 'all' ? 'הכול' : `${CATEGORY_META[c].icon} ${CATEGORY_META[c].label}`}
             </button>
           ))}
+        </div>
+
+        {/* Who paid — member roster */}
+        <div style={{ background: 'white', borderRadius: '16px', padding: '1.25rem', marginBottom: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', border: '1px solid #e5e7eb' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 'bold', margin: 0, color: '#111827' }}>
+              👥 מי שילם{filter !== 'all' ? ` · ${CATEGORY_META[filter].label}` : ''}
+            </h3>
+            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#059669' }}>
+              {paidByMember.size} מתוך {teamMembers.length} שילמו
+            </span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: '0.5rem' }}>
+            {roster.map((m) => (
+              <div
+                key={m.name}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '0.5rem',
+                  padding: '0.5rem 0.75rem',
+                  borderRadius: '10px',
+                  background: m.paid ? '#ecfdf5' : '#f9fafb',
+                  border: `1px solid ${m.paid ? '#a7f3d0' : '#e5e7eb'}`,
+                  opacity: m.paid ? 1 : 0.7,
+                }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600, fontSize: '0.9rem', color: m.paid ? '#065f46' : '#6b7280' }}>
+                  <span>{m.paid ? '✅' : '⭕'}</span>
+                  {m.name}
+                </span>
+                {m.paid ? (
+                  <span style={{ fontWeight: 800, color: '#059669', direction: 'ltr', fontSize: '0.85rem' }}>
+                    {formatUSD(m.paid.total)}
+                  </span>
+                ) : (
+                  <span style={{ fontSize: '0.72rem', color: '#9ca3af' }}>טרם שילם</span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Payments list */}
