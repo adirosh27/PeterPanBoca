@@ -114,7 +114,7 @@ export async function previewParsing(limit = 5): Promise<unknown> {
             hasText: !!mail.text,
             hasHtml: !!mail.html,
             bodySnippet: body.slice(0, 800),
-            parsed: parseZelleEmail(mail.subject || '', body),
+            parsed: parseZelleEmail(mail.subject || '', body, { messageId: mail.messageId, receivedDate: mail.date }),
           });
         }
       }
@@ -154,19 +154,19 @@ export async function syncPaymentsFromGmail(): Promise<SyncResult> {
       );
     }
     try {
-      // Only Chase Zelle notifications are of interest.
-      let uids = await client.search({ from: 'chase' }, { uid: true });
-      if (!uids || uids.length === 0) {
-        // Fall back to scanning the whole label if the FROM filter finds nothing.
-        uids = await client.search({ all: true }, { uid: true });
-      }
+      // The label is dedicated to Zelle notifications (often forwarded, so the
+      // sender is not Chase) — scan everything in it and let the parser filter.
+      const uids = await client.search({ all: true }, { uid: true });
       if (uids && uids.length > 0) {
         for await (const msg of client.fetch(uids, { uid: true, source: true }, { uid: true })) {
           scanned++;
           try {
             const mail = await simpleParser(msg.source as Buffer);
             const body = mail.text || (mail.html ? htmlToText(mail.html) : '');
-            const payment = parseZelleEmail(mail.subject || '', body);
+            const payment = parseZelleEmail(mail.subject || '', body, {
+              messageId: mail.messageId,
+              receivedDate: mail.date,
+            });
             if (payment) parsedPayments.push(payment);
           } catch (err) {
             console.error('Failed to parse a message during payments sync:', err);

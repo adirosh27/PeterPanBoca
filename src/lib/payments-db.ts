@@ -225,28 +225,45 @@ function fieldAfter(lines: string[], label: RegExp): string | null {
   return null;
 }
 
-// Parse a single Chase Zelle notification body (plain text preferred). Returns
-// null if it does not look like a Zelle "you received money" email.
-export function parseZelleEmail(subject: string, bodyText: string): Payment | null {
+export interface ParseContext {
+  messageId?: string; // email Message-ID, used as the dedup id when there is no txn number
+  receivedDate?: Date; // email Date header, used when the body has no explicit date
+}
+
+// Parse a Chase Zelle / QuickPay notification. Handles both the newer format
+// ("Transaction number", "Sent on", "Memo" on separate lines) and the older
+// forwarded QuickPay format ("Amount: $X (USD)", "Memo: ...", no txn number).
+// Returns null if it does not look like a Zelle payment email.
+export function parseZelleEmail(subject: string, bodyText: string, ctx: ParseContext = {}): Payment | null {
   const text = (bodyText || '').replace(/\r/g, '');
   const lines = text.split('\n');
   const flat = text.replace(/\s+/g, ' ').trim();
 
-  // Payer name: "<Name> sent you money"
-  const payerMatch = flat.match(/([A-Za-z][A-Za-z'.\-]*(?:\s+[A-Za-z][A-Za-z'.\-]*)+?)\s+sent you money/i);
-  const payerNameRaw = payerMatch ? payerMatch[1].trim() : '';
+  // Payer name: prefer the subject ("[Fw:] <Name> sent you $45.00" or
+  // "<Name> sent you money"); fall back to the body. Require capitalized name
+  // tokens right before "sent you" so we don't swallow preceding words.
+  const nameToken = "[A-Z][A-Za-z'.\\-]+";
+  const namePattern = `(${nameToken}(?:\\s+${nameToken}){0,3})\\s+sent you`;
+  const cleanSubject = subject.replace(/^\s*(?:fw|fwd|re)\s*:\s*/i, '');
+  const payerNameRaw = (
+    cleanSubject.match(new RegExp(namePattern))?.[1] ||
+    flat.match(new RegExp(namePattern))?.[1] ||
+    ''
+  ).trim();
 
-  // Transaction number (used as the unique id).
+  // Transaction number if present; otherwise fall back to the email Message-ID
+  // so re-syncing the same email stays idempotent.
   const txn = fieldAfter(lines, /Transaction number/i) || (flat.match(/Transaction number\s*:?\s*(\d+)/i)?.[1] ?? '');
-  const id = (txn || '').replace(/\D/g, '');
+  const txnId = (txn || '').replace(/\D/g, '');
+  const id = txnId || (ctx.messageId ? `mid:${ctx.messageId.replace(/[<>]/g, '')}` : '');
 
-  // Amount, e.g. "$250.75"
+  // Amount, e.g. "$250.75" or "Amount: $45.00 (USD)"
   const amountRaw = fieldAfter(lines, /Amount/i) || flat.match(/Amount\s*:?\s*\$?([0-9,]+\.\d{2})/i)?.[1] || '';
   const amount = parseFloat((amountRaw.match(/[0-9,]+\.\d{2}/)?.[0] || amountRaw).replace(/,/g, ''));
 
-  // Date, e.g. "May 05, 2025"
+  // Date: explicit "Sent on <Month DD, YYYY>" if present, else the email date.
   const sentOn = fieldAfter(lines, /Sent on/i) || flat.match(/Sent on\s*:?\s*([A-Za-z]+ \d{1,2},? \d{4})/i)?.[1] || '';
-  const parsedDate = sentOn ? new Date(sentOn) : null;
+  const parsedDate = sentOn ? new Date(sentOn) : ctx.receivedDate || null;
   const date = parsedDate && !isNaN(parsedDate.getTime())
     ? parsedDate.toISOString().slice(0, 10)
     : new Date().toISOString().slice(0, 10);
@@ -254,7 +271,7 @@ export function parseZelleEmail(subject: string, bodyText: string): Payment | nu
   // Memo (may be empty).
   const memo = (fieldAfter(lines, /Memo/i) || '').trim();
 
-  const looksLikeZelle = /zelle/i.test(subject) || /sent you money/i.test(flat);
+  const looksLikeZelle = /zelle|quickpay/i.test(subject) || /sent you money|zelle|quickpay/i.test(flat);
   if (!looksLikeZelle || !id || !payerNameRaw || isNaN(amount)) {
     return null;
   }
