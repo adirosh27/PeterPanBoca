@@ -46,6 +46,37 @@ function getCreds(): { user: string; pass: string } {
   return { user, pass };
 }
 
+// Diagnostic: try both credential pairs and report which (if any) authenticates.
+// Reveals a typo'd user or a bad/short app password without exposing the password.
+export async function testAuth(): Promise<unknown> {
+  const pairs = [
+    { name: 'IMAP-specific', user: (process.env.GMAIL_IMAP_USER || '').trim(), pass: (process.env.GMAIL_IMAP_APP_PASSWORD || '').replace(/\s+/g, '') },
+    { name: 'shared GMAIL_*', user: (process.env.GMAIL_USER || '').trim(), pass: (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '') },
+  ];
+  const results = [];
+  for (const p of pairs) {
+    const entry: Record<string, unknown> = { name: p.name, user: p.user, passLength: p.pass.length };
+    if (!p.user || !p.pass) {
+      entry.ok = false;
+      entry.error = 'missing user or password';
+      results.push(entry);
+      continue;
+    }
+    const client = new ImapFlow({ host: 'imap.gmail.com', port: 993, secure: true, auth: { user: p.user, pass: p.pass }, logger: false });
+    try {
+      await client.connect();
+      entry.ok = true;
+      await client.logout().catch(() => {});
+    } catch (err) {
+      const e = err as Record<string, unknown>;
+      entry.ok = false;
+      entry.error = e?.responseText || e?.message;
+    }
+    results.push(entry);
+  }
+  return results;
+}
+
 // Diagnostic: list the account's mailbox/label paths so we can confirm the
 // exact PAYMENTS_GMAIL_LABEL value to use.
 export async function listMailboxes(): Promise<string[]> {
