@@ -4,7 +4,9 @@
 //
 // Required env vars (set in Vercel + local .env):
 //   GMAIL_IMAP_USER          - e.g. peterpanboca@gmail.com
+//                              (falls back to the existing GMAIL_USER)
 //   GMAIL_IMAP_APP_PASSWORD  - a Gmail app password (needs 2FA on the account)
+//                              (falls back to the existing GMAIL_APP_PASSWORD)
 //   PAYMENTS_GMAIL_LABEL     - label/folder to read (defaults to INBOX)
 import { ImapFlow } from 'imapflow';
 import { simpleParser } from 'mailparser';
@@ -33,12 +35,12 @@ export interface SyncResult {
 }
 
 export async function syncPaymentsFromGmail(): Promise<SyncResult> {
-  const user = process.env.GMAIL_IMAP_USER;
-  const pass = process.env.GMAIL_IMAP_APP_PASSWORD;
+  const user = process.env.GMAIL_IMAP_USER || process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_IMAP_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD;
   const label = process.env.PAYMENTS_GMAIL_LABEL || 'INBOX';
 
   if (!user || !pass) {
-    throw new Error('GMAIL_IMAP_USER / GMAIL_IMAP_APP_PASSWORD are not configured');
+    throw new Error('Gmail IMAP credentials are not configured (GMAIL_IMAP_USER/GMAIL_USER + GMAIL_IMAP_APP_PASSWORD/GMAIL_APP_PASSWORD)');
   }
 
   const client = new ImapFlow({
