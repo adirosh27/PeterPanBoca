@@ -190,14 +190,8 @@ function WeekBirthdays() {
           return (
             <div
               key={`${birthday.name}-${birthday.month}-${birthday.day}`}
+              className="week-birthday-row"
               style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '0.5rem',
-                padding: 'clamp(0.75rem, 3vw, 1rem)',
-                borderRadius: '12px',
                 background: isTodaysBirthday
                   ? 'rgba(251, 191, 36, 0.35)'
                   : 'rgba(255, 255, 255, 0.8)',
@@ -206,27 +200,25 @@ function WeekBirthdays() {
                   : '1px solid rgba(0, 0, 0, 0.05)'
               }}
             >
-              <span
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 'clamp(0.95rem, 2.8vw, 1.1rem)',
-                  color: '#1f2937'
-                }}
-              >
+              <span className="week-birthday-name">
                 {isTodaysBirthday ? '🎉 ' : '🎈 '}
                 {birthday.name}
                 {isTodaysBirthday && ' — היום!'}
               </span>
-              <span
-                style={{
-                  fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)',
-                  color: '#4b5563'
-                }}
-              >
+
+              {/* Same date, two lengths: the short one takes over on narrow
+                  screens so the name and date always share one line. */}
+              <span className="week-birthday-date week-birthday-date-full">
                 {birthday.date.toLocaleDateString('he-IL', {
                   weekday: 'long',
                   day: 'numeric',
                   month: 'long'
+                })}
+              </span>
+              <span className="week-birthday-date week-birthday-date-short">
+                {birthday.date.toLocaleDateString('he-IL', {
+                  day: 'numeric',
+                  month: 'short'
                 })}
               </span>
             </div>
@@ -345,6 +337,49 @@ export default function HomePage() {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
+        }
+
+        /* Birthday rows: name and date stay on one line at every width.
+           nowrap on the row plus nowrap on both children makes wrapping
+           structurally impossible; the name ellipsizes if space runs out. */
+        .week-birthday-row {
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          padding: clamp(0.6rem, 3vw, 1rem);
+          border-radius: 12px;
+        }
+
+        .week-birthday-name {
+          font-weight: bold;
+          color: #1f2937;
+          font-size: clamp(0.8rem, 3.2vw, 1.1rem);
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .week-birthday-date {
+          color: #4b5563;
+          font-size: clamp(0.75rem, 2.6vw, 0.95rem);
+          flex-shrink: 0;
+          white-space: nowrap;
+        }
+
+        .week-birthday-date-short {
+          display: none;
+        }
+
+        @media (max-width: 600px) {
+          .week-birthday-date-full {
+            display: none;
+          }
+          .week-birthday-date-short {
+            display: inline;
+          }
         }
       `}</style>
       {/* Hero Section */}
