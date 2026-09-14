@@ -161,6 +161,7 @@ function WeekBirthdays() {
   }
 
   return (
+    <>
     <div
       data-card
       style={{
@@ -234,6 +235,37 @@ function WeekBirthdays() {
         })}
       </div>
     </div>
+
+    {/* Divider between the birthdays card and the "founded" badge */}
+    <div
+      aria-hidden="true"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.75rem',
+        margin: 'clamp(1.5rem, 5vw, 2.5rem) auto clamp(0.5rem, 2vw, 1rem) auto',
+        maxWidth: '420px'
+      }}
+    >
+      <span
+        style={{
+          flex: 1,
+          height: '2px',
+          borderRadius: '1px',
+          background: 'linear-gradient(to right, rgba(16, 185, 129, 0), rgba(16, 185, 129, 0.45))'
+        }}
+      />
+      <span style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', lineHeight: 1 }}>⚓</span>
+      <span
+        style={{
+          flex: 1,
+          height: '2px',
+          borderRadius: '1px',
+          background: 'linear-gradient(to left, rgba(16, 185, 129, 0), rgba(16, 185, 129, 0.45))'
+        }}
+      />
+    </div>
+    </>
   );
 }
 
