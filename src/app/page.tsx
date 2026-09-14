@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { getWeekBirthdays, isSameDay, type WeekBirthday } from '@/lib/birthdays';
 
 // Upcoming events data
 const UPCOMING_EVENTS = [
@@ -138,6 +139,100 @@ function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targe
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// This week's birthdays (Sunday - Saturday), shown on the home page
+function WeekBirthdays() {
+  // Computed after mount: the week depends on the visitor's local date, and
+  // deriving it during render would not match what the server prerendered.
+  const [weekBirthdays, setWeekBirthdays] = useState<WeekBirthday[] | null>(null);
+  const [today, setToday] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const now = new Date();
+    setToday(now);
+    setWeekBirthdays(getWeekBirthdays(now));
+  }, []);
+
+  if (!weekBirthdays || !today || weekBirthdays.length === 0) {
+    return null;
+  }
+
+  return (
+    <div
+      data-card
+      style={{
+        borderRadius: '20px',
+        padding: 'clamp(1rem, 4vw, 2rem)',
+        background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(236, 72, 153, 0.12))',
+        border: '2px solid rgba(251, 191, 36, 0.3)',
+        direction: 'rtl'
+      }}
+    >
+      <h2
+        style={{
+          margin: '0 0 1.25rem 0',
+          textAlign: 'center',
+          fontSize: 'clamp(1.3rem, 4vw, 1.8rem)',
+          fontWeight: 'bold',
+          color: '#1f2937'
+        }}
+      >
+        🎂 ימי הולדת השבוע
+      </h2>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        {weekBirthdays.map((birthday) => {
+          const isTodaysBirthday = isSameDay(birthday.date, today);
+
+          return (
+            <div
+              key={`${birthday.name}-${birthday.month}-${birthday.day}`}
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '0.5rem',
+                padding: 'clamp(0.75rem, 3vw, 1rem)',
+                borderRadius: '12px',
+                background: isTodaysBirthday
+                  ? 'rgba(251, 191, 36, 0.35)'
+                  : 'rgba(255, 255, 255, 0.8)',
+                border: isTodaysBirthday
+                  ? '2px solid rgba(245, 158, 11, 0.6)'
+                  : '1px solid rgba(0, 0, 0, 0.05)'
+              }}
+            >
+              <span
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 'clamp(0.95rem, 2.8vw, 1.1rem)',
+                  color: '#1f2937'
+                }}
+              >
+                {isTodaysBirthday ? '🎉 ' : '🎈 '}
+                {birthday.name}
+                {isTodaysBirthday && ' — היום!'}
+              </span>
+              <span
+                style={{
+                  fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)',
+                  color: '#4b5563'
+                }}
+              >
+                {birthday.date.toLocaleDateString('he-IL', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long'
+                })}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -381,6 +476,13 @@ export default function HomePage() {
             }
             return null;
           })()}
+        </div>
+      </section>
+
+      {/* This Week Birthdays Section */}
+      <section style={{ padding: '0 clamp(1rem, 4vw, 2rem)' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <WeekBirthdays />
         </div>
       </section>
 

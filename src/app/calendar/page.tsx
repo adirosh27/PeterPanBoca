@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { birthdays } from '@/lib/birthdays';
 
 interface Event {
   id: number;
@@ -22,35 +23,7 @@ interface Holiday {
   color: string;
 }
 
-const birthdays = [
-  { name: 'Oren Benvenisti', month: 8, day: 30 },
-  { name: 'Eyal Bishri', month: 12, day: 10 },
-  { name: 'Ron Dickson', month: 11, day: 1 },
-  { name: 'Yossi Chaham', month: 10, day: 29 },
-  { name: 'Ofer Gilady', month: 1, day: 21 },
-  { name: 'Adir Hazan', month: 10, day: 27 },
-  { name: 'Nadav Houri', month: 5, day: 13 },
-  { name: 'Daniel Kern', month: 3, day: 3 },
-  { name: 'Avi Levi', month: 7, day: 8 },
-  { name: 'Moshe Marcu', month: 12, day: 8 },
-  { name: 'Steven (Shuly) Michaels', month: 12, day: 3 },
-  { name: 'Tal Shaked', month: 7, day: 25 },
-  { name: 'Sagie Shanun', month: 2, day: 21 },
-  { name: 'Momy Shoshan', month: 1, day: 3 },
-  { name: 'Lior Tamir', month: 12, day: 6 },
-  { name: 'Amit Tirosh', month: 12, day: 15 },
-  { name: 'Roee Vulkan', month: 10, day: 6 },
-  { name: 'Roei Wagner', month: 7, day: 21 },
-  { name: 'Shay Zaidenberg', month: 12, day: 24 },
-  { name: 'Shalom Sapir', month: 12, day: 24 },
-  { name: 'Dudi Amsalem', month: 6, day: 29 },
-  { name: 'Shalom Moldavski', month: 9, day: 17 },
-  { name: 'Itamar Ankorion', month: 10, day: 4 },
-  { name: 'Safi Bar', month: 2, day: 23 },
-  { name: 'Ori Feigin', month: 5, day: 6 },
-  { name: 'Sahar Aviani', month: 7, day: 12 },
-  { name: 'Ram Almog', month: 9, day: 14 },
-];
+
 
 
 const holidays: Holiday[] = [
