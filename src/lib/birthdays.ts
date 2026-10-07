@@ -18,7 +18,6 @@ export const birthdays: Birthday[] = [
   { name: 'Moshe Marcu', month: 12, day: 8 },
   { name: 'Steven (Shuly) Michaels', month: 12, day: 3 },
   { name: 'Tal Shaked', month: 7, day: 25 },
-  { name: 'Sagie Shanun', month: 2, day: 21 },
   { name: 'Momy Shoshan', month: 1, day: 3 },
   { name: 'Lior Tamir', month: 12, day: 6 },
   { name: 'Amit Tirosh', month: 12, day: 15 },

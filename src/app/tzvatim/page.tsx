@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 const hebrewMonths = [
   { name: 'ינואר', icon: '❄️', color: '#60a5fa' },
   { name: 'פברואר', icon: '💝', color: '#f472b6' },
@@ -15,7 +17,9 @@ const hebrewMonths = [
   { name: 'דצמבר', icon: '🎄', color: '#10b981' }
 ];
 
-const teams = [
+type Team = { month: string; members: string[] };
+
+const teams2026: Team[] = [
   { month: 'ינואר', members: ['עופר גלעדי', 'שלום מולדבסקי'] },
   { month: 'פברואר', members: ['אדיר חזן', 'רועי וגנר'] },
   { month: 'מרץ', members: ['אבי לוי', 'דני קרן'] },
@@ -30,7 +34,45 @@ const teams = [
   { month: 'דצמבר', members: ['רועי וולקן', 'איתמר אנקוריון'] }
 ];
 
+// 2027: everyone reshuffled - no one repeats a 2026 teammate or their 2026 month
+const teams2027: Team[] = [
+  { month: 'ינואר', members: ['ליאור טמיר', 'ספי בר'] },
+  { month: 'פברואר', members: ['אורן בנבנישתי', 'יוסי חכם'] },
+  { month: 'מרץ', members: ['שי זיידנברג', 'יוסי עוז־סיני'] },
+  { month: 'אפריל', members: ['שלום מולדבסקי', 'רועי וולקן', 'רועי וגנר'] },
+  { month: 'מאי', members: ['אבי לוי', 'טל שקד', 'מומי שושן'] },
+  { month: 'יוני', members: ['עופר גלעדי', 'אייל בישרי'] },
+  { month: 'יולי', members: ['דודי אמסלם', 'עמית תירוש', 'סהר אביאני'] },
+  { month: 'אוגוסט', members: ['נדב חורי', 'משה מרקו'] },
+  { month: 'ספטמבר', members: ['דני קרן', 'איתמר אנקוריון'] },
+  { month: 'אוקטובר', members: ['רון דיקסון', 'אורי פייגין'] },
+  { month: 'נובמבר', members: ['אדיר חזן', 'שלום ספיר'] },
+  { month: 'דצמבר', members: ['שולי מייקלס', 'רם אלמוג'] }
+];
+
+const teamsByYear: Record<number, Team[]> = {
+  2026: teams2026,
+  2027: teams2027
+};
+
+const years = Object.keys(teamsByYear).map(Number).sort((a, b) => a - b);
+
+function defaultYear(): number {
+  const current = new Date().getFullYear();
+  if (teamsByYear[current]) return current;
+  return current > years[years.length - 1] ? years[years.length - 1] : years[0];
+}
+
 export default function TzvatimPage() {
+  const [year, setYear] = useState<number>(years[0]);
+
+  // Pick the current year on the client so the page rolls over to 2027 on Jan 1
+  useEffect(() => {
+    setYear(defaultYear());
+  }, []);
+
+  const teams = teamsByYear[year];
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -78,6 +120,43 @@ export default function TzvatimPage() {
           }}>
             חלוקת הצוותים לארגון 12 האירועים השנתיים
           </p>
+
+          {/* Year selector */}
+          <div style={{
+            display: 'inline-flex',
+            gap: '0.5rem',
+            marginTop: '1.5rem',
+            padding: '0.4rem',
+            background: 'rgba(255, 255, 255, 0.7)',
+            borderRadius: '999px',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)'
+          }}>
+            {years.map((y) => {
+              const active = y === year;
+              return (
+                <button
+                  key={y}
+                  type="button"
+                  onClick={() => setYear(y)}
+                  aria-pressed={active}
+                  style={{
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '0.55rem 1.5rem',
+                    borderRadius: '999px',
+                    fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
+                    fontWeight: 'bold',
+                    color: active ? '#ffffff' : '#047857',
+                    background: active ? 'linear-gradient(135deg, #10b981, #059669)' : 'transparent',
+                    boxShadow: active ? '0 4px 12px rgba(16, 185, 129, 0.35)' : 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {y}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Teams Grid */}
@@ -90,7 +169,7 @@ export default function TzvatimPage() {
             const monthData = hebrewMonths.find(m => m.name === team.month);
             return (
               <div
-                key={index}
+                key={`${year}-${index}`}
                 data-card
                 style={{
                   background: 'linear-gradient(135deg, #ffffff, #f8fafc)',
