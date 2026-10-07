@@ -1,6 +1,18 @@
 'use client';
 
-const regulations = [
+type SubItem = string | { text: string; subItems: string[] };
+
+type Regulation = {
+  title: string;
+  content?: string;
+  subItems?: SubItem[];
+  lettered?: boolean;
+  icon: string;
+};
+
+const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י'];
+
+const regulations: Regulation[] = [
   {
     title: 'מטרת הקבוצה',
     content: 'מטרת הקבוצה היא גיבוש וחיזוק קשרי החברות באמצעות מפגשים ופעילויות מגוונות.',
@@ -67,13 +79,21 @@ const regulations = [
     icon: '⚠️'
   },
   {
-    title: 'מועמד לחברות בקבוצה',
-    content: 'תהליך ההצטרפות לקבוצה:',
+    title: 'נוהל צירוף חבר חדש',
+    lettered: true,
     subItems: [
-      'הצטרפות תתאפשר על בסיס מקום פנוי בלבד',
-      'המועמד יתבקש להגיע למפגש אחד כאורח',
-      'לאחר מכן יצטרף לצוות להפקת פעילות',
-      'נדרשות המלצות מלפחות 50% מחברי הקבוצה, בהצבעה אנונימית'
+      'בחינת וצירוף חברים חדשים תעשה על בסיס מקום פנוי ובקשות יגיעו מחברי הקבוצה.',
+      {
+        text: 'חבר הקבוצה שמעלה בקשה לצרף חבר חדש יהיה הספונסר של אותו מועמד ובאחריותו:',
+        subItems: [
+          'לעדכן את חברי הוועד.',
+          'להעביר ולוודא שהמועמד מבין ומקבל את תקנון הקבוצה.',
+          'להביא את המועמד לקחת חלק בכמה שיותר פעילויות שונות שאינן הפעילות החודשית כמו: כדורעף, פוקר, פיקלבול, קבל"ש, מפגש בשר, ירי במטווחים וכו\'.'
+        ]
+      },
+      'המועמד ייקח חלק בפעילות חודשית אחרונה לפני מפגש חצי שנתי (דצמבר או יוני).',
+      'במפגש החצי שנתי (ינואר או יולי) תתבצע הצבעה אנונימית בעד ונגד צירוף המועמד לחברות בקבוצה.',
+      'כדי להצטרף לקבוצה לפחות 50% מחברי הקבוצה צריכים להצביע בעד המועמד.'
     ],
     icon: '🆕'
   },
@@ -244,16 +264,33 @@ export default function TakanonPage() {
                   <span>{reg.icon}</span>
                   <span>{index + 1}. {reg.title}</span>
                 </h3>
-                <p style={{ margin: 0 }}>{reg.content}</p>
+                {reg.content && <p style={{ margin: 0 }}>{reg.content}</p>}
                 {reg.subItems && (
                   <ul style={{
-                    margin: '0.75rem 0 0 0',
-                    paddingRight: '1.5rem',
-                    listStyleType: 'disc'
+                    margin: reg.content ? '0.75rem 0 0 0' : 0,
+                    paddingRight: reg.lettered ? 0 : '1.5rem',
+                    listStyleType: reg.lettered ? 'none' : 'disc'
                   }}>
-                    {reg.subItems.map((item, subIndex) => (
-                      <li key={subIndex} style={{ marginBottom: '0.25rem' }}>{item}</li>
-                    ))}
+                    {reg.subItems.map((item, subIndex) => {
+                      const text = typeof item === 'string' ? item : item.text;
+                      return (
+                        <li key={subIndex} style={{ marginBottom: '0.25rem' }}>
+                          {reg.lettered && <strong>{hebrewLetters[subIndex]}. </strong>}
+                          {text}
+                          {typeof item !== 'string' && (
+                            <ul style={{
+                              margin: '0.25rem 0 0.5rem 0',
+                              paddingRight: '1.5rem',
+                              listStyleType: 'disc'
+                            }}>
+                              {item.subItems.map((nested, nestedIndex) => (
+                                <li key={nestedIndex} style={{ marginBottom: '0.25rem' }}>{nested}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </div>
@@ -269,7 +306,7 @@ export default function TakanonPage() {
           fontSize: '0.9rem',
           direction: 'rtl'
         }}>
-          <p>📌 התקנון עודכן לאחרונה: ינואר 2026</p>
+          <p>📌 התקנון עודכן לאחרונה: אוקטובר 2026</p>
         </div>
       </div>
     </div>
