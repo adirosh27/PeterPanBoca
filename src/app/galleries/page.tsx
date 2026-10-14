@@ -443,6 +443,18 @@ export default function GalleriesPage() {
               </h2>
             </div>
 
+            {/* On wide screens the event write-up sits to the right of the photos */}
+            <style>{`
+              .event-layout { display: flex; flex-direction: column; gap: 1.5rem; }
+              .event-photos { min-width: 0; }
+              .event-description { box-sizing: border-box; max-height: 50vh; overflow-y: auto; }
+              @media (min-width: 900px) {
+                .event-layout { flex-direction: row-reverse; align-items: flex-start; }
+                .event-description { flex: 0 0 360px; box-sizing: border-box; position: sticky; top: 115px; max-height: calc(100vh - 130px); overflow-y: auto; }
+                .event-photos { flex: 1; }
+              }
+            `}</style>
+            <div className="event-layout" style={{ direction: 'ltr' }}>
             {(() => {
               const currentEvent = galleryData[selectedYear as keyof typeof galleryData]?.find(
                 (e) => e.folder === selectedEvent
@@ -451,40 +463,45 @@ export default function GalleriesPage() {
               if (!description) return null;
 
               const [title, ...body] = description.split('\n');
+              const paragraphs = body.join('\n').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
               return (
                 <div
+                  className="event-description"
                   dir="rtl"
                   style={{
                     background: 'rgba(255, 255, 255, 0.95)',
                     borderRadius: '20px',
-                    padding: 'clamp(1.25rem, 4vw, 2rem)',
-                    marginBottom: '2rem',
+                    padding: '1.25rem 1.5rem',
                     boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
                     border: '2px solid rgba(255, 255, 255, 0.3)',
                     textAlign: 'right'
                   }}
                 >
                   <h3 style={{
-                    fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
+                    fontSize: '1.2rem',
                     fontWeight: 'bold',
                     color: '#065f46',
-                    margin: '0 0 1rem 0'
+                    margin: '0 0 0.6rem 0',
+                    lineHeight: 1.35
                   }}>
                     {title}
                   </h3>
-                  <p style={{
-                    whiteSpace: 'pre-line',
-                    fontSize: '1.05rem',
-                    lineHeight: 1.8,
-                    color: '#374151',
-                    margin: 0
-                  }}>
-                    {body.join('\n').trim()}
-                  </p>
+                  {paragraphs.map((paragraph, i) => (
+                    <p key={i} style={{
+                      whiteSpace: 'pre-line',
+                      fontSize: '0.95rem',
+                      lineHeight: 1.5,
+                      color: '#374151',
+                      margin: i === paragraphs.length - 1 ? 0 : '0 0 0.5rem 0'
+                    }}>
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
               );
             })()}
 
+            <div className="event-photos">
             {loadingPhotos ? (
               <div style={{
                 background: 'rgba(255, 255, 255, 0.95)',
@@ -718,6 +735,8 @@ export default function GalleriesPage() {
                 })()}
               </div>
             )}
+            </div>
+            </div>
 
             {/* Photo Modal */}
             {selectedPhoto && (
