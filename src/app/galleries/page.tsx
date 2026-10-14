@@ -35,7 +35,7 @@ const airsoftOct2026Description = `פיטר פן איירסופט: לא AIR ול
 
 לחיי החברות, הצחוקים, הכדוריות הלבנות והגברים שמסרבים להתבגר אבל מוכנים להיפגע בשביל עוד ערב של פיטר פן!
 
-תודות למארגנים שוליוסי צמד חמד, צוות לעניין!`;
+תודות למארגנים שולי ויוסי צמד חמד, צוות לעניין!`;
 
 // Define the gallery structure based on the actual folder structure
 const galleryData = {
