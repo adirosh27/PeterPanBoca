@@ -3,10 +3,44 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
+// Event write-ups shown above a gallery's photos. The first line is the title.
+const airsoftOct2026Description = `פיטר פן איירסופט: לא AIR ולא SOFT, אבל הרבה אאוץ׳!
+
+חברי פיטר פן גילו שהגיל הוא רק מספר, במיוחד כשהכדוריות הלבנות מתחילות לעוף ואתה מגלה שהגוף שלך כבר לא בן 20, אבל עדיין מתעקש להסתער כאילו אנחנו במבצע אנטבה.
+
+לפני שיצאנו לקרב, העמסנו שווארמה פרגיות, חומוס, סחוג, סלט וצ׳יפס לפנים. כי אם כבר הולכים לחטוף, לפחות שהקיבה תהיה מוכנה לקרב.
+
+אדיר נשא נאום תודה מרגש בסוף הארוחה וכמעט סגר את האירוע עוד לפני שנורתה ירייה אחת. למזלו, יוסי נכנס לפעולה, הלביש אותו בשכפ״ץ, קסדה ונייר מטבח לבן תלוי מקדימה. לא ברור אם זה היה ציוד מגן, סינר של שף או דגל לבן של כניעה מוקדמת. בכל מקרה, אדיר עבר ממצב ״שבע ועייף״ למצב ״מוכן לקרב, בערך״.
+
+מומי מינה את עצמו למתעד הצה״לי הרשמי, התמקם במגדל הפיקוח עם מצלמה וחיוך של מי שיודע משהו שאנחנו לא יודעים.
+
+קיבלנו תדריך זריז שהיה כל כך ברור, שאחרי שסיימנו אותו היינו צריכים תדריך נוסף כדי להבין מה היה בתדריך הראשון.
+המשכנו בניסיון נואש לברר מה מטרת המשחק, איך מנצחים ומתי יודעים שהקרב הסתיים. התשובות היו כל כך מסווגות, שעד לרגע זה גם השב״כ לא הצליח לפענח אותן.
+
+התחלקנו לשתי קבוצות: הקבוצה הירוקה נגד הקבוצה הירוקה יותר …
+ואז התחילה החגיגה: יריות לכל הכיוונים, הסתערויות, נסיגות טקטיות ובעיקר ירי דו־צדדי. היו רגעים שלא היה ברור מי נגד מי, אבל היה ברור שכולם נגד כולם.
+
+אבי, שבמשך כל האירוע זעק שאסור לירות באוטומט, מצא את עצמו עם האצבע תקועה על ההדק במצב אוטומטי. כנראה שברגע האמת האצבע החליטה שהפקודות הן בגדר המלצה בלבד.
+
+מסקנה: בפעם הבאה אבי יהיה אחראי על התדריך, בתנאי שמישהו אחר ייקח לו את הנשק.
+
+כמו כן חייבים לעבוד קצת על האמינות בקבוצה. היו כאלה שחטפו מטחים של כדוריות, חטפו עוד כמה, הסתובבו כאילו לא קרה כלום והמשיכו להסתער. חתולים עם תשע נשמות נראו לידם כמו חובבנים.
+אולי צריך להוסיף לתקנון פיטר פן סעיף חדש: מי שנפגע חייב להודות בזה, או לפחות להפסיק לטעון שזו הייתה רק רוח קלה.
+
+וכמובן, מולדבסקי בחר בדרך עצמאית והשתתף לבדו בפיינטבול. בזמן שכולנו ניסינו להבין מי יורה על מי, הוא ניהל מלחמה פרטית משלו.
+
+חזרנו הביתה מרוצים, מחויכים ועם כמה סימנים כחולים למזכרת. מי ניצח? לא ברור. מי הפסיד? כנראה העור שלנו. ומה הייתה המטרה? נשאיר את זה לחקירת ועדת פיטר פן. אבל דבר אחד בטוח: כולם יצאו גיבורים, לפחות עד שהגיעו למקלחת.
+
+ורק דבר אחד העיב על הניצחון הגדול של הערב: לא סגרנו את הארוחה עם קפה עם הל ובבקה שוקולד!
+
+לחיי החברות, הצחוקים, הכדוריות הלבנות והגברים שמסרבים להתבגר אבל מוכנים להיפגע בשביל עוד ערב של פיטר פן!
+
+תודות למארגנים שוליוסי צמד חמד, צוות לעניין!`;
+
 // Define the gallery structure based on the actual folder structure
 const galleryData = {
   2026: [
-    { name: 'Airsoft - אוקטובר 2026', folder: 'Airsoft - אוקטובר 2026' },
+    { name: 'Airsoft - אוקטובר 2026', folder: 'Airsoft - אוקטובר 2026', description: airsoftOct2026Description },
     { name: 'קורס הכנת קפה - ספטמבר 2026', folder: 'קורס הכנת קפה - ספטמבר 2026' },
     { name: 'ערב קפוא אצל ספי - אוגוסט 2026', folder: 'ערב קפוא אצל ספי - אוגוסט 2026' },
     { name: 'גמר מונדיאל - יולי 2026', folder: 'גמר מונדיאל - יולי 2026' },
@@ -67,9 +101,38 @@ export default function GalleriesPage() {
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [photos, setPhotos] = useState<PhotoData[]>([]);
   const [loadingPhotos, setLoadingPhotos] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<PhotoData | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const years = Object.keys(galleryData).map(Number).sort((a, b) => b - a); // Sort years descending
+  const selectedPhoto = selectedIndex !== null ? photos[selectedIndex] : null;
+
+  const showPrevPhoto = () => {
+    setSelectedIndex((prev) => (prev === null ? prev : (prev - 1 + photos.length) % photos.length));
+  };
+
+  const showNextPhoto = () => {
+    setSelectedIndex((prev) => (prev === null ? prev : (prev + 1) % photos.length));
+  };
+
+  // Keyboard navigation and background scroll lock while the photo modal is open
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedIndex(null);
+      else if (e.key === 'ArrowLeft') showPrevPhoto();
+      else if (e.key === 'ArrowRight') showNextPhoto();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedIndex, photos.length]);
 
   useEffect(() => {
     if (selectedEvent && selectedYear) {
@@ -355,7 +418,7 @@ export default function GalleriesPage() {
                 onClick={() => {
                   setSelectedEvent(null);
                   setPhotos([]);
-                  setSelectedPhoto(null);
+                  setSelectedIndex(null);
                 }}
                 style={{
                   background: 'rgba(255, 255, 255, 0.9)',
@@ -379,6 +442,48 @@ export default function GalleriesPage() {
                 📸 {selectedEvent}
               </h2>
             </div>
+
+            {(() => {
+              const currentEvent = galleryData[selectedYear as keyof typeof galleryData]?.find(
+                (e) => e.folder === selectedEvent
+              );
+              const description = currentEvent && 'description' in currentEvent ? (currentEvent as any).description as string : null;
+              if (!description) return null;
+
+              const [title, ...body] = description.split('\n');
+              return (
+                <div
+                  dir="rtl"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '20px',
+                    padding: 'clamp(1.25rem, 4vw, 2rem)',
+                    marginBottom: '2rem',
+                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    textAlign: 'right'
+                  }}
+                >
+                  <h3 style={{
+                    fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
+                    fontWeight: 'bold',
+                    color: '#065f46',
+                    margin: '0 0 1rem 0'
+                  }}>
+                    {title}
+                  </h3>
+                  <p style={{
+                    whiteSpace: 'pre-line',
+                    fontSize: '1.05rem',
+                    lineHeight: 1.8,
+                    color: '#374151',
+                    margin: 0
+                  }}>
+                    {body.join('\n').trim()}
+                  </p>
+                </div>
+              );
+            })()}
 
             {loadingPhotos ? (
               <div style={{
@@ -486,7 +591,7 @@ export default function GalleriesPage() {
                   {photos.map((photo, index) => (
                     <div
                       key={index}
-                      onClick={() => setSelectedPhoto(photo)}
+                      onClick={() => setSelectedIndex(index)}
                       style={{
                         position: 'relative',
                         aspectRatio: '1',
@@ -630,15 +735,83 @@ export default function GalleriesPage() {
                   zIndex: 1000,
                   padding: '2rem'
                 }}
-                onClick={() => setSelectedPhoto(null)}
+                onClick={() => setSelectedIndex(null)}
+                onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
+                onTouchEnd={(e) => {
+                  if (touchStartX === null) return;
+                  const deltaX = e.changedTouches[0].clientX - touchStartX;
+                  setTouchStartX(null);
+                  if (Math.abs(deltaX) < 50) return;
+                  if (deltaX < 0) showNextPhoto();
+                  else showPrevPhoto();
+                }}
               >
-                <div style={{
-                  position: 'relative',
-                  maxWidth: '90vw',
-                  maxHeight: '90vh'
-                }}>
+                {/* Photo counter */}
+                {photos.length > 1 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(0, 0, 0, 0.6)',
+                    color: 'white',
+                    padding: '0.4rem 1rem',
+                    borderRadius: '20px',
+                    fontSize: '0.9rem',
+                    direction: 'ltr',
+                    zIndex: 1001
+                  }}>
+                    {selectedIndex! + 1} / {photos.length}
+                  </div>
+                )}
+
+                {/* Previous / next buttons */}
+                {photos.length > 1 && [
+                  { label: '‹', side: 'left', ariaLabel: 'Previous photo', onNavigate: showPrevPhoto },
+                  { label: '›', side: 'right', ariaLabel: 'Next photo', onNavigate: showNextPhoto }
+                ].map(({ label, side, ariaLabel, onNavigate }) => (
+                  <button
+                    key={side}
+                    aria-label={ariaLabel}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigate();
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      [side]: '0.75rem',
+                      transform: 'translateY(-50%)',
+                      background: 'rgba(255, 255, 255, 0.25)',
+                      border: 'none',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '48px',
+                      height: '48px',
+                      fontSize: '2rem',
+                      lineHeight: 1,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 1001
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: 'relative',
+                    maxWidth: '90vw',
+                    maxHeight: '90vh'
+                  }}
+                >
                   {selectedPhoto.type === 'video' ? (
                     <video
+                      key={selectedPhoto.url}
                       src={selectedPhoto.url}
                       controls
                       autoPlay
@@ -658,8 +831,10 @@ export default function GalleriesPage() {
                       height={800}
                       style={{
                         objectFit: 'contain',
-                        maxWidth: '100%',
-                        maxHeight: '100%',
+                        width: 'auto',
+                        height: 'auto',
+                        maxWidth: '90vw',
+                        maxHeight: '85vh',
                         borderRadius: '10px'
                       }}
                     />
@@ -667,7 +842,7 @@ export default function GalleriesPage() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedPhoto(null);
+                      setSelectedIndex(null);
                     }}
                     style={{
                       position: 'absolute',
