@@ -42,6 +42,7 @@ const galleryData = {
   2026: [
     { name: 'Airsoft - אוקטובר 2026', folder: 'Airsoft - אוקטובר 2026', description: airsoftOct2026Description },
     { name: 'קורס הכנת קפה - ספטמבר 2026', folder: 'קורס הכנת קפה - ספטמבר 2026' },
+    { name: "טיול ג'יפים - אוגוסט 2026", folder: "טיול ג'יפים - אוגוסט 2026", youtubeId: 'LNzRRVQOLhQ' },
     { name: 'ערב קפוא אצל ספי - אוגוסט 2026', folder: 'ערב קפוא אצל ספי - אוגוסט 2026' },
     { name: 'גמר מונדיאל - יולי 2026', folder: 'גמר מונדיאל - יולי 2026' },
     { name: 'חפלה בבריכה - יוני 2026', folder: 'חפלה בבריכה - יוני 2026' },
@@ -106,6 +107,10 @@ export default function GalleriesPage() {
 
   const years = Object.keys(galleryData).map(Number).sort((a, b) => b - a); // Sort years descending
   const selectedPhoto = selectedIndex !== null ? photos[selectedIndex] : null;
+  const currentGalleryEvent = selectedYear && selectedEvent
+    ? galleryData[selectedYear as keyof typeof galleryData]?.find((e) => e.folder === selectedEvent)
+    : undefined;
+  const youtubeId = currentGalleryEvent && 'youtubeId' in currentGalleryEvent ? (currentGalleryEvent as any).youtubeId as string : null;
 
   const showPrevPhoto = () => {
     setSelectedIndex((prev) => (prev === null ? prev : (prev - 1 + photos.length) % photos.length));
@@ -502,6 +507,27 @@ export default function GalleriesPage() {
             })()}
 
             <div className="event-photos">
+            {youtubeId && (
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '20px',
+                padding: '1rem',
+                marginBottom: '1.5rem',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                border: '2px solid rgba(255, 255, 255, 0.3)'
+              }}>
+                <div style={{ position: 'relative', aspectRatio: '16 / 9', borderRadius: '12px', overflow: 'hidden' }}>
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
+                    title={selectedEvent ?? 'Event video'}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
+                  />
+                </div>
+              </div>
+            )}
+
             {loadingPhotos ? (
               <div style={{
                 background: 'rgba(255, 255, 255, 0.95)',
@@ -515,7 +541,7 @@ export default function GalleriesPage() {
                 <div style={{ fontSize: '3rem', marginBottom: '2rem' }}>📸</div>
                 <p style={{ fontSize: '1.2rem', color: '#6b7280' }}>טוען תמונות...</p>
               </div>
-            ) : photos.length === 0 ? (
+            ) : photos.length === 0 ? (youtubeId ? null : (
               <div style={{
                 background: 'rgba(255, 255, 255, 0.95)',
                 borderRadius: '20px',
@@ -590,7 +616,7 @@ export default function GalleriesPage() {
                   );
                 })()}
               </div>
-            ) : (
+            )) : (
               <div style={{
                 background: 'rgba(255, 255, 255, 0.95)',
                 borderRadius: '20px',
