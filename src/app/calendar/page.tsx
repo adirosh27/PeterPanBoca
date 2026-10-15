@@ -205,12 +205,12 @@ const events: Event[] = [
     date: '2026-11-14',
     endDate: '2026-11-15',
     title: '🤠 סופ״ש בריבר ראנץ׳',
-    description: 'סוף שבוע קהילתי בריזורט וחוות הרודאו ריבר ראנץ׳ - כל המשפחה מוזמנת!',
+    description: 'סוף שבוע בריזורט וחוות הרודאו ריבר ראנץ׳ - לחברי הקבוצה בלבד.',
     time: 'שבת-ראשון, 14-15 בנובמבר',
     location: 'Westgate River Ranch Resort & Rodeo, 3200 River Ranch Blvd, River Ranch, FL',
     type: 'adventure',
     price: '',
-    ageGroup: 'כל המשפחה',
+    ageGroup: 'חברים בלבד',
     spotsLeft: 50
   },
 ];
