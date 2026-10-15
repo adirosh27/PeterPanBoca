@@ -696,6 +696,7 @@ export default function CalendarPage() {
               maxWidth: '560px',
               width: '100%',
               maxHeight: '85vh',
+              direction: 'rtl',
               overflowY: 'auto',
               background: 'rgba(255, 255, 255, 0.97)',
               boxShadow: '0 25px 60px rgba(0, 0, 0, 0.35)',
