@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { birthdays } from '@/lib/birthdays';
+import { googleMapsUrl } from '@/lib/calendar-links';
+import AddToCalendar from '@/components/AddToCalendar';
 
 interface Event {
   id: number;
   date: string;
+  endDate?: string; // last day of a multi-day event (inclusive)
   title: string;
   description: string;
   time: string;
@@ -197,6 +200,19 @@ const events: Event[] = [
     ageGroup: 'כל המשפחה',
     spotsLeft: 50
   },
+  {
+    id: 10,
+    date: '2026-11-14',
+    endDate: '2026-11-15',
+    title: '🤠 סופ״ש בריבר ראנץ׳',
+    description: 'סוף שבוע קהילתי בריזורט וחוות הרודאו ריבר ראנץ׳ - כל המשפחה מוזמנת!',
+    time: 'שבת-ראשון, 14-15 בנובמבר',
+    location: 'Westgate River Ranch Resort & Rodeo, 3200 River Ranch Blvd, River Ranch, FL',
+    type: 'adventure',
+    price: '',
+    ageGroup: 'כל המשפחה',
+    spotsLeft: 50
+  },
 ];
 
 const typeColors = {
@@ -259,7 +275,11 @@ export default function CalendarPage() {
 
   const getEventsForDate = (date: Date) => {
     const dateString = date.toISOString().split('T')[0];
-    return events.filter(event => event.date === dateString);
+    return events.filter(event =>
+      event.endDate
+        ? dateString >= event.date && dateString <= event.endDate
+        : event.date === dateString
+    );
   };
 
   const getHolidaysForDate = (date: Date) => {
@@ -780,6 +800,7 @@ export default function CalendarPage() {
                 {[
                   { icon: '📅', label: 'תאריך', value: new Date(selectedEvent.date + 'T12:00:00').toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' }) },
                   { icon: '⏰', label: 'שעה', value: selectedEvent.time },
+                  { icon: '📍', label: 'מיקום', value: selectedEvent.location, href: googleMapsUrl(selectedEvent.location) },
                 ].map((item) => (
                   <div key={item.label} style={{
                     background: `${typeColors[selectedEvent.type]}0f`,
@@ -791,10 +812,25 @@ export default function CalendarPage() {
                       {item.icon} {item.label}
                     </div>
                     <div style={{ fontWeight: 'bold', color: '#1f2937', fontSize: '0.95rem' }}>
-                      {item.value}
+                      {'href' in item ? (
+                        <a href={item.href} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none' }}>
+                          🗺️ {item.value}
+                        </a>
+                      ) : item.value}
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <AddToCalendar event={{
+                  title: selectedEvent.title,
+                  date: selectedEvent.date,
+                  endDate: selectedEvent.endDate,
+                  time: selectedEvent.time,
+                  location: selectedEvent.location,
+                  description: selectedEvent.description
+                }} />
               </div>
 
               {selectedEvent.spotsLeft <= 10 && (

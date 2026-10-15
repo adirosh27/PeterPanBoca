@@ -3,20 +3,45 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { getWeekBirthdays, isSameDay, type WeekBirthday } from '@/lib/birthdays';
+import { googleMapsUrl, type CalendarEventInfo } from '@/lib/calendar-links';
+import AddToCalendar from '@/components/AddToCalendar';
 
 // Upcoming events data
-const UPCOMING_EVENTS = [
+const UPCOMING_EVENTS: {
+  id: string;
+  name: string;
+  date: string;
+  dateLabel?: string;
+  address: string;
+  fullAddress: string;
+  calendarEvent?: CalendarEventInfo;
+}[] = [
   {
     id: 'family-friday-dinner',
     name: 'ארוחת שישי משפחות',
     date: '2026-01-30T19:30:00',
     address: 'Boca Falls Club House',
     fullAddress: '21700 Boca Falls Dr, Boca Raton, FL 33428'
+  },
+  {
+    id: 'river-ranch-weekend',
+    name: '🤠 סופ״ש בריבר ראנץ׳',
+    date: '2026-11-14T00:00:00',
+    // Multi-day event with no set start time: show the date range instead of an hour
+    dateLabel: 'שבת-ראשון, 14-15 בנובמבר 2026',
+    address: 'Westgate River Ranch Resort & Rodeo',
+    fullAddress: '3200 River Ranch Blvd, River Ranch, FL',
+    calendarEvent: {
+      title: 'סופ״ש בריבר ראנץ׳ - פיטר פן',
+      date: '2026-11-14',
+      endDate: '2026-11-15',
+      location: 'Westgate River Ranch Resort & Rodeo, 3200 River Ranch Blvd, River Ranch, FL'
+    }
   }
 ];
 
 // Countdown Timer Component
-function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targetDate: string, eventName: string, address?: string, fullAddress?: string }) {
+function CountdownTimer({ targetDate, eventName, address, fullAddress, dateLabel, calendarEvent }: { targetDate: string, eventName: string, address?: string, fullAddress?: string, dateLabel?: string, calendarEvent?: CalendarEventInfo }) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -110,7 +135,7 @@ function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targe
           </div>
           {fullAddress && (
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`}
+              href={googleMapsUrl(address ? `${address}, ${fullAddress}` : fullAddress)}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -128,7 +153,7 @@ function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targe
             </a>
           )}
           <div style={{ marginTop: '0.75rem', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)', color: '#6b7280' }}>
-            ⏰ {new Date(targetDate).toLocaleString('he-IL', {
+            ⏰ {dateLabel ?? new Date(targetDate).toLocaleString('he-IL', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
@@ -137,6 +162,7 @@ function CountdownTimer({ targetDate, eventName, address, fullAddress }: { targe
               minute: '2-digit'
             })}
           </div>
+          {calendarEvent && <AddToCalendar event={calendarEvent} />}
         </div>
       )}
     </div>
@@ -538,6 +564,8 @@ export default function HomePage() {
                   eventName={nextEvent.name}
                   address={nextEvent.address}
                   fullAddress={nextEvent.fullAddress}
+                  dateLabel={nextEvent.dateLabel}
+                  calendarEvent={nextEvent.calendarEvent}
                 />
               );
             }
