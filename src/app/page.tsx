@@ -12,8 +12,8 @@ const UPCOMING_EVENTS: {
   name: string;
   date: string;
   dateLabel?: string;
-  address: string;
-  fullAddress: string;
+  address?: string;
+  fullAddress?: string;
   calendarEvent?: CalendarEventInfo;
 }[] = [
   {
@@ -36,6 +36,19 @@ const UPCOMING_EVENTS: {
       date: '2026-11-14',
       endDate: '2026-11-15',
       location: 'Westgate River Ranch Resort & Rodeo, 3200 River Ranch Blvd, River Ranch, FL'
+    }
+  },
+  {
+    id: 'day-at-the-races',
+    name: '🏇 יום במרוצים',
+    date: '2026-12-19T00:00:00',
+    dateLabel: 'שבת, 19 בדצמבר 2026 - השעה תפורסם בהמשך',
+    address: 'Gulfstream Park',
+    fullAddress: '901 S Federal Hwy, Hallandale Beach, FL 33009',
+    calendarEvent: {
+      title: 'יום במרוצים - פיטר פן',
+      date: '2026-12-19',
+      location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009'
     }
   }
 ];
