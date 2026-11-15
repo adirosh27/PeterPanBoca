@@ -224,7 +224,7 @@ const events: Event[] = [
     time: '12:00',
     location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009',
     type: 'special',
-    price: TBA,
+    price: '',
     ageGroup: 'כל המשפחה',
     spotsLeft: 50
   },
