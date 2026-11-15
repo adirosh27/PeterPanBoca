@@ -41,13 +41,13 @@ const UPCOMING_EVENTS: {
   {
     id: 'day-at-the-races',
     name: '🏇 יום במרוצים',
-    date: '2026-12-19T00:00:00',
-    dateLabel: 'שבת, 19 בדצמבר 2026 - השעה תפורסם בהמשך',
+    date: '2026-12-19T12:00:00',
     address: 'Gulfstream Park',
     fullAddress: '901 S Federal Hwy, Hallandale Beach, FL 33009',
     calendarEvent: {
       title: 'יום במרוצים - פיטר פן',
       date: '2026-12-19',
+      time: '12:00',
       location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009'
     }
   }

@@ -221,7 +221,7 @@ const events: Event[] = [
     date: '2026-12-19',
     title: '🏇 יום במרוצים',
     description: 'יום במרוצים עם כל הקבוצה! פרטים נוספים יפורסמו בהמשך.',
-    time: TBA,
+    time: '12:00',
     location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009',
     type: 'special',
     price: TBA,
