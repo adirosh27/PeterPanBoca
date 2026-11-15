@@ -19,6 +19,9 @@ interface Event {
   spotsLeft: number;
 }
 
+// Placeholder for details that haven't been announced yet
+const TBA = 'יפורסם בהמשך';
+
 interface Holiday {
   date: string;
   name: string;
@@ -211,6 +214,18 @@ const events: Event[] = [
     type: 'adventure',
     price: '',
     ageGroup: 'חברים בלבד',
+    spotsLeft: 50
+  },
+  {
+    id: 11,
+    date: '2026-12-19',
+    title: '🏇 יום במרוצים',
+    description: 'יום במרוצים עם כל הקבוצה! פרטים נוספים יפורסמו בהמשך.',
+    time: TBA,
+    location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009',
+    type: 'special',
+    price: TBA,
+    ageGroup: 'כל המשפחה',
     spotsLeft: 50
   },
 ];
@@ -801,7 +816,7 @@ export default function CalendarPage() {
                 {[
                   { icon: '📅', label: 'תאריך', value: new Date(selectedEvent.date + 'T12:00:00').toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' }) },
                   { icon: '⏰', label: 'שעה', value: selectedEvent.time },
-                  { icon: '📍', label: 'מיקום', value: selectedEvent.location, href: googleMapsUrl(selectedEvent.location) },
+                  { icon: '📍', label: 'מיקום', value: selectedEvent.location, ...(selectedEvent.location !== TBA && { href: googleMapsUrl(selectedEvent.location) }) },
                 ].map((item) => (
                   <div key={item.label} style={{
                     background: `${typeColors[selectedEvent.type]}0f`,
@@ -829,7 +844,7 @@ export default function CalendarPage() {
                   date: selectedEvent.date,
                   endDate: selectedEvent.endDate,
                   time: selectedEvent.time,
-                  location: selectedEvent.location,
+                  location: selectedEvent.location !== TBA ? selectedEvent.location : undefined,
                   description: selectedEvent.description
                 }} />
               </div>
