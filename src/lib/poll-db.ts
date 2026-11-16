@@ -416,3 +416,15 @@ export async function deletePoll(pollId: string): Promise<boolean> {
     return false;
   }
 }
+
+// Open or close a poll. Opening one closes the others (only one active poll at a time).
+export async function setPollActive(pollId: string, active: boolean): Promise<boolean> {
+  if (!redis) throw new Error('Redis is not configured');
+  const polls = await getAllPolls();
+  if (!polls.some((p) => p.id === pollId)) return false;
+  const updated = polls.map((p) =>
+    p.id === pollId ? { ...p, isActive: active } : active ? { ...p, isActive: false } : p
+  );
+  await redis.set(POLLS_KEY, updated);
+  return true;
+}

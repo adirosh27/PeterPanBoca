@@ -104,3 +104,12 @@ export async function getRegistrationCount(): Promise<number> {
   const registrations = await getAllRegistrations();
   return registrations.length;
 }
+// Delete a registration by id. Returns false if it was not found.
+export async function deleteRegistration(id: string): Promise<boolean> {
+  if (!redis) throw new Error('Redis is not configured');
+  const registrations = await getAllRegistrations();
+  const remaining = registrations.filter((r) => r.id !== id);
+  if (remaining.length === registrations.length) return false;
+  await redis.set(REGISTRATIONS_KEY, remaining);
+  return true;
+}
