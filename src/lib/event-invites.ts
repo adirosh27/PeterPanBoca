@@ -16,6 +16,7 @@ const REMINDED_KEY = 'peter-pan-event-reminders-sent';
 const REMINDER_DAYS = 7;
 
 export type EmailKind = 'invite' | 'reminder';
+const SUBJECT_SUFFIX = 'מפגש פיטר פן';
 const SITE_URL = 'https://peter-pan-boca.vercel.app';
 
 const redis = (() => {
@@ -99,7 +100,9 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:16px;background:#ecfdf5;font-family:Arial,Helvetica,sans-serif;color:#1f2937;direction:rtl;text-align:right">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 8px 24px rgba(6,95,70,.12)">
-    <div style="background:linear-gradient(135deg,#047857,#10b981 60%,#34d399);padding:32px 24px 28px;text-align:center;color:#ffffff">
+    <div style="background:linear-gradient(135deg,#047857,#10b981 60%,#34d399);padding:24px 24px 28px;text-align:center;color:#ffffff">
+      <img src="${SITE_URL}/images/email-logo.png" width="96" height="95" alt="Peter Pan Boca"
+           style="display:block;margin:0 auto 14px;width:96px;height:auto;border:0" />
       <div style="font-size:13px;letter-spacing:6px;font-weight:bold;opacity:.9;direction:ltr">${headerEn}</div>
       <div style="font-size:15px;margin-top:4px;opacity:.95">${escapeHtml(headerHe)}</div>
       <div style="margin:22px auto 0;display:inline-block;background:#ffffff;color:#065f46;border-radius:16px;padding:14px 28px;box-shadow:0 6px 16px rgba(0,0,0,.15)">
@@ -158,8 +161,8 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
 
   return {
     subject: reminder
-      ? `⏰ תזכורת: ${event.title} – ${daysLeftText(daysLeft).replace('!', '')} (${dayAndMonth(event.date)})`
-      : `📅 Save the Date: ${event.title} – ${dayAndMonth(event.date)}`,
+      ? `⏰ תזכורת: ${event.title} – ${daysLeftText(daysLeft).replace('!', '')} (${dayAndMonth(event.date)}) - ${SUBJECT_SUFFIX}`
+      : `📅 Save the Date: ${event.title} – ${dayAndMonth(event.date)} - ${SUBJECT_SUFFIX}`,
     html,
     text,
     ics: icsContent(info),
@@ -288,4 +291,37 @@ export async function runEventEmails({ dryRun = false } = {}): Promise<EventEmai
   }
 
   return result;
+}
+
+// Admin "send to everyone" for one event's Save the Date (e.g. an event that
+// existed before the daily job started, so it never got one). Records it as
+// sent so the daily job won't send it again. Refuses a second send unless
+// `force` is set.
+export async function sendSaveTheDateToAll(eventId: number, { force = false } = {}) {
+  if (!redis) throw new Error('Redis is not configured');
+  const events = await getEvents();
+  const event = events.find((e) => e.id === eventId);
+  if (!event) throw new Error(`No event with id ${eventId}`);
+  if ((event.endDate ?? event.date) < todayInNewYork()) throw new Error('This event is already over');
+
+  const transporter = createTransporter();
+  if (!transporter) throw notConfigured();
+
+  // Before the first daily run: record existing events first, so that run
+  // doesn't treat them as new.
+  if (!(await redis.exists(SENT_KEY))) {
+    const all = events.map((e) => String(e.id)) as [string, ...string[]];
+    await redis.sadd(SENT_KEY, ...all);
+    await redis.srem(SENT_KEY, String(event.id));
+  }
+
+  const isNew = (await redis.sadd(SENT_KEY, String(event.id))) === 1;
+  if (!isNew && !force) {
+    throw new Error('ALREADY_SENT: this event\'s Save the Date was already sent to everyone');
+  }
+  // Within a week of the event, this email is the reminder too.
+  const days = daysBetween(todayInNewYork(), event.date);
+  if (days >= 1 && days <= REMINDER_DAYS) await redis.sadd(REMINDED_KEY, String(event.id));
+
+  return sendToAll(transporter, event, 'invite');
 }

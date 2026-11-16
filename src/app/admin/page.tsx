@@ -708,6 +708,28 @@ function Events(props: {
     }
   };
 
+  const [sendingAll, setSendingAll] = useState<number | null>(null);
+  const sendToEveryone = async (ev: Event) => {
+    if (!confirm(`Send the Save the Date for "${ev.title}" (${ev.date}) to ALL active members now?\n\nEach member gets their own email. This can't be undone.`)) return;
+    setSendingAll(ev.id);
+    try {
+      let data;
+      try {
+        data = await call({ sendAll: '1', eventId: String(ev.id) });
+      } catch (err) {
+        if (!(err instanceof Error && err.message.startsWith('ALREADY_SENT'))) throw err;
+        if (!confirm(`The Save the Date for "${ev.title}" was already sent to everyone.\n\nSend it to everyone AGAIN?`)) return;
+        data = await call({ sendAll: '1', eventId: String(ev.id), force: '1' });
+      }
+      const s = data.sent;
+      notify(`Save the Date sent: ${s.delivered} delivered${s.failed.length ? `, ${s.failed.length} failed (${s.failed.join(', ')})` : ''}`, s.failed.length ? 'err' : undefined);
+    } catch (err) {
+      notify(`Send failed: ${err instanceof Error ? err.message : err}`, 'err');
+    } finally {
+      setSendingAll(null);
+    }
+  };
+
   const sendTest = async (e: React.FormEvent) => {
     e.preventDefault();
     setRunning('test');
@@ -755,6 +777,14 @@ function Events(props: {
                     {d >= 1 && d <= 7 && <span className="adm-pill is-warn">reminder window</span>}
                     <span className="adm-muted adm-small">#{e.id}</span>
                     <button className="adm-btn adm-btn-sm" onClick={() => setEditing(e)}>Edit</button>
+                    <button
+                      className="adm-btn adm-btn-sm"
+                      onClick={() => sendToEveryone(e)}
+                      disabled={sendingAll !== null || !!running}
+                      title="Email this event's Save the Date to every active member now"
+                    >
+                      {sendingAll === e.id ? 'Sending…' : '✉️ Send to everyone'}
+                    </button>
                   </div>
                 </div>
               );

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isPaymentsAdmin } from '@/lib/payments-db';
-import { runEventEmails, sendTestInvite, type EmailKind } from '@/lib/event-invites';
+import { runEventEmails, sendSaveTheDateToAll, sendTestInvite, type EmailKind } from '@/lib/event-invites';
 import { getMemberEmail } from '@/lib/member-emails';
 
 // Who receives test emails from the admin page's "send me a test" buttons.
@@ -14,6 +14,8 @@ const TEST_RECIPIENT_NAME = 'אדיר חזן';
 //   /api/events/send-invites?password=<admin password>&eventId=11&testTo=<member email>
 //     (test: one event to one member, nothing marked as sent; add &kind=reminder
 //      for the reminder version)
+//   ...&sendAll=1&eventId=11  (send that event's Save the Date to every member now;
+//      refused if already sent unless &force=1)
 // Auth: the admin password, or the cron's Authorization: Bearer <CRON_SECRET>.
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -44,6 +46,12 @@ async function run(request: NextRequest) {
         if (!to) throw new Error('Test recipient not found');
         return NextResponse.json({ success: true, test: await sendTestInvite(Number(body.eventId), to, kind) });
       }
+    }
+    if (searchParams.get('sendAll') === '1') {
+      // Admin: send one event's Save the Date to every member now.
+      const eventId = Number(searchParams.get('eventId'));
+      const sent = await sendSaveTheDateToAll(eventId, { force: searchParams.get('force') === '1' });
+      return NextResponse.json({ success: true, sent });
     }
     const testTo = searchParams.get('testTo');
     if (testTo) {
