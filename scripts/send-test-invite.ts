@@ -1,6 +1,5 @@
 // Sends one "Save the Date" test email for one event to one member.
-// Sent from peterpenboca@gmail.com. Needs EVENT_INVITES_GMAIL_USER and
-// EVENT_INVITES_GMAIL_APP_PASSWORD (an app password for that account) in .env.local.
+// Sent from the site Gmail account. Needs GMAIL_USER and GMAIL_APP_PASSWORD in .env.local.
 //   npx tsx --env-file=.env.local scripts/send-test-invite.ts <eventId> <member email>
 import { sendTestInvite } from '../src/lib/event-invites';
 
