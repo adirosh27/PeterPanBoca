@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { events as calendarEvents } from '@/lib/events';
+import { useEvents } from '@/lib/use-events';
 
 interface GalleryFile {
   path: string;
@@ -52,8 +52,13 @@ const button = (bg: string, disabled = false): React.CSSProperties => ({
 // sends it to the site admin only; nothing is sent to members or marked as sent.
 function EventEmailTest({ password }: { password: string }) {
   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  const calendarEvents = useEvents().events ?? [];
   const upcoming = calendarEvents.filter((e) => (e.endDate ?? e.date) >= today);
   const [eventId, setEventId] = useState(upcoming[0]?.id ?? calendarEvents[calendarEvents.length - 1]?.id);
+  const defaultId = upcoming[0]?.id ?? calendarEvents[calendarEvents.length - 1]?.id;
+  useEffect(() => {
+    if (eventId === undefined && defaultId !== undefined) setEventId(defaultId);
+  }, [eventId, defaultId]);
   const [sending, setSending] = useState<'invite' | 'reminder' | null>(null);
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
   const options = upcoming.length ? upcoming : calendarEvents;

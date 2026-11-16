@@ -1,6 +1,7 @@
-// Calendar events, shared by the calendar page (client) and the event-invite
-// emails (server). Adding an event here emails an invite to every active member
-// on the next run of /api/events/send-invites (daily cron).
+// Calendar event type and the original list of events.
+// Events are now stored in Redis and edited on the admin page (Events & Emails);
+// see src/lib/events-store.ts. `defaultEvents` below only seeds the store the
+// first time it is read, so editing this list no longer changes the site.
 
 export interface Event {
   id: number;
@@ -19,7 +20,9 @@ export interface Event {
 // Placeholder for details that haven't been announced yet
 export const TBA = 'יפורסם בהמשך';
 
-export const events: Event[] = [
+export const EVENT_TYPES: Event['type'][] = ['special', 'adventure', 'fairy', 'pirate'];
+
+export const defaultEvents: Event[] = [
   {
     id: 1,
     date: '2026-01-30',
@@ -45,7 +48,7 @@ export const events: Event[] = [
     spotsLeft: 15
   },
   {
-    id: 2,
+    id: 12, // was a second id 2; ids must be unique now that events are edited by id
     date: '2024-01-22',
     title: 'נשף הפיות הקסום',
     description: 'ערב קסום עם טינקר בל! יצירת אבק פיות, מסיבת תחפושות והרבה קסמים.',

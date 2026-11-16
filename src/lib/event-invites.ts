@@ -1,12 +1,13 @@
 // Event emails to every active member. SERVER-SIDE ONLY (member emails, Gmail, Redis).
-//  - "Save the Date" when a new event is added to src/lib/events.ts
+//  - "Save the Date" when a new event is added on the admin page
 //  - a reminder one week before the event
 // A daily cron runs runEventEmails(). Redis sets record what was already sent.
 // The very first run only records the events that exist at that point (no
 // Save the Date for them); their reminders still go out a week before.
 import nodemailer from 'nodemailer';
 import { Redis } from '@upstash/redis';
-import { events, TBA, type Event } from '@/lib/events';
+import { TBA, type Event } from '@/lib/events';
+import { getEvents } from '@/lib/events-store';
 import { getActiveMemberEmails, memberEmails } from '@/lib/member-emails';
 import { googleCalendarUrl, googleMapsUrl, icsContent, type CalendarEventInfo } from '@/lib/calendar-links';
 
@@ -194,7 +195,7 @@ const notConfigured = () =>
 
 // Test send: one event to one member, without marking anything as sent.
 export async function sendTestInvite(eventId: number, to: string, kind: EmailKind = 'invite') {
-  const event = events.find((e) => e.id === eventId);
+  const event = (await getEvents()).find((e) => e.id === eventId);
   if (!event) throw new Error(`No event with id ${eventId}`);
   if (!memberEmails.some((m) => m.email.toLowerCase() === to.toLowerCase())) {
     throw new Error('Test emails can only go to a member address');
@@ -238,6 +239,7 @@ export async function runEventEmails({ dryRun = false } = {}): Promise<EventEmai
   if (!redis) throw new Error('Redis is not configured');
 
   const result: EventEmailsResult = { baseline: false, invites: [], reminders: [], dryRun };
+  const events = await getEvents();
   const today = todayInNewYork();
   const upcoming = (e: Event) => (e.endDate ?? e.date) >= today;
   const ids = (list: Event[]) => list.map((e) => String(e.id)) as [string, ...string[]];

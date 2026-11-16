@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { birthdays } from '@/lib/birthdays';
 import { googleMapsUrl } from '@/lib/calendar-links';
 import AddToCalendar from '@/components/AddToCalendar';
-import { events, TBA, type Event } from '@/lib/events';
+import { TBA, type Event } from '@/lib/events';
+import { useEvents } from '@/lib/use-events';
 
 interface Holiday {
   date: string;
@@ -119,6 +120,7 @@ export default function CalendarPage() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const events = useEvents().events ?? [];
 
   // Get today's birthdays - memoized to avoid recalculation
   const todaysBirthdays = React.useMemo(() => {
