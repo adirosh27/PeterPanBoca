@@ -290,3 +290,35 @@ export async function runEventEmails({ dryRun = false } = {}): Promise<EventEmai
 
   return result;
 }
+
+// Admin "send to everyone" for one event's Save the Date (e.g. an event that
+// existed before the daily job started, so it never got one). Records it as
+// sent so the daily job won't send it again. Refuses a second send unless
+// `force` is set.
+export async function sendSaveTheDateToAll(eventId: number, { force = false } = {}) {
+  if (!redis) throw new Error('Redis is not configured');
+  const event = events.find((e) => e.id === eventId);
+  if (!event) throw new Error(`No event with id ${eventId}`);
+  if ((event.endDate ?? event.date) < todayInNewYork()) throw new Error('This event is already over');
+
+  const transporter = createTransporter();
+  if (!transporter) throw notConfigured();
+
+  // Before the first daily run: record existing events first, so that run
+  // doesn't treat them as new.
+  if (!(await redis.exists(SENT_KEY))) {
+    const all = events.map((e) => String(e.id)) as [string, ...string[]];
+    await redis.sadd(SENT_KEY, ...all);
+    await redis.srem(SENT_KEY, String(event.id));
+  }
+
+  const isNew = (await redis.sadd(SENT_KEY, String(event.id))) === 1;
+  if (!isNew && !force) {
+    throw new Error('ALREADY_SENT: this event\'s Save the Date was already sent to everyone');
+  }
+  // Within a week of the event, this email is the reminder too.
+  const days = daysBetween(todayInNewYork(), event.date);
+  if (days >= 1 && days <= REMINDER_DAYS) await redis.sadd(REMINDED_KEY, String(event.id));
+
+  return sendToAll(transporter, event, 'invite');
+}
