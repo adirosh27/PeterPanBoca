@@ -40,6 +40,7 @@ const airsoftOct2026Description = `פיטר פן איירסופט: לא AIR ול
 // Define the gallery structure based on the actual folder structure
 const galleryData = {
   2026: [
+    { name: 'Westgate River Ranch Resort & Rodeo - נובמבר 2026', folder: 'Westgate River Ranch Resort & Rodeo - נובמבר 2026' },
     { name: 'Airsoft - אוקטובר 2026', folder: 'Airsoft - אוקטובר 2026', description: airsoftOct2026Description },
     { name: 'קורס הכנת קפה - ספטמבר 2026', folder: 'קורס הכנת קפה - ספטמבר 2026' },
     { name: "טיול ג'יפים - אוגוסט 2026", folder: "טיול ג'יפים - אוגוסט 2026", youtubeId: 'LNzRRVQOLhQ' },
