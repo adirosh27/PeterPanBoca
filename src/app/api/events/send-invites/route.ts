@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isPaymentsAdmin } from '@/lib/payments-db';
 import { runEventEmails, sendTestInvite, type EmailKind } from '@/lib/event-invites';
+import { getMemberEmail } from '@/lib/member-emails';
+
+// Who receives test emails from the admin page's "send me a test" buttons.
+const TEST_RECIPIENT_NAME = 'אדיר חזן';
 
 // Daily cron: emails all members a Save the Date for each new event in
 // src/lib/events.ts, and a reminder one week before each event.
@@ -18,6 +22,7 @@ export const maxDuration = 300;
 function authorized(request: NextRequest): boolean {
   const { searchParams } = new URL(request.url);
   if (isPaymentsAdmin(searchParams.get('password'))) return true;
+  if (isPaymentsAdmin(request.headers.get('x-admin-password'))) return true; // admin pages
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret && request.headers.get('authorization') === `Bearer ${cronSecret}`) return true;
   return false;
@@ -29,8 +34,18 @@ async function run(request: NextRequest) {
   }
   const { searchParams } = new URL(request.url);
   const dryRun = searchParams.get('dryRun') === '1';
-  const testTo = searchParams.get('testTo');
   try {
+    // "Send me a test" button on the admin page: always goes to the site admin only.
+    if (request.method === 'POST' && request.headers.get('content-type')?.includes('application/json')) {
+      const body = await request.json().catch(() => ({}));
+      if (body?.test) {
+        const kind: EmailKind = body.kind === 'reminder' ? 'reminder' : 'invite';
+        const to = getMemberEmail(TEST_RECIPIENT_NAME);
+        if (!to) throw new Error('Test recipient not found');
+        return NextResponse.json({ success: true, test: await sendTestInvite(Number(body.eventId), to, kind) });
+      }
+    }
+    const testTo = searchParams.get('testTo');
     if (testTo) {
       // Test send of one event to one member; nothing is marked as announced.
       const eventId = Number(searchParams.get('eventId'));
