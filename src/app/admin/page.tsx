@@ -117,6 +117,22 @@ export default function AdminPage() {
           >
             📥 Download Excel
           </button>
+          <a
+            href="/admin/photos"
+            style={{
+              display: 'inline-block',
+              marginInlineStart: '0.75rem',
+              backgroundColor: '#dc2626',
+              color: 'white',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              textDecoration: 'none'
+            }}
+          >
+            🗑️ Manage Gallery Photos
+          </a>
         </div>
 
         {error && (
