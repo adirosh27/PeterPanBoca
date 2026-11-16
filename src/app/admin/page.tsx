@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import EventEmailTest from '@/components/EventEmailTest';
 
 interface Registration {
   id: string;
@@ -134,6 +135,8 @@ export default function AdminPage() {
             🗑️ Manage Gallery Photos
           </a>
         </div>
+
+        <EventEmailTest />
 
         {error && (
           <div style={{

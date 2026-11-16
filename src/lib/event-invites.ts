@@ -15,6 +15,7 @@ const REMINDED_KEY = 'peter-pan-event-reminders-sent';
 const REMINDER_DAYS = 7;
 
 export type EmailKind = 'invite' | 'reminder';
+const SUBJECT_SUFFIX = 'מפגש פיטר פן';
 const SITE_URL = 'https://peter-pan-boca.vercel.app';
 
 const redis = (() => {
@@ -157,8 +158,8 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
 
   return {
     subject: reminder
-      ? `⏰ תזכורת: ${event.title} – ${daysLeftText(daysLeft).replace('!', '')} (${dayAndMonth(event.date)})`
-      : `📅 Save the Date: ${event.title} – ${dayAndMonth(event.date)}`,
+      ? `⏰ תזכורת: ${event.title} – ${daysLeftText(daysLeft).replace('!', '')} (${dayAndMonth(event.date)}) - ${SUBJECT_SUFFIX}`
+      : `📅 Save the Date: ${event.title} – ${dayAndMonth(event.date)} - ${SUBJECT_SUFFIX}`,
     html,
     text,
     ics: icsContent(info),
