@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { events as calendarEvents } from '@/lib/events';
 
 interface GalleryFile {
   path: string;
@@ -47,67 +46,6 @@ const button = (bg: string, disabled = false): React.CSSProperties => ({
   fontWeight: 'bold',
   fontSize: '0.95rem',
 });
-
-// "Send me a test" for the Save the Date / reminder event emails. The server
-// sends it to the site admin only; nothing is sent to members or marked as sent.
-function EventEmailTest({ password }: { password: string }) {
-  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
-  const upcoming = calendarEvents.filter((e) => (e.endDate ?? e.date) >= today);
-  const [eventId, setEventId] = useState(upcoming[0]?.id ?? calendarEvents[calendarEvents.length - 1]?.id);
-  const [sending, setSending] = useState<'invite' | 'reminder' | null>(null);
-  const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
-  const options = upcoming.length ? upcoming : calendarEvents;
-
-  const send = async (kind: 'invite' | 'reminder') => {
-    setSending(kind);
-    setResult(null);
-    try {
-      const res = await fetch('/api/events/send-invites', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
-        body: JSON.stringify({ test: true, eventId, kind }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error || data.message || 'Send failed');
-      setResult({ ok: true, text: `Sent "${data.test.title}" (${kind === 'reminder' ? 'reminder' : 'Save the Date'}) to ${data.test.to}, from ${data.test.from}.` });
-    } catch (err) {
-      setResult({ ok: false, text: err instanceof Error ? err.message : 'Send failed' });
-    } finally {
-      setSending(null);
-    }
-  };
-
-  return (
-    <div style={{ ...card, marginBottom: '1rem' }}>
-      <div style={{ fontWeight: 'bold', color: '#065f46', marginBottom: '0.5rem' }}>📧 Event emails – send me a test</div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
-        <select
-          value={eventId}
-          onChange={(e) => setEventId(Number(e.target.value))}
-          style={{ flex: '1 1 260px', minWidth: 0, padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1' }}
-        >
-          {options.map((e) => (
-            <option key={e.id} value={e.id}>
-              {e.date} · {e.title}
-            </option>
-          ))}
-        </select>
-        <button onClick={() => send('invite')} disabled={!!sending} style={button('#10b981', !!sending)}>
-          {sending === 'invite' ? 'Sending…' : 'Send me Save the Date'}
-        </button>
-        <button onClick={() => send('reminder')} disabled={!!sending} style={button('#0d9488', !!sending)}>
-          {sending === 'reminder' ? 'Sending…' : 'Send me the reminder'}
-        </button>
-      </div>
-      {result && (
-        <div style={{ marginTop: '0.6rem', color: result.ok ? '#065f46' : '#dc2626' }}>
-          {result.ok ? '✅ ' : 'Error: '}
-          {result.text}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function GalleryAdminPage() {
   const [password, setPassword] = useState('');
@@ -296,8 +234,6 @@ export default function GalleryAdminPage() {
             )}
           </div>
         )}
-
-        <EventEmailTest password={password} />
 
         {events.length > 0 && (
           <div style={{ ...card, marginBottom: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
