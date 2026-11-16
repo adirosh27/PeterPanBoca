@@ -818,7 +818,124 @@ function Events({ password, upcoming, notify }: { password: string; upcoming: Ev
           </form>
         </section>
       </div>
+
+      <EmailActivity password={password} upcoming={upcoming} />
     </>
+  );
+}
+
+// ---------- email activity ----------
+
+interface ActivityRow {
+  name: string;
+  email: string;
+  sentAt?: string;
+  error?: string;
+  opens: number;
+  lastOpen?: string;
+  clicks: number;
+  lastClick?: string;
+  links: string[];
+}
+
+interface ActivityData {
+  summary: { sent: number; failed: number; opened: number; clicked: number };
+  rows: ActivityRow[];
+}
+
+function EmailActivity({ password, upcoming }: { password: string; upcoming: Event[] }) {
+  const options = [...upcoming, ...allEvents.filter((e) => !upcoming.includes(e)).reverse()];
+  const [eventId, setEventId] = useState<number>(options[0]?.id ?? 0);
+  const [kind, setKind] = useState<'invite' | 'reminder' | 'test'>('invite');
+  const [data, setData] = useState<ActivityData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/events/activity?eventId=${eventId}&kind=${kind}`, {
+        headers: { 'x-admin-password': password },
+        cache: 'no-store',
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || json.message || 'Failed to load');
+      setData(json);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [password, eventId, kind]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const s = data?.summary;
+  const pct = (n: number) => (s && s.sent ? ` (${Math.round((n / s.sent) * 100)}%)` : '');
+
+  return (
+    <section className="adm-card adm-table-wrap">
+      <div style={{ padding: '1rem 1rem 0' }}>
+        <h2>Email activity</h2>
+        <p className="adm-muted adm-small">
+          Who got each email, opened it and clicked a link. Opens are approximate: some email apps hide images
+          (counted once they click), and Apple Mail can load images on its own. Emails sent before tracking was added show as not sent.
+        </p>
+        <div className="adm-actions">
+          <select className="adm-input" value={eventId} onChange={(e) => setEventId(Number(e.target.value))}>
+            {options.map((e) => (
+              <option key={`${e.id}-${e.date}`} value={e.id}>#{e.id} · {e.title} ({e.date})</option>
+            ))}
+          </select>
+          <select className="adm-input" value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
+            <option value="invite">Save the Date</option>
+            <option value="reminder">Reminder</option>
+            <option value="test">Test sends</option>
+          </select>
+          <button className="adm-btn" onClick={load} disabled={loading}>{loading ? 'Loading…' : 'Refresh'}</button>
+        </div>
+        {error && <div className="adm-alert adm-alert-warn">{error}</div>}
+        {s && (
+          <div className="adm-actions">
+            <span className="adm-pill">✉️ Sent {s.sent}</span>
+            <span className="adm-pill">👀 Opened {s.opened}{pct(s.opened)}</span>
+            <span className="adm-pill">🔗 Clicked {s.clicked}{pct(s.clicked)}</span>
+            {s.failed > 0 && <span className="adm-pill is-warn">⚠️ Failed {s.failed}</span>}
+          </div>
+        )}
+      </div>
+      {data && (
+        data.rows.length === 0 ? (
+          <Empty>Nothing sent yet.</Empty>
+        ) : (
+          <table className="adm-table">
+            <thead>
+              <tr><th>Member</th><th>Sent</th><th>Opened</th><th>Clicked</th></tr>
+            </thead>
+            <tbody>
+              {data.rows.map((r) => (
+                <tr key={r.email}>
+                  <td dir="auto">{r.name}<div className="adm-muted adm-small">{r.email}</div></td>
+                  <td className="adm-small">
+                    {r.error ? <span className="adm-pill is-warn" title={r.error}>failed</span> : r.sentAt ? fmtDateTime(r.sentAt) : <span className="adm-muted">—</span>}
+                  </td>
+                  <td className="adm-small">
+                    {r.opens ? <>✅ {fmtDateTime(r.lastOpen)}{r.opens > 1 && <span className="adm-muted"> · {r.opens}×</span>}</> : <span className="adm-muted">—</span>}
+                  </td>
+                  <td className="adm-small">
+                    {r.clicks ? <>🔗 {r.links.join(', ')}{r.clicks > 1 && <span className="adm-muted"> · {r.clicks}×</span>}</> : <span className="adm-muted">—</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )
+      )}
+    </section>
   );
 }
 
