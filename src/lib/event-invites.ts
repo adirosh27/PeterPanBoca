@@ -165,35 +165,22 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
   };
 }
 
-// Invites always go out from the group's own Gmail account.
-export const PETER_PAN_EMAIL = 'peterpenboca@gmail.com';
+// The site's Gmail account (the Peter Pan account), exactly as the registration
+// confirmation emails in src/lib/email.ts use it.
+const senderAddress = () => (process.env.GMAIL_USER || '').trim();
 
-// Gmail login for PETER_PAN_EMAIL: EVENT_INVITES_GMAIL_USER/_APP_PASSWORD if
-// set, else the site's shared GMAIL_USER/GMAIL_APP_PASSWORD. Returns null when
-// nothing is configured; throws if the login is for any other account, so an
-// invite can never go out from someone's personal address.
 export function createTransporter() {
-  const [user, pass] = process.env.EVENT_INVITES_GMAIL_USER
-    ? [process.env.EVENT_INVITES_GMAIL_USER, process.env.EVENT_INVITES_GMAIL_APP_PASSWORD]
-    : [process.env.GMAIL_USER, process.env.GMAIL_APP_PASSWORD];
-  if (!user || !pass) return null;
-  if (user.trim().toLowerCase() !== PETER_PAN_EMAIL) {
-    throw new Error(
-      `Event invites must be sent from ${PETER_PAN_EMAIL}, but Gmail is set up for ${user.trim()}. ` +
-        'Set EVENT_INVITES_GMAIL_USER / EVENT_INVITES_GMAIL_APP_PASSWORD for the Peter Pan account.'
-    );
-  }
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) return null;
   return nodemailer.createTransport({
     service: 'gmail',
-    auth: { user: PETER_PAN_EMAIL, pass: pass.replace(/\s+/g, '') },
+    auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD },
   });
 }
 
 export async function sendInvite(transporter: nodemailer.Transporter, event: Event, to: string, kind: EmailKind = 'invite') {
   const mail = buildInviteEmail(event, kind);
   await transporter.sendMail({
-    from: `"Peter Pan Boca" <${PETER_PAN_EMAIL}>`,
-    replyTo: PETER_PAN_EMAIL,
+    from: `"Peter Pan Boca" <${senderAddress()}>`,
     to,
     subject: mail.subject,
     html: mail.html,
@@ -203,7 +190,7 @@ export async function sendInvite(transporter: nodemailer.Transporter, event: Eve
 }
 
 const notConfigured = () =>
-  new Error('Gmail is not configured for the Peter Pan account (GMAIL_USER / GMAIL_APP_PASSWORD)');
+  new Error('Gmail is not configured (GMAIL_USER / GMAIL_APP_PASSWORD)');
 
 // Test send: one event to one member, without marking anything as sent.
 export async function sendTestInvite(eventId: number, to: string, kind: EmailKind = 'invite') {
@@ -215,7 +202,7 @@ export async function sendTestInvite(eventId: number, to: string, kind: EmailKin
   const transporter = createTransporter();
   if (!transporter) throw notConfigured();
   await sendInvite(transporter, event, to, kind);
-  return { eventId, title: event.title, to, kind };
+  return { eventId, title: event.title, to, kind, from: senderAddress() };
 }
 
 interface SentReport {
