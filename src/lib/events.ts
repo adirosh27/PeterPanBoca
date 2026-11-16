@@ -158,11 +158,11 @@ export const events: Event[] = [
     date: '2026-12-19',
     title: '🏇 יום במרוצים',
     description: 'יום במרוצים עם כל הקבוצה! פרטים נוספים יפורסמו בהמשך.',
-    time: '12:00',
+    time: TBA,
     location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009',
     type: 'special',
     price: '',
-    ageGroup: 'כל המשפחה',
+    ageGroup: 'גברים בלבד',
     spotsLeft: 50
   },
 ];

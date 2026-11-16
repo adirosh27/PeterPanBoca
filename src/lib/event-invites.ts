@@ -91,7 +91,7 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
     ['📍 מיקום', event.location, location && googleMapsUrl(location)],
     ['💵 מחיר', event.price],
     ['👥 למי', event.ageGroup],
-  ];
+  ].filter(([, value]) => value?.trim()) as [string, string, string?][];
 
   const html = `<!DOCTYPE html>
 <html dir="rtl" lang="he">

@@ -47,7 +47,6 @@ const UPCOMING_EVENTS: {
     calendarEvent: {
       title: 'יום במרוצים - פיטר פן',
       date: '2026-12-19',
-      time: '12:00',
       location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009'
     }
   }
