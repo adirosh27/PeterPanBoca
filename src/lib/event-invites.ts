@@ -9,6 +9,7 @@ import { Redis } from '@upstash/redis';
 import { TBA, type Event } from '@/lib/events';
 import { getEvents } from '@/lib/events-store';
 import { getActiveMemberEmails, memberEmails } from '@/lib/member-emails';
+import { createToken, recordSent, type ActivityKind } from '@/lib/email-activity';
 import { googleCalendarUrl, googleMapsUrl, icsContent, type CalendarEventInfo } from '@/lib/calendar-links';
 
 const SENT_KEY = 'peter-pan-event-invites-sent';
@@ -70,7 +71,12 @@ const daysLeftText = (days: number) =>
 
 // "Save the Date" / reminder email: big date, title, the known details, and
 // one-tap buttons to save the event (Google link + attached .ics).
-export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
+// Link/pixel URLs that record opens and clicks for this copy of the email
+// (plain URLs when there is no tracking token).
+const tracked = (token: string | null | undefined, url: string) =>
+  token ? `${SITE_URL}/api/events/track/click?t=${token}&u=${encodeURIComponent(url)}` : url;
+
+export function buildInviteEmail(event: Event, kind: EmailKind = 'invite', token?: string | null) {
   const reminder = kind === 'reminder';
   const daysLeft = daysBetween(todayInNewYork(), event.date);
   const [headerEn, headerHe] = reminder
@@ -120,14 +126,14 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
             ([label, value, href]) => `<tr>
           <td style="padding:10px 0;border-top:1px solid #d1fae5;color:#065f46;font-weight:bold;white-space:nowrap;vertical-align:top">${label}</td>
           <td style="padding:10px 12px 10px 0;border-top:1px solid #d1fae5">${
-            href ? `<a href="${escapeHtml(href)}" style="color:#047857">${escapeHtml(value)}</a>` : escapeHtml(value)
+            href ? `<a href="${escapeHtml(tracked(token, href))}" style="color:#047857">${escapeHtml(value)}</a>` : escapeHtml(value)
           }</td>
         </tr>`
           )
           .join('')}
       </table>
       <div style="text-align:center;margin:26px 0 6px">
-        <a href="${escapeHtml(googleCalendarUrl(info))}"
+        <a href="${escapeHtml(tracked(token, googleCalendarUrl(info)))}"
            style="display:inline-block;background:#10b981;color:#ffffff;text-decoration:none;font-weight:bold;font-size:16px;padding:14px 28px;border-radius:999px">
           📅 שמירה ב-Google Calendar
         </a>
@@ -136,11 +142,12 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
         ביומן של אייפון או Outlook? פתחו את הקובץ המצורף <b>event.ics</b> והאירוע יתווסף ליומן.
       </p>
       <p style="text-align:center;font-size:13px;margin:22px 0 0">
-        <a href="${SITE_URL}/calendar" style="color:#047857">לכל האירועים ביומן של פיטר פן</a>
+        <a href="${escapeHtml(tracked(token, `${SITE_URL}/calendar`))}" style="color:#047857">לכל האירועים ביומן של פיטר פן</a>
       </p>
     </div>
   </div>
   <p style="text-align:center;font-size:12px;color:#6b7280;margin:14px 0 0">🧚 Peter Pan Boca</p>
+${token ? `<img src="${SITE_URL}/api/events/track/open?t=${token}" width="1" height="1" alt="" style="display:block;width:1px;height:1px;border:0" />` : ''}
 </body>
 </html>`;
 
@@ -181,8 +188,26 @@ export function createTransporter() {
   });
 }
 
-export async function sendInvite(transporter: nodemailer.Transporter, event: Event, to: string, kind: EmailKind = 'invite') {
-  const mail = buildInviteEmail(event, kind);
+// Sends one member's copy, with its own tracking token, and records sent/failed.
+export async function sendInvite(
+  transporter: nodemailer.Transporter,
+  event: Event,
+  to: string,
+  kind: EmailKind = 'invite',
+  activityKind: ActivityKind = kind
+) {
+  const token = await createToken(event.id, activityKind, to).catch(() => null);
+  const mail = buildInviteEmail(event, kind, token);
+  try {
+    await sendMail(transporter, to, mail);
+  } catch (error) {
+    await recordSent(event.id, activityKind, to, error instanceof Error ? error.message : String(error)).catch(() => {});
+    throw error;
+  }
+  await recordSent(event.id, activityKind, to).catch(() => {});
+}
+
+async function sendMail(transporter: nodemailer.Transporter, to: string, mail: ReturnType<typeof buildInviteEmail>) {
   await transporter.sendMail({
     from: `"Peter Pan Boca" <${senderAddress()}>`,
     to,
@@ -205,7 +230,7 @@ export async function sendTestInvite(eventId: number, to: string, kind: EmailKin
   }
   const transporter = createTransporter();
   if (!transporter) throw notConfigured();
-  await sendInvite(transporter, event, to, kind);
+  await sendInvite(transporter, event, to, kind, 'test');
   return { eventId, title: event.title, to, kind, from: senderAddress() };
 }
 
