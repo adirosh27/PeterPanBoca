@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllRegistrations, addRegistration, initDatabase, getRegistrationCount } from '@/lib/db';
+import { getAllRegistrations, addRegistration, initDatabase, getRegistrationCount, deleteRegistration } from '@/lib/db';
+import { isPaymentsAdmin } from '@/lib/payments-db';
 import { sendConfirmationEmail, sendAdminNotification } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
@@ -76,8 +77,13 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint to retrieve registrations (for admin use)
-export async function GET() {
+function unauthorized() {
+  return NextResponse.json({ success: false, message: 'Wrong admin password', registrations: [] }, { status: 401 });
+}
+
+// GET endpoint to retrieve registrations (admin only: header x-admin-password)
+export async function GET(request: NextRequest) {
+  if (!isPaymentsAdmin(request.headers.get('x-admin-password'))) return unauthorized();
   try {
     console.log('GET /api/register - starting');
     
@@ -118,6 +124,24 @@ export async function GET() {
         error: error instanceof Error ? error.message : 'Unknown error',
         details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : String(error)) : undefined
       },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE ?id=<registration id> (admin only: header x-admin-password)
+export async function DELETE(request: NextRequest) {
+  if (!isPaymentsAdmin(request.headers.get('x-admin-password'))) return unauthorized();
+  const id = new URL(request.url).searchParams.get('id');
+  if (!id) return NextResponse.json({ success: false, message: 'id is required' }, { status: 400 });
+  try {
+    const ok = await deleteRegistration(id);
+    if (!ok) return NextResponse.json({ success: false, message: 'Registration not found' }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error in DELETE /api/register:', error);
+    return NextResponse.json(
+      { success: false, message: error instanceof Error ? error.message : 'Delete failed' },
       { status: 500 }
     );
   }

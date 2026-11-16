@@ -99,7 +99,9 @@ export function buildInviteEmail(event: Event, kind: EmailKind = 'invite') {
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:16px;background:#ecfdf5;font-family:Arial,Helvetica,sans-serif;color:#1f2937;direction:rtl;text-align:right">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 8px 24px rgba(6,95,70,.12)">
-    <div style="background:linear-gradient(135deg,#047857,#10b981 60%,#34d399);padding:32px 24px 28px;text-align:center;color:#ffffff">
+    <div style="background:linear-gradient(135deg,#047857,#10b981 60%,#34d399);padding:24px 24px 28px;text-align:center;color:#ffffff">
+      <img src="${SITE_URL}/images/email-logo.png" width="96" height="95" alt="Peter Pan Boca"
+           style="display:block;margin:0 auto 14px;width:96px;height:auto;border:0" />
       <div style="font-size:13px;letter-spacing:6px;font-weight:bold;opacity:.9;direction:ltr">${headerEn}</div>
       <div style="font-size:15px;margin-top:4px;opacity:.95">${escapeHtml(headerHe)}</div>
       <div style="margin:22px auto 0;display:inline-block;background:#ffffff;color:#065f46;border-radius:16px;padding:14px 28px;box-shadow:0 6px 16px rgba(0,0,0,.15)">
