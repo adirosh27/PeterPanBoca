@@ -5,6 +5,7 @@ const nextConfig = {
   },
   outputFileTracingExcludes: {
     '/api/photos': ['./public/images/**', './public/Photos/**'],
+    '/api/gallery-admin': ['./public/images/**', './public/Photos/**'],
   },
   // Force cache invalidation
   generateBuildId: async () => {
