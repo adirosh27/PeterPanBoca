@@ -5,52 +5,54 @@ import { useEffect, useState } from 'react';
 import { getWeekBirthdays, isSameDay, type WeekBirthday } from '@/lib/birthdays';
 import { googleMapsUrl, type CalendarEventInfo } from '@/lib/calendar-links';
 import AddToCalendar from '@/components/AddToCalendar';
+import { TBA, type Event } from '@/lib/events';
+import { useEvents } from '@/lib/use-events';
 
-// Upcoming events data
-const UPCOMING_EVENTS: {
-  id: string;
-  name: string;
+// Countdown details for a calendar event (events are edited on the admin page)
+interface CountdownEvent {
   date: string;
+  name: string;
   dateLabel?: string;
   address?: string;
   fullAddress?: string;
-  calendarEvent?: CalendarEventInfo;
-}[] = [
-  {
-    id: 'family-friday-dinner',
-    name: 'ארוחת שישי משפחות',
-    date: '2026-01-30T19:30:00',
-    address: 'Boca Falls Club House',
-    fullAddress: '21700 Boca Falls Dr, Boca Raton, FL 33428'
-  },
-  {
-    id: 'river-ranch-weekend',
-    name: '🤠 סופ״ש בריבר ראנץ׳',
-    date: '2026-11-14T00:00:00',
-    // Multi-day event with no set start time: show the date range instead of an hour
-    dateLabel: 'שבת-ראשון, 14-15 בנובמבר 2026',
-    address: 'Westgate River Ranch Resort & Rodeo',
-    fullAddress: '3200 River Ranch Blvd, River Ranch, FL',
-    calendarEvent: {
-      title: 'סופ״ש בריבר ראנץ׳ - פיטר פן',
-      date: '2026-11-14',
-      endDate: '2026-11-15',
-      location: 'Westgate River Ranch Resort & Rodeo, 3200 River Ranch Blvd, River Ranch, FL'
-    }
-  },
-  {
-    id: 'day-at-the-races',
-    name: '🏇 יום במרוצים',
-    date: '2026-12-19T12:00:00',
-    address: 'Gulfstream Park',
-    fullAddress: '901 S Federal Hwy, Hallandale Beach, FL 33009',
-    calendarEvent: {
-      title: 'יום במרוצים - פיטר פן',
-      date: '2026-12-19',
-      location: 'Gulfstream Park, 901 S Federal Hwy, Hallandale Beach, FL 33009'
-    }
+  calendarEvent: CalendarEventInfo;
+}
+
+const known = (value: string) => (value && value !== TBA ? value : undefined);
+
+function toCountdown(event: Event): CountdownEvent {
+  const time = known(event.time)?.match(/^\s*(\d{1,2}):(\d{2})/);
+  const timed = time && !event.endDate;
+  const location = known(event.location);
+  // "Venue, street, city" -> venue on top, the rest as the map link
+  const [venue, ...addressParts] = location ? location.split(',') : [];
+  const format = (date: string, options: Intl.DateTimeFormatOptions) =>
+    new Date(`${date}T12:00:00`).toLocaleDateString('he-IL', options);
+
+  let dateLabel: string | undefined;
+  if (event.endDate) {
+    dateLabel = `${format(event.date, { weekday: 'long' })}-${format(event.endDate, { weekday: 'long' })}, ` +
+      `${format(event.date, { day: 'numeric' })}-${format(event.endDate, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  } else if (!timed) {
+    dateLabel = `${format(event.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} - השעה תפורסם בהמשך`;
   }
-];
+
+  return {
+    date: `${event.date}T${timed ? `${time[1].padStart(2, '0')}:${time[2]}` : '00:00'}:00`,
+    name: event.title,
+    dateLabel,
+    address: venue?.trim(),
+    fullAddress: addressParts.join(',').trim() || undefined,
+    calendarEvent: {
+      title: `${event.title} - פיטר פן`,
+      date: event.date,
+      endDate: event.endDate,
+      time: known(event.time),
+      location,
+      description: event.description || undefined
+    }
+  };
+}
 
 // Countdown Timer Component
 function CountdownTimer({ targetDate, eventName, address, fullAddress, dateLabel, calendarEvent }: { targetDate: string, eventName: string, address?: string, fullAddress?: string, dateLabel?: string, calendarEvent?: CalendarEventInfo }) {
@@ -300,6 +302,7 @@ function WeekBirthdays() {
 }
 
 export default function HomePage() {
+  const { events } = useEvents();
   const [themeContent, setThemeContent] = useState({
     heroTitle: "ברוכים הבאים לקבוצת פיטר פן בבוקה רטון",
     heroSubtitle: '', 
@@ -567,7 +570,10 @@ export default function HomePage() {
           {(() => {
             // Find the next upcoming event
             const now = new Date();
-            const nextEvent = UPCOMING_EVENTS.find(event => new Date(event.date) > now);
+            const nextEvent = (events ?? [])
+              .map(toCountdown)
+              .sort((a, b) => a.date.localeCompare(b.date))
+              .find(event => new Date(event.date) > now);
 
             if (nextEvent) {
               return (

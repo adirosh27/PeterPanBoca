@@ -6,8 +6,8 @@ import { getMemberEmail } from '@/lib/member-emails';
 // Who receives test emails from the admin page's "send me a test" buttons.
 const TEST_RECIPIENT_NAME = 'אדיר חזן';
 
-// Daily cron: emails all members a Save the Date for each new event in
-// src/lib/events.ts, and a reminder one week before each event.
+// Daily cron: emails all members a Save the Date for each new event (added on
+// the admin page), and a reminder one week before each event.
 // Can also be run by hand right after adding an event:
 //   /api/events/send-invites?password=<admin password>            (sends)
 //   /api/events/send-invites?password=<admin password>&dryRun=1   (preview only)

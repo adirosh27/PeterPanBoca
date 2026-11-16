@@ -1,7 +1,8 @@
 'use client';
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import { events as allEvents, TBA, type Event } from '@/lib/events';
+import { EVENT_TYPES, TBA, type Event } from '@/lib/events';
+import { useEvents } from '@/lib/use-events';
 import { getWeekBirthdays } from '@/lib/birthdays';
 
 // ---------- types ----------
@@ -226,6 +227,9 @@ export default function AdminPage() {
     if (authed) loadAll();
   }, [authed, loadAll]);
 
+  const { events: loadedEvents, reload: reloadEvents } = useEvents();
+  const allEvents = useMemo(() => loadedEvents ?? [], [loadedEvents]);
+
   // ----- derived -----
 
   const today = todayStr();
@@ -234,7 +238,7 @@ export default function AdminPage() {
       allEvents
         .filter((e) => (e.endDate ?? e.date) >= today)
         .sort((a, b) => a.date.localeCompare(b.date)),
-    [today]
+    [today, allEvents]
   );
   const activePoll = polls.find((p) => p.isActive);
   const needsReview = payments.filter((p) => p.needsReview);
@@ -327,7 +331,16 @@ export default function AdminPage() {
           {section === 'registrations' && (
             <Registrations password={password} registrations={registrations} reload={loadAll} notify={notify} />
           )}
-          {section === 'events' && <Events password={password} upcoming={upcomingEvents} notify={notify} />}
+          {section === 'events' && (
+            <Events
+              password={password}
+              allEvents={allEvents}
+              upcoming={upcomingEvents}
+              loaded={loadedEvents !== null}
+              reload={reloadEvents}
+              notify={notify}
+            />
+          )}
           {section === 'polls' && <Polls password={password} polls={polls} reload={loadAll} notify={notify} />}
           {section === 'payments' && (
             <Payments password={password} payments={payments} reload={loadAll} notify={notify} />
@@ -637,13 +650,29 @@ function Registrations({ password, registrations, reload, notify }: { password: 
 
 // ---------- events & emails ----------
 
-function Events({ password, upcoming, notify }: { password: string; upcoming: Event[]; notify: Notify }) {
+function Events(props: {
+  password: string;
+  allEvents: Event[];
+  upcoming: Event[];
+  loaded: boolean;
+  reload: () => Promise<void>;
+  notify: Notify;
+}) {
+  const { password, allEvents, upcoming, loaded, reload, notify } = props;
+  const [editing, setEditing] = useState<Event | 'new' | null>(null);
   const [running, setRunning] = useState<'' | 'preview' | 'send' | 'test'>('');
   const [result, setResult] = useState<EmailRunResult | null>(null);
   const [testEvent, setTestEvent] = useState<number>(upcoming[0]?.id ?? 0);
   const [testKind, setTestKind] = useState<'invite' | 'reminder'>('invite');
   const [testTo, setTestTo] = useState('');
   const pastCount = allEvents.length - upcoming.length;
+  const past = allEvents
+    .filter((e) => !upcoming.includes(e))
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  useEffect(() => {
+    if (!upcoming.some((e) => e.id === testEvent) && upcoming[0]) setTestEvent(upcoming[0].id);
+  }, [upcoming, testEvent]);
 
   const call = async (params: Record<string, string>) => {
     const qs = new URLSearchParams({ password, ...params });
@@ -716,13 +745,16 @@ function Events({ password, upcoming, notify }: { password: string; upcoming: Ev
 
   return (
     <>
-      <Header title="Events & Emails" subtitle={`${upcoming.length} upcoming · ${pastCount} past. Events are edited in src/lib/events.ts.`}>
+      <Header title="Events & Emails" subtitle={`${upcoming.length} upcoming · ${pastCount} past. Changes show on the calendar and home page right away.`}>
         <a className="adm-btn" href="/calendar">Open calendar →</a>
+        <button className="adm-btn adm-btn-primary" onClick={() => setEditing('new')} disabled={!loaded}>+ New event</button>
       </Header>
 
       <section className="adm-card">
         <h2>Upcoming events</h2>
-        {upcoming.length === 0 ? (
+        {!loaded ? (
+          <Empty>Loading events…</Empty>
+        ) : upcoming.length === 0 ? (
           <Empty>No upcoming events.</Empty>
         ) : (
           <div className="adm-events">
@@ -744,8 +776,9 @@ function Events({ password, upcoming, notify }: { password: string; upcoming: Ev
                     <span className="adm-pill">{d <= 0 ? 'today' : `in ${d}d`}</span>
                     {d >= 1 && d <= 7 && <span className="adm-pill is-warn">reminder window</span>}
                     <span className="adm-muted adm-small">#{e.id}</span>
+                    <button className="adm-btn adm-btn-sm" onClick={() => setEditing(e)}>Edit</button>
                     <button
-                      className="adm-btn"
+                      className="adm-btn adm-btn-sm"
                       onClick={() => sendToEveryone(e)}
                       disabled={sendingAll !== null || !!running}
                       title="Email this event's Save the Date to every active member now"
@@ -759,6 +792,40 @@ function Events({ password, upcoming, notify }: { password: string; upcoming: Ev
           </div>
         )}
       </section>
+
+      {past.length > 0 && (
+        <details className="adm-card adm-past">
+          <summary>Past events ({past.length})</summary>
+          <div className="adm-events">
+            {past.map((e) => (
+              <div key={`${e.id}-${e.date}`} className="adm-event">
+                <div className="adm-event-body">
+                  <strong dir="auto">{e.title}</strong>
+                  <small>{fmtDate(e.date)}</small>
+                </div>
+                <div className="adm-event-tags">
+                  <span className="adm-muted adm-small">#{e.id}</span>
+                  <button className="adm-btn adm-btn-sm" onClick={() => setEditing(e)}>Edit</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
+
+      {editing && (
+        <EventEditor
+          event={editing === 'new' ? null : editing}
+          password={password}
+          onClose={() => setEditing(null)}
+          onSaved={async (text) => {
+            setEditing(null);
+            notify(text);
+            await reload();
+          }}
+          notify={notify}
+        />
+      )}
 
       <div className="adm-grid-2">
         <section className="adm-card">
@@ -798,7 +865,7 @@ function Events({ password, upcoming, notify }: { password: string; upcoming: Ev
             <label>
               Event
               <select className="adm-input" value={testEvent} onChange={(e) => setTestEvent(Number(e.target.value))}>
-                {(upcoming.length ? upcoming : allEvents).map((e) => (
+                {(upcoming.length ? upcoming : allEvents).map((e: Event) => (
                   <option key={`${e.id}-${e.date}`} value={e.id}>#{e.id} · {e.title} ({e.date})</option>
                 ))}
               </select>
@@ -819,8 +886,173 @@ function Events({ password, upcoming, notify }: { password: string; upcoming: Ev
         </section>
       </div>
 
-      <EmailActivity password={password} upcoming={upcoming} />
+      <EmailActivity password={password} upcoming={upcoming} allEvents={allEvents} />
     </>
+  );
+}
+
+// ---------- event editor ----------
+
+const TYPE_LABELS: Record<Event['type'], string> = {
+  special: '👑 Special (orange)',
+  adventure: '⭐ Adventure (green)',
+  fairy: '🧚 Fairy (purple)',
+  pirate: '🏴‍☠️ Pirate (red)',
+};
+
+const AUDIENCES = ['כל המשפחה', 'חברים בלבד', 'גברים בלבד', 'נשים בלבד', 'ילדים'];
+
+function EventEditor(props: {
+  event: Event | null;
+  password: string;
+  onClose: () => void;
+  onSaved: (message: string) => Promise<void>;
+  notify: Notify;
+}) {
+  const { event, password, onClose, onSaved, notify } = props;
+  const [form, setForm] = useState(() => ({
+    title: event?.title ?? '',
+    date: event?.date ?? '',
+    endDate: event?.endDate ?? '',
+    time: known(event?.time),
+    location: known(event?.location),
+    description: event?.description ?? '',
+    ageGroup: event?.ageGroup ?? 'כל המשפחה',
+    price: event?.price ?? '',
+    type: event?.type ?? ('special' as Event['type']),
+  }));
+  const [busy, setBusy] = useState<'' | 'save' | 'delete'>('');
+  const [error, setError] = useState('');
+  const set = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && !busy && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [busy, onClose]);
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy('save');
+    setError('');
+    try {
+      const res = await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+        body: JSON.stringify({ ...(event && { id: event.id, spotsLeft: event.spotsLeft }), ...form }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Save failed');
+      await onSaved(event ? `Saved “${data.event.title}”` : `Added “${data.event.title}” to the calendar`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      setBusy('');
+    }
+  };
+
+  const remove = async () => {
+    if (!event || !confirm(`Delete “${event.title}” (${fmtDate(event.date)}) from the calendar? This can't be undone.`)) return;
+    setBusy('delete');
+    try {
+      const res = await fetch(`/api/events?id=${event.id}`, { method: 'DELETE', headers: { 'x-admin-password': password } });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Delete failed');
+      await onSaved(`Deleted “${event.title}”`);
+    } catch (err) {
+      notify(`Delete failed: ${err instanceof Error ? err.message : err}`, 'err');
+      setBusy('');
+    }
+  };
+
+  return (
+    <div className="adm-modal" onMouseDown={(e) => e.target === e.currentTarget && !busy && onClose()}>
+      <form className="adm-card adm-modal-box adm-form" onSubmit={save}>
+        <div className="adm-modal-head">
+          <h2>{event ? `Edit event #${event.id}` : 'New event'}</h2>
+          <button type="button" className="adm-btn adm-btn-ghost adm-btn-sm" onClick={onClose} disabled={!!busy} aria-label="Close">✕</button>
+        </div>
+
+        <label>
+          Title
+          <input className="adm-input" dir="auto" required value={form.title} onChange={set('title')} placeholder="🏇 יום במרוצים" autoFocus />
+          <small className="adm-muted">Start with an emoji — it shows on the calendar on phones.</small>
+        </label>
+
+        <div className="adm-form-row">
+          <label>
+            Date
+            <input className="adm-input" type="date" required value={form.date} onChange={set('date')} />
+          </label>
+          <label>
+            Last day <span className="adm-muted">(multi-day only)</span>
+            <input className="adm-input" type="date" min={form.date || undefined} value={form.endDate} onChange={set('endDate')} />
+          </label>
+        </div>
+
+        <div className="adm-form-row">
+          <label>
+            Time
+            <input className="adm-input" value={form.time} onChange={set('time')} placeholder="19:30 or 16:00-18:00" />
+            <small className="adm-muted">Empty = “{TBA}”</small>
+          </label>
+          <label>
+            Type / color
+            <select className="adm-input" value={form.type} onChange={set('type')}>
+              {EVENT_TYPES.map((t) => (
+                <option key={t} value={t}>{TYPE_LABELS[t]}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Location
+          <input className="adm-input" dir="auto" value={form.location} onChange={set('location')} placeholder="Venue name, street, city" />
+          <small className="adm-muted">Venue first, then the address, separated by commas. Empty = “{TBA}”</small>
+        </label>
+
+        <label>
+          Description
+          <textarea className="adm-input" dir="auto" rows={3} value={form.description} onChange={set('description')} />
+        </label>
+
+        <div className="adm-form-row">
+          <label>
+            Who is invited
+            <input className="adm-input" dir="auto" list="adm-audiences" value={form.ageGroup} onChange={set('ageGroup')} />
+            <datalist id="adm-audiences">
+              {AUDIENCES.map((a) => <option key={a} value={a} />)}
+            </datalist>
+          </label>
+          <label>
+            Price <span className="adm-muted">(optional)</span>
+            <input className="adm-input" dir="auto" value={form.price} onChange={set('price')} placeholder="חינם / $40" />
+          </label>
+        </div>
+
+        {!event && (
+          <div className="adm-alert adm-alert-warn">
+            All active members get a <b>Save the Date</b> email for a new upcoming event on the next daily email run
+            (or right away with “Send due emails now”).
+          </div>
+        )}
+        {error && <div className="adm-alert adm-alert-err">{error}</div>}
+
+        <div className="adm-modal-actions">
+          {event && (
+            <button type="button" className="adm-btn adm-btn-danger" onClick={remove} disabled={!!busy}>
+              {busy === 'delete' ? 'Deleting…' : 'Delete'}
+            </button>
+          )}
+          <span style={{ flex: 1 }} />
+          <button type="button" className="adm-btn" onClick={onClose} disabled={!!busy}>Cancel</button>
+          <button className="adm-btn adm-btn-primary" disabled={!!busy}>
+            {busy === 'save' ? 'Saving…' : event ? 'Save changes' : 'Add event'}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 
@@ -843,9 +1075,14 @@ interface ActivityData {
   rows: ActivityRow[];
 }
 
-function EmailActivity({ password, upcoming }: { password: string; upcoming: Event[] }) {
+function EmailActivity({ password, upcoming, allEvents }: { password: string; upcoming: Event[]; allEvents: Event[] }) {
   const options = [...upcoming, ...allEvents.filter((e) => !upcoming.includes(e)).reverse()];
   const [eventId, setEventId] = useState<number>(options[0]?.id ?? 0);
+  // Events load after the first render; pick the first one once they arrive
+  const firstId = options[0]?.id;
+  useEffect(() => {
+    if (!eventId && firstId) setEventId(firstId);
+  }, [eventId, firstId]);
   const [kind, setKind] = useState<'invite' | 'reminder' | 'test'>('invite');
   const [data, setData] = useState<ActivityData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -871,8 +1108,8 @@ function EmailActivity({ password, upcoming }: { password: string; upcoming: Eve
   }, [password, eventId, kind]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    if (eventId) load();
+  }, [load, eventId]);
 
   const s = data?.summary;
   const pct = (n: number) => (s && s.sent ? ` (${Math.round((n / s.sent) * 100)}%)` : '');
@@ -1264,6 +1501,17 @@ const CSS = `
 .adm-link-card{display:flex;flex-direction:column;gap:.3rem;text-decoration:none;color:inherit}
 .adm-link-card:hover{border-color:var(--brand)}
 .adm-link-icon{font-size:1.6rem}
+.adm-modal{position:fixed;inset:0;z-index:1000;background:rgba(15,23,42,.5);display:flex;align-items:flex-start;justify-content:center;padding:4vh 1rem;overflow-y:auto}
+.adm-modal-box{width:100%;max-width:620px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.adm-modal-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.adm-modal-head h2{margin:0}
+.adm-modal-actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.4rem}
+.adm-form-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.adm-form label small{font-weight:400}
+.adm-form textarea{resize:vertical;font:inherit}
+.adm-past summary{cursor:pointer;font-weight:700}
+.adm-past[open] summary{margin-bottom:.4rem}
+@media (max-width:600px){.adm-form-row{grid-template-columns:1fr}}
 .adm-toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:.7rem 1.1rem;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50;max-width:calc(100% - 2rem)}
 .adm-toast.is-err{background:var(--danger)}
 @media (max-width:900px){
