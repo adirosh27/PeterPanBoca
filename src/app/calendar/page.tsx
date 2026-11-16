@@ -98,6 +98,23 @@ const typeDecor: Record<Event['type'], string[]> = {
 
 const SPARKLES = ['✨', '⭐', '🌟', '💫'];
 
+// Splits a leading emoji off an event title ("🏇 יום במרוצים" -> 🏇 + "יום במרוצים"),
+// falling back to the event type's icon when the title has none
+function splitTitle(event: Event) {
+  const match = event.title.match(/^(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)\s*/u);
+  return match
+    ? { emoji: match[1], text: event.title.slice(match[0].length) }
+    : { emoji: typeIcons[event.type], text: event.title };
+}
+
+function formatEventDates(event: Event) {
+  const format = (date: string, options: Intl.DateTimeFormatOptions) =>
+    new Date(date + 'T12:00:00').toLocaleDateString('he-IL', options);
+  return event.endDate
+    ? `${format(event.date, { weekday: 'short', day: 'numeric' })} - ${format(event.endDate, { weekday: 'short', day: 'numeric', month: 'long' })}`
+    : format(event.date, { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
 export default function CalendarPage() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -154,6 +171,13 @@ export default function CalendarPage() {
     return [...regularHolidays, ...birthdaysToday];
   };
 
+  // Events that fall (even partly) in the month being shown
+  const monthStart = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-01`;
+  const monthEnd = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-31`;
+  const monthEvents = events
+    .filter(event => event.date <= monthEnd && (event.endDate ?? event.date) >= monthStart)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -178,16 +202,22 @@ export default function CalendarPage() {
       const dayEvents = getEventsForDate(date);
       const dayHolidays = getHolidaysForDate(date);
       const isToday = date.toDateString() === new Date().toDateString();
+      const eventColor = dayEvents.length > 0 ? typeColors[dayEvents[0].type] : null;
+      const restingBackground = isToday
+        ? 'rgba(254, 243, 199, 0.85)'
+        : eventColor ? `${eventColor}1f` : 'rgba(255, 255, 255, 0.75)';
 
       days.push(
         <div
           key={day}
+          onClick={dayEvents.length > 0 ? () => setSelectedEvent(dayEvents[0]) : undefined}
           style={{
             minWidth: 0,
             minHeight: 'clamp(60px, 15vw, 84px)',
             padding: 'clamp(0.35rem, 1.2vw, 0.6rem)',
-            border: isToday ? '2px solid #f59e0b' : '1px solid rgba(16, 185, 129, 0.15)',
-            backgroundColor: isToday ? 'rgba(254, 243, 199, 0.85)' : 'rgba(255, 255, 255, 0.75)',
+            overflow: 'hidden',
+            border: isToday ? '2px solid #f59e0b' : eventColor ? `2px solid ${eventColor}` : '1px solid rgba(16, 185, 129, 0.15)',
+            backgroundColor: restingBackground,
             borderRadius: '12px',
             cursor: dayEvents.length > 0 ? 'pointer' : 'default',
             transition: 'all 0.25s ease',
@@ -202,13 +232,13 @@ export default function CalendarPage() {
           }}
           onMouseLeave={(e) => {
             if (dayEvents.length > 0) {
-              e.currentTarget.style.backgroundColor = isToday ? 'rgba(254, 243, 199, 0.85)' : 'rgba(255, 255, 255, 0.75)';
+              e.currentTarget.style.backgroundColor = restingBackground;
               e.currentTarget.style.transform = 'translateY(0) scale(1)';
               e.currentTarget.style.boxShadow = isToday ? '0 0 0 3px rgba(245, 158, 11, 0.15)' : 'none';
             }
           }}
         >
-          <div style={{
+          <div className="cal-day-head" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.3rem',
@@ -244,7 +274,8 @@ export default function CalendarPage() {
           {dayEvents.map(event => (
             <div
               key={event.id}
-              onClick={() => setSelectedEvent(event)}
+              className="cal-chip"
+              onClick={(e) => { e.stopPropagation(); setSelectedEvent(event); }}
               style={{
                 fontSize: 'clamp(0.6rem, 2vw, 0.72rem)',
                 padding: 'clamp(2px, 0.6vw, 3px) clamp(5px, 1.2vw, 7px)',
@@ -260,11 +291,12 @@ export default function CalendarPage() {
                 maxWidth: '100%'
               }}
             >
-              {typeIcons[event.type]} {event.title.length > 14 ? `${event.title.substring(0, 14)}…` : event.title}
+              <span className="cal-chip-emoji">{splitTitle(event).emoji}</span>
+              <span className="cal-chip-title"> {splitTitle(event).text}</span>
             </div>
           ))}
           {dayHolidays.length > 0 && (
-            <div style={{
+            <div className="cal-day-note" style={{
               fontSize: '0.65rem',
               color: '#6b7280',
               marginTop: '0.2rem',
@@ -318,6 +350,27 @@ export default function CalendarPage() {
         @keyframes modalPopIn {
           0% { opacity: 0; transform: scale(0.9) translateY(20px); }
           100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Phones: days are ~45px wide, too narrow for text. Event chips shrink
+           to the event's emoji and birthday names hide (the cake next to the
+           day number stays); the month's events are listed under the grid. */
+        @media (max-width: 600px) {
+          .cal-chip {
+            text-align: center;
+            padding: 2px 0 !important;
+            font-size: 1rem !important;
+            background: white !important;
+            box-shadow: none !important;
+          }
+          .cal-chip-title,
+          .cal-day-note {
+            display: none;
+          }
+          .cal-day-head {
+            flex-wrap: wrap;
+            gap: 0 !important;
+          }
         }
 
         @keyframes heroFloat {
@@ -520,6 +573,66 @@ export default function CalendarPage() {
             {renderCalendar()}
           </div>
         </div>
+
+        {monthEvents.length > 0 && (
+          <div
+            data-card
+            style={{
+              borderRadius: '24px',
+              padding: 'clamp(1rem, 4vw, 1.5rem)',
+              marginBottom: '2rem',
+              background: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(10px)',
+              border: '2px solid rgba(16, 185, 129, 0.2)',
+              boxShadow: '0 10px 30px rgba(16, 185, 129, 0.12)',
+              direction: 'rtl'
+            }}
+          >
+            <h3 style={{ margin: '0 0 1rem', fontSize: 'clamp(1.15rem, 4vw, 1.4rem)', fontWeight: 'bold', color: '#065f46' }}>
+              🗓️ אירועים ב{months[selectedMonth]}
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {monthEvents.map(event => {
+                const { emoji, text } = splitTitle(event);
+                return (
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => setSelectedEvent(event)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.85rem',
+                      width: '100%',
+                      padding: '0.85rem 1rem',
+                      borderRadius: '16px',
+                      border: `1px solid ${typeColors[event.type]}55`,
+                      borderInlineStart: `5px solid ${typeColors[event.type]}`,
+                      background: `${typeColors[event.type]}12`,
+                      textAlign: 'start',
+                      fontFamily: 'inherit',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <span style={{ fontSize: '2rem', lineHeight: 1, flexShrink: 0 }}>{emoji}</span>
+                    <span style={{ minWidth: 0 }}>
+                      <span style={{ display: 'block', fontWeight: 'bold', color: '#1f2937', fontSize: '1.05rem' }}>{text}</span>
+                      <span style={{ display: 'block', color: '#4b5563', fontSize: '0.9rem', marginTop: '0.2rem' }}>
+                        📅 {formatEventDates(event)}{event.time && event.time !== TBA && !event.endDate ? ` · ${event.time}` : ''}
+                      </span>
+                      {event.location && event.location !== TBA && (
+                        <span style={{ display: 'block', color: '#6b7280', fontSize: '0.85rem', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          📍 {event.location.split(',')[0]}
+                        </span>
+                      )}
+                    </span>
+                    <span aria-hidden="true" style={{ marginInlineStart: 'auto', color: typeColors[event.type], fontSize: '1.25rem' }}>‹</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
       </div>
 
