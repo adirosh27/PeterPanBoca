@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/generate-image-manifest.js && next build",
+    "build": "next build",
+    "photos:upload": "node scripts/upload-photos.js",
+    "photos:manifest": "node scripts/generate-image-manifest.js",
     "start": "next start",
     "lint": "next lint",
     "keep-db-active": "node keep-db-active.js",
@@ -42,6 +44,7 @@
     "yet-another-react-lightbox": "^3.25.0"
   },
   "devDependencies": {
-    "@types/mailparser": "^3.4.6"
+    "@types/mailparser": "^3.4.6",
+    "@vercel/blob": "^2.9.0"
   }
 }

@@ -38,3 +38,7 @@ next-env.d.ts
 /data/registrations.json*.log
 # video files in images - too large for Vercel
 public/images/**/*.mp4
+
+# gallery photos live in Vercel Blob, not the repo (see README-PHOTOS.md)
+public/images/20*/
+photos-to-upload/
