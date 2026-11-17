@@ -2,6 +2,10 @@
 const nextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Gallery photos are served from Vercel Blob (see scripts/upload-photos.js)
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com', pathname: '/images/**' },
+    ],
   },
   outputFileTracingExcludes: {
     '/api/photos': ['./public/images/**', './public/Photos/**'],

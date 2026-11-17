@@ -7,3 +7,7 @@
 !public/videos/hero-video.webm
 !public/videos/worldcup-final-2026-clip-1.mp4
 !public/videos/worldcup-final-2026-clip-2.mp4
+
+# gallery photos live in Vercel Blob
+public/images/20*/
+photos-to-upload/

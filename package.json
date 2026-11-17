@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/generate-image-manifest.js && next build",
+    "build": "next build",
+    "photos:upload": "node scripts/upload-photos.js",
+    "photos:manifest": "node scripts/generate-image-manifest.js",
     "start": "next start",
     "lint": "next lint",
     "keep-db-active": "node keep-db-active.js",
@@ -23,6 +25,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@upstash/redis": "^1.39.0",
+    "@vercel/blob": "^2.9.0",
     "autoprefixer": "^10.6.1",
     "clsx": "^2.1.1",
     "eslint": "^9.34.0",

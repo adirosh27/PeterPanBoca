@@ -1,16 +1,20 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { del, list } from '@vercel/blob';
 
 // Gallery photo management for the admin "delete photos" page.
 //
-// Photos live in the git repo under public/images/<year>/<event>/<file>.
-// A deployed Vercel site cannot delete its own static files, so:
-//   - When GITHUB_TOKEN is set, deletions are committed to GitHub (one commit
-//     per batch), which triggers a redeploy that drops the files for real.
-//   - Otherwise, when running locally (not on Vercel), files are deleted from
-//     disk; commit the result yourself.
+// Photos live in Vercel Blob at images/<year>/<event>/<file> (see
+// README-PHOTOS.md). The galleries read their photo list from the committed
+// public/image-manifest.json, so a delete does two things:
+//   1. Remove the photos from the manifest. With GITHUB_TOKEN set this is
+//      committed to GitHub, which redeploys the site; when running locally
+//      (not on Vercel) the manifest file is rewritten on disk instead.
+//   2. Delete the photos from Blob.
+// The manifest goes first: if that fails nothing is deleted, and the admin
+// can simply retry.
 
-export const IMAGES_PREFIX = 'public/images/';
+export const IMAGES_PREFIX = 'images/';
 const MEDIA_RE = /\.(jpg|jpeg|png|gif|webp|mp4|mov|webm)$/i;
 const MANIFEST_PATH = 'public/image-manifest.json';
 
@@ -18,9 +22,9 @@ const GITHUB_REPO = process.env.GITHUB_REPO || 'adirosh27/PeterPanBoca';
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
 
 export interface GalleryFile {
-  path: string; // repo-relative, e.g. public/images/2025/<event>/IMG_1.jpg
+  path: string; // Blob pathname, e.g. images/2025/<event>/IMG_1.jpg
   name: string;
-  url: string; // public URL, e.g. /images/2025/<event>/IMG_1.jpg
+  url: string; // public Blob URL
   size: number; // bytes
   type: 'image' | 'video';
 }
@@ -41,24 +45,13 @@ export function getMode(): Mode {
   return 'unconfigured';
 }
 
-/** A path is deletable only if it is a media file inside public/images/<year>/<event>/. */
+/** A path is deletable only if it is a media file at images/<year>/<event>/<file> in Blob. */
 export function isDeletablePath(p: unknown): p is string {
   if (typeof p !== 'string' || !p.startsWith(IMAGES_PREFIX)) return false;
   const rest = p.slice(IMAGES_PREFIX.length).split('/');
   if (rest.length !== 3) return false;
   if (rest.some((seg) => !seg || seg === '.' || seg === '..' || seg.includes('\\'))) return false;
   return MEDIA_RE.test(p);
-}
-
-function toFile(p: string, size: number): GalleryFile {
-  const name = p.split('/').pop()!;
-  return {
-    path: p,
-    name,
-    url: '/' + p.slice('public/'.length),
-    size,
-    type: /\.(mp4|mov|webm)$/i.test(name) ? 'video' : 'image',
-  };
 }
 
 function groupByEvent(files: GalleryFile[]): GalleryEvent[] {
@@ -81,6 +74,51 @@ function groupByEvent(files: GalleryFile[]): GalleryEvent[] {
   return events;
 }
 
+// ---------- Blob ----------
+
+function requireBlobToken() {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error('BLOB_READ_WRITE_TOKEN is not set');
+}
+
+async function listBlob(): Promise<GalleryFile[]> {
+  requireBlobToken();
+  const files: GalleryFile[] = [];
+  let cursor: string | undefined;
+  do {
+    const page = await list({ prefix: IMAGES_PREFIX, cursor, limit: 1000 });
+    for (const b of page.blobs) {
+      if (!isDeletablePath(b.pathname)) continue;
+      const name = b.pathname.split('/').pop()!;
+      files.push({
+        path: b.pathname,
+        name,
+        url: b.url,
+        size: b.size,
+        type: /\.(mp4|mov|webm)$/i.test(name) ? 'video' : 'image',
+      });
+    }
+    cursor = page.hasMore ? page.cursor : undefined;
+  } while (cursor);
+  return files;
+}
+
+// ---------- Manifest ----------
+
+type Manifest = Record<string, { urlPrefix: string; images: { name: string; url: string }[] }>;
+
+function removeFromManifest(manifest: Manifest, paths: string[]) {
+  const byEvent = new Map<string, Set<string>>();
+  for (const p of paths) {
+    const [year, event, name] = p.slice(IMAGES_PREFIX.length).split('/');
+    const key = `${year}/${event}`;
+    if (!byEvent.has(key)) byEvent.set(key, new Set());
+    byEvent.get(key)!.add(name);
+  }
+  for (const [key, names] of byEvent) {
+    if (manifest[key]) manifest[key].images = manifest[key].images.filter((img) => !names.has(img.name));
+  }
+}
+
 // ---------- GitHub ----------
 
 async function gh<T>(apiPath: string, init?: RequestInit): Promise<T> {
@@ -101,27 +139,11 @@ async function gh<T>(apiPath: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-interface GhTreeEntry { path: string; type: string; size?: number; sha: string }
-
-async function githubHead() {
+async function commitManifestToGithub(paths: string[]): Promise<{ commitUrl: string }> {
   const ref = await gh<{ object: { sha: string } }>(`/git/ref/heads/${encodeURIComponent(GITHUB_BRANCH)}`);
-  const commit = await gh<{ tree: { sha: string } }>(`/git/commits/${ref.object.sha}`);
-  return { commitSha: ref.object.sha, treeSha: commit.tree.sha };
-}
+  const commitSha = ref.object.sha;
+  const head = await gh<{ tree: { sha: string } }>(`/git/commits/${commitSha}`);
 
-async function listGithub(): Promise<GalleryFile[]> {
-  const { treeSha } = await githubHead();
-  const tree = await gh<{ tree: GhTreeEntry[]; truncated: boolean }>(`/git/trees/${treeSha}?recursive=1`);
-  if (tree.truncated) throw new Error('GitHub tree listing was truncated');
-  return tree.tree
-    .filter((e) => e.type === 'blob' && isDeletablePath(e.path))
-    .map((e) => toFile(e.path, e.size ?? 0));
-}
-
-async function deleteGithub(paths: string[]): Promise<{ commitUrl: string }> {
-  const { commitSha, treeSha } = await githubHead();
-
-  // Keep the committed manifest in sync (the build regenerates it anyway).
   const manifestFile = await gh<{ content: string }>(
     `/contents/${MANIFEST_PATH}?ref=${encodeURIComponent(GITHUB_BRANCH)}`
   );
@@ -131,11 +153,8 @@ async function deleteGithub(paths: string[]): Promise<{ commitUrl: string }> {
   const tree = await gh<{ sha: string }>(`/git/trees`, {
     method: 'POST',
     body: JSON.stringify({
-      base_tree: treeSha,
-      tree: [
-        ...paths.map((p) => ({ path: p, mode: '100644', type: 'blob', sha: null })),
-        { path: MANIFEST_PATH, mode: '100644', type: 'blob', content: JSON.stringify(manifest) },
-      ],
+      base_tree: head.tree.sha,
+      tree: [{ path: MANIFEST_PATH, mode: '100644', type: 'blob', content: JSON.stringify(manifest) }],
     }),
   });
 
@@ -157,67 +176,29 @@ async function deleteGithub(paths: string[]): Promise<{ commitUrl: string }> {
   return { commitUrl: commit.html_url };
 }
 
-// ---------- Local filesystem ----------
-
-const repoRoot = () => process.cwd();
-
-async function listLocal(): Promise<GalleryFile[]> {
-  const base = path.join(repoRoot(), IMAGES_PREFIX);
-  const out: GalleryFile[] = [];
-  const years = await fs.readdir(base, { withFileTypes: true });
-  for (const y of years.filter((d) => d.isDirectory())) {
-    const events = await fs.readdir(path.join(base, y.name), { withFileTypes: true });
-    for (const e of events.filter((d) => d.isDirectory())) {
-      const dir = path.join(base, y.name, e.name);
-      for (const f of await fs.readdir(dir, { withFileTypes: true })) {
-        const rel = `${IMAGES_PREFIX}${y.name}/${e.name}/${f.name}`;
-        if (!f.isFile() || !isDeletablePath(rel)) continue;
-        const stat = await fs.stat(path.join(dir, f.name));
-        out.push(toFile(rel, stat.size));
-      }
-    }
-  }
-  return out;
+async function writeManifestLocally(paths: string[]) {
+  const manifestAbs = path.join(process.cwd(), MANIFEST_PATH);
+  const manifest = JSON.parse(await fs.readFile(manifestAbs, 'utf-8'));
+  removeFromManifest(manifest, paths);
+  await fs.writeFile(manifestAbs, JSON.stringify(manifest));
 }
 
-async function deleteLocal(paths: string[]) {
-  const base = path.resolve(repoRoot(), IMAGES_PREFIX);
-  for (const p of paths) {
-    const abs = path.resolve(repoRoot(), p);
-    if (!abs.startsWith(base + path.sep)) throw new Error(`Refusing to delete outside images: ${p}`);
-    await fs.rm(abs, { force: true });
-  }
-  const manifestAbs = path.join(repoRoot(), MANIFEST_PATH);
-  try {
-    const manifest = JSON.parse(await fs.readFile(manifestAbs, 'utf-8'));
-    removeFromManifest(manifest, paths);
-    await fs.writeFile(manifestAbs, JSON.stringify(manifest));
-  } catch {
-    // Manifest missing is fine; the build regenerates it.
-  }
-}
-
-// ---------- Shared ----------
-
-type Manifest = Record<string, { urlPrefix: string; images: { url: string }[] }>;
-
-function removeFromManifest(manifest: Manifest, paths: string[]) {
-  const urls = new Set(paths.map((p) => '/' + p.slice('public/'.length)));
-  for (const key of Object.keys(manifest)) {
-    manifest[key].images = manifest[key].images.filter((img) => !urls.has(img.url));
-  }
-}
+// ---------- API ----------
 
 export async function listGallery(): Promise<GalleryEvent[]> {
-  const mode = getMode();
-  if (mode === 'unconfigured') throw new Error('GITHUB_TOKEN is not set on this deployment');
-  return groupByEvent(mode === 'github' ? await listGithub() : await listLocal());
+  if (getMode() === 'unconfigured') throw new Error('GITHUB_TOKEN is not set on this deployment');
+  return groupByEvent(await listBlob());
 }
 
 export async function deletePhotos(paths: string[]): Promise<{ mode: Mode; commitUrl?: string }> {
   const mode = getMode();
   if (mode === 'unconfigured') throw new Error('GITHUB_TOKEN is not set on this deployment');
-  if (mode === 'github') return { mode, ...(await deleteGithub(paths)) };
-  await deleteLocal(paths);
-  return { mode };
+  requireBlobToken();
+
+  let commitUrl: string | undefined;
+  if (mode === 'github') ({ commitUrl } = await commitManifestToGithub(paths));
+  else await writeManifestLocally(paths);
+
+  await del(paths);
+  return { mode, commitUrl };
 }

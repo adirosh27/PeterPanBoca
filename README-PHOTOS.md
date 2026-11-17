@@ -1,44 +1,51 @@
-# Adding Your Real Photos
+# Gallery photos
 
-## The Issue with Google Drive
+Gallery photos are stored in **Vercel Blob** (store `peter-pan-boca-photos`), not in this repo.
+Keeping them out of `public/` keeps each Vercel deployment small. When the photos were in the
+repo, every deployment carried a full copy of them and used up the account's Deployment Storage.
 
-Google Drive doesn't allow direct embedding of photos from sharing URLs due to security restrictions. The website currently shows placeholder photos from Picsum.
+**Don't add gallery photos under `public/images/`.** That folder is git-ignored for year folders
+(`public/images/20*/`) and only holds site assets like `PP_Logo.png`.
 
-## Solutions to Add Your Real Photos
+## How it works
 
-### Option 1: Upload to Imgur (Easiest)
-1. Go to https://imgur.com
-2. Upload all your photos
-3. Get the direct image URLs (right-click → "Copy image address")
-4. Replace the placeholder URLs in `src/lib/data.ts`
+- Photos live in Blob at `images/<year>/<event name>/<file>`.
+- `public/image-manifest.json` maps each `<year>/<event name>` to its photo URLs. It is committed
+  to the repo, and `/api/photos` serves it to the galleries page.
+- `next.config.js` allows `next/image` to load and optimize images from
+  `*.public.blob.vercel-storage.com`.
 
-### Option 2: Use Vercel Blob Storage
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel blob put your-photo.jpg --token YOUR_TOKEN`
-3. Use the returned URLs in the website
+## Adding a new gallery
 
-### Option 3: Use Cloudinary
-1. Create free account at https://cloudinary.com
-2. Upload photos to your media library
-3. Get direct URLs and replace in the data file
+1. One-time setup: pull the Blob token into `.env.local`:
 
-### Option 4: Host Images in Public Folder
-1. Put all photos in `public/photos/` directory
-2. Update URLs to `/photos/your-image.jpg`
-3. This will include them directly in the website
+   ```bash
+   vercel env pull .env.local
+   ```
 
-## How to Replace the URLs
+2. Put the photos in a folder named `<year>/<event name>/`, for example
+   `photos-to-upload/2026/שייט - אפריל 2026/`. `photos-to-upload/` is git-ignored.
 
-Edit `src/lib/data.ts` and replace the `allPhotoUrls` array with your actual photo URLs:
+3. Upload them. Files already in Blob are skipped, and the manifest is regenerated:
 
-```javascript
-const allPhotoUrls = [
-  'https://your-image-host.com/photo1.jpg',
-  'https://your-image-host.com/photo2.jpg',
-  // ... all 33 photos
-];
-```
+   ```bash
+   npm run photos:upload -- "photos-to-upload/2026/שייט - אפריל 2026"
+   ```
 
-## Current Status
+4. Add the event to `src/lib/data.ts` as before, then commit `public/image-manifest.json` and the
+   data change.
 
-The website is fully functional with placeholder photos. Once you provide working image URLs, they will display immediately.
+To rebuild the manifest from what's in Blob (for example after deleting photos in the Vercel
+dashboard), run `npm run photos:manifest`.
+
+## Limits (Hobby plan)
+
+Vercel Blob on Hobby includes 1 GB of storage, 2,000 uploads/lists and 10 GB of transfer per
+month, shared with the account's other projects. If you go over, Blob is blocked for 30 days.
+The galleries use about 635 MB, so keep an eye on the Blob usage page, and consider resizing very
+large camera photos (for example to 2400px wide) before uploading.
+
+## Deleting photos
+
+Use the admin page at `/admin/photos`. It deletes the photos from Blob and commits the updated
+manifest to GitHub (needs `GITHUB_TOKEN`), which redeploys the site.
