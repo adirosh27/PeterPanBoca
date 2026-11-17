@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Delete photos. Body: { paths: string[] } (repo-relative, under public/images/).
+// Delete photos. Body: { paths: string[] } (Blob pathnames, under images/).
 export async function POST(request: NextRequest) {
   if (!isPaymentsAdmin(request.headers.get('x-admin-password'))) return unauthorized();
 

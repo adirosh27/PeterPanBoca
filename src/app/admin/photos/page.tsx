@@ -133,7 +133,7 @@ export default function GalleryAdminPage() {
       `Permanently delete ${paths.length} file${paths.length === 1 ? '' : 's'} (${formatSize(selectedSize)}) from the gallery?\n\n` +
         (mode === 'github'
           ? 'This commits the deletion to GitHub and the site will redeploy in a few minutes.'
-          : 'The files will be deleted from this computer. Commit and push to update the live site.')
+          : 'The files will be deleted from Blob right away. Commit and push public/image-manifest.json to update the live site.')
     );
     if (!ok) return;
 
@@ -209,7 +209,7 @@ export default function GalleryAdminPage() {
         <p style={{ color: '#475569', marginBottom: '1rem' }}>
           {totalCount} files · {formatSize(totalSize)} total
           {mode === 'github' && ' · deletions are committed to GitHub'}
-          {mode === 'local' && ' · local mode: deletes files on this computer'}
+          {mode === 'local' && ' · local mode: deletes from Blob and updates the manifest on this computer'}
         </p>
 
         {error && (

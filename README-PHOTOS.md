@@ -42,5 +42,10 @@ dashboard), run `npm run photos:manifest`.
 
 Vercel Blob on Hobby includes 1 GB of storage, 2,000 uploads/lists and 10 GB of transfer per
 month, shared with the account's other projects. If you go over, Blob is blocked for 30 days.
-The galleries use about 725 MB, so keep an eye on the Blob usage page, and consider resizing very
+The galleries use about 635 MB, so keep an eye on the Blob usage page, and consider resizing very
 large camera photos (for example to 2400px wide) before uploading.
+
+## Deleting photos
+
+Use the admin page at `/admin/photos`. It deletes the photos from Blob and commits the updated
+manifest to GitHub (needs `GITHUB_TOKEN`), which redeploys the site.
